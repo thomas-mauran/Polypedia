@@ -1,9 +1,13 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 
+const userRoutes = require("./user/routes")
+
 // db connect
 
 const app = express();
+
+app.use(express.json())
 
 app.use((req,res,next) => {
     res.setHeader('Acces-Control-Allow-Origin', '*')
@@ -23,6 +27,8 @@ app.use(
 
 //app.use("/api/auth", userRoutes);
 // app.use("/api/question", questionRoutes)
+
+app.use("/user", userRoutes)
 app.get("/", (req, res) => {
     res.send("Server is up")
 })
