@@ -1,0 +1,14 @@
+version: '3.7'
+services: 
+  postgres:
+    container_name: polypedia-postgres
+    image: postgres:latest
+    restart: always
+    environment: 
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=1234
+      - POSTGRES_DB=polypedia
+    ports:
+    - '5455:5432'
+    volumes:
+    - ./database/createDb.sql:/docker-entrypoint-initdb.d/createDb.sql
