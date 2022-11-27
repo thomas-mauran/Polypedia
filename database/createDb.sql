@@ -1,17 +1,17 @@
-CREATE TABLE "public.Users" (
+CREATE TABLE "public.users" (
 	"id" serial NOT NULL,
 	"login" VARCHAR(75) NOT NULL,
 	"email" VARCHAR(255) NOT NULL UNIQUE,
 	"password" VARCHAR(255) NOT NULL,
 	"is_admin" BOOLEAN NOT NULL,
-	CONSTRAINT "Users_pk" PRIMARY KEY ("id")
+	CONSTRAINT "users_pk" PRIMARY KEY ("id")
 ) WITH (
   OIDS=FALSE
 );
 
 
 
-CREATE TABLE "public.Books" (
+CREATE TABLE "public.books" (
 	"id" serial NOT NULL,
 	"name" VARCHAR(255) NOT NULL,
 	"description" VARCHAR(500) NOT NULL,
@@ -19,25 +19,25 @@ CREATE TABLE "public.Books" (
 	"language_id" integer NOT NULL,
 	"path" VARCHAR(500) NOT NULL UNIQUE,
 	"downloads" integer NOT NULL,
-	CONSTRAINT "Books_pk" PRIMARY KEY ("id")
+	CONSTRAINT "books_pk" PRIMARY KEY ("id")
 ) WITH (
   OIDS=FALSE
 );
 
 
 
-CREATE TABLE "public.Authors" (
+CREATE TABLE "public.authors" (
 	"id" serial NOT NULL,
 	"firstname" VARCHAR(100) NOT NULL,
 	"lastname" VARCHAR(100) NOT NULL,
-	CONSTRAINT "Authors_pk" PRIMARY KEY ("id")
+	CONSTRAINT "authors_pk" PRIMARY KEY ("id")
 ) WITH (
   OIDS=FALSE
 );
 
 
 
-CREATE TABLE "public.Books_Authors" (
+CREATE TABLE "public.books_authors" (
 	"book_id" integer NOT NULL,
 	"author_id" integer NOT NULL
 ) WITH (
@@ -46,17 +46,17 @@ CREATE TABLE "public.Books_Authors" (
 
 
 
-CREATE TABLE "public.Tags" (
+CREATE TABLE "public.tags" (
 	"id" serial NOT NULL,
 	"name" serial(50) NOT NULL UNIQUE,
-	CONSTRAINT "Tags_pk" PRIMARY KEY ("id")
+	CONSTRAINT "tags_pk" PRIMARY KEY ("id")
 ) WITH (
   OIDS=FALSE
 );
 
 
 
-CREATE TABLE "public.Books_Tags" (
+CREATE TABLE "public.books_tags" (
 	"book_id" integer NOT NULL,
 	"tag_id" integer NOT NULL
 ) WITH (
@@ -65,17 +65,17 @@ CREATE TABLE "public.Books_Tags" (
 
 
 
-CREATE TABLE "public.Languages" (
+CREATE TABLE "public.languages" (
 	"id" serial NOT NULL,
 	"name" VARCHAR(50) NOT NULL,
-	CONSTRAINT "Languages_pk" PRIMARY KEY ("id")
+	CONSTRAINT "languages_pk" PRIMARY KEY ("id")
 ) WITH (
   OIDS=FALSE
 );
 
 
 
-CREATE TABLE "public.Books_Users" (
+CREATE TABLE "public.books_users" (
 	"book_id" integer NOT NULL,
 	"user_id" integer NOT NULL
 ) WITH (
@@ -85,19 +85,19 @@ CREATE TABLE "public.Books_Users" (
 
 
 
-ALTER TABLE "Books" ADD CONSTRAINT "Books_fk0" FOREIGN KEY ("language_id") REFERENCES "Languages"("id");
+ALTER TABLE "books" ADD CONSTRAINT "books_fk0" FOREIGN KEY ("language_id") REFERENCES "languages"("id");
 
 
-ALTER TABLE "Books_Authors" ADD CONSTRAINT "Books_Authors_fk0" FOREIGN KEY ("book_id") REFERENCES "Books"("id");
-ALTER TABLE "Books_Authors" ADD CONSTRAINT "Books_Authors_fk1" FOREIGN KEY ("author_id") REFERENCES "Authors"("id");
+ALTER TABLE "books_authors" ADD CONSTRAINT "books_authors_fk0" FOREIGN KEY ("book_id") REFERENCES "books"("id");
+ALTER TABLE "books_authors" ADD CONSTRAINT "books_authors_fk1" FOREIGN KEY ("author_id") REFERENCES "authors"("id");
 
 
-ALTER TABLE "Books_Tags" ADD CONSTRAINT "Books_Tags_fk0" FOREIGN KEY ("book_id") REFERENCES "Books"("id");
-ALTER TABLE "Books_Tags" ADD CONSTRAINT "Books_Tags_fk1" FOREIGN KEY ("tag_id") REFERENCES "Tags"("id");
+ALTER TABLE "books_tags" ADD CONSTRAINT "books_tags_fk0" FOREIGN KEY ("book_id") REFERENCES "books"("id");
+ALTER TABLE "books_tags" ADD CONSTRAINT "books_tags_fk1" FOREIGN KEY ("tag_id") REFERENCES "tags"("id");
 
 
-ALTER TABLE "Books_Users" ADD CONSTRAINT "Books_Users_fk0" FOREIGN KEY ("book_id") REFERENCES "Books"("id");
-ALTER TABLE "Books_Users" ADD CONSTRAINT "Books_Users_fk1" FOREIGN KEY ("user_id") REFERENCES "Users"("id");
+ALTER TABLE "books_users" ADD CONSTRAINT "books_users_fk0" FOREIGN KEY ("book_id") REFERENCES "books"("id");
+ALTER TABLE "books_users" ADD CONSTRAINT "books_users_fk1" FOREIGN KEY ("user_id") REFERENCES "users"("id");
 
 
 
