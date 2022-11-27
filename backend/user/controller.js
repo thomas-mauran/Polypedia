@@ -4,16 +4,6 @@ const jwt = require("jsonwebtoken");
 const pool = require("../db");
 const queries = require("./queries");
 
-// Fetch every user
-const getUsers = (req, res) => {
-  pool.query("SELECT * FROM public.Users", (error, results) => {
-    if (error) {
-      console.log(error);
-      return res.status(500).send({ error: error });
-    }
-    res.status(200).json(results.rows);
-  });
-};
 
 // Get a user info using his id
 const getUserById = (req, res) => {
@@ -112,7 +102,6 @@ const loginUser = async (req, res) => {
 };
 
 module.exports = {
-  getUsers,
   getUserById,
   createUser,
   loginUser,

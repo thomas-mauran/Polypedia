@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 
 const userRoutes = require("./user/routes")
+const bookRoutes = require("./book/routes")
 
 // db connect
 
@@ -29,6 +30,7 @@ app.use(
 // app.use("/api/question", questionRoutes)
 
 app.use("/user", userRoutes)
+app.use("/book/", bookRoutes)
 app.get("/", (req, res) => {
     res.send("Server is up")
 })
