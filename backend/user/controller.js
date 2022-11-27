@@ -35,6 +35,7 @@ const createUser = async (req, res) => {
     }
   });
 
+
   pool.query(
     queries.addUser,
     [login, email, cryptedPassword, false],
@@ -81,7 +82,7 @@ const loginUser = async (req, res) => {
               // If they are the same
               if (valid) {
                 // Create a jwt token for the user
-                const token = jwt.sign({ userId: userId }, "abc", {
+                const token = jwt.sign({ userId: userId }, process.env.JWT_TOKEN_KEY, {
                   expiresIn: "24h",
                 });
 
