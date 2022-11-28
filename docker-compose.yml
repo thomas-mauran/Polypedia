@@ -12,3 +12,32 @@ services:
     - '5455:5432'
     volumes:
     - ./database/createDb.sql:/docker-entrypoint-initdb.d/createDb.sql
+    networks:
+    - backend
+    extra_hosts:
+    - "host.docker.internal:host-gateway"
+
+
+  
+  api:
+    depends_on:
+    - postgres
+    container_name: polypedia-api
+    image: sample-express-app
+    build: ./backend
+    ports: 
+    - "3000:3000"
+    networks:
+    - backend
+    volumes:
+    - ./backend:/usr/src/app
+    extra_hosts:
+    - "host.docker.internal:host-gateway"
+
+      
+
+networks:
+  backend:
+    driver: bridge
+
+  
