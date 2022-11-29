@@ -17,13 +17,10 @@ services:
     extra_hosts:
     - "host.docker.internal:host-gateway"
 
-
-  
   api:
     depends_on:
     - postgres
     container_name: polypedia-api
-    image: sample-express-app
     build: ./backend
     ports: 
     - "3000:3000"
@@ -33,7 +30,14 @@ services:
     - ./backend:/usr/src/app
     extra_hosts:
     - "host.docker.internal:host-gateway"
-
+  
+  frontend:
+    container_name: polypedia-frontend
+    build: ./frontend
+    ports: 
+    - "8080:8080"
+    - "443:443"
+    
       
 
 networks:
