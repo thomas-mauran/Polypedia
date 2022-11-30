@@ -35,8 +35,14 @@ services:
     container_name: polypedia-frontend
     build: ./frontend
     ports: 
-    - "8080:8080"
+    - "80:80"
     - "443:443"
+    volumes:
+    - ./frontend:/app
+    stdin_open: true
+    tty: true
+    environment:
+    - CHOKIDAR_USEPOLLING=true
     
       
 
