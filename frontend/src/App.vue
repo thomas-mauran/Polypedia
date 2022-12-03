@@ -1,11 +1,16 @@
 <script setup>
-import {  RouterView } from 'vue-router'
+import {  RouterView, useRoute} from 'vue-router'
+
+import navbar from "./components/navbarComponent"
+const route = useRoute()
+
 
 </script>
 
 <template>
 
   <main>
+    <navbar v-if="route.meta.navbar"/>
 
   </main>
   <RouterView />
@@ -15,6 +20,29 @@ import {  RouterView } from 'vue-router'
 
 
 <style>
+
+@import url('https://fonts.googleapis.com/css2?family=Itim&family=Jost:wght@700&display=swap');
+
+@font-face {
+  font-family: 'JejuGothic';
+  src: url('./fonts/JejuGothic-Regular.ttf');
+}
+
+*{
+  font-family: "JejuGothic", regular;
+}
+
+.verticalDivCentered{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+.bigTitle{
+  font-family: 'Itim', cursive;
+  font-size: 2em;
+}
 
 .verticalDiv{
   display: flex;
