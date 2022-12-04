@@ -4,7 +4,6 @@ const jwt = require("jsonwebtoken");
 const pool = require("../db");
 const queries = require("./queries");
 
-
 // Get a user info using his id
 const getUserById = (req, res) => {
   const id = parseInt(req.params.id);
@@ -19,8 +18,10 @@ const getUserById = (req, res) => {
   });
 };
 
+
+
 // Create a new user
-const createUser = async (req, res) => {
+const signup = async (req, res) => {
   const { login, email, password } = req.body;
 
   let cryptedPassword = await bcrypt.hash(password, 10);
@@ -34,7 +35,6 @@ const createUser = async (req, res) => {
       res.status(403).json({ error: "This email is already used" });
     }
   });
-
 
   pool.query(
     queries.addUser,
@@ -82,9 +82,13 @@ const loginUser = async (req, res) => {
               // If they are the same
               if (valid) {
                 // Create a jwt token for the user
-                const token = jwt.sign({ userId: userId }, process.env.JWT_TOKEN_KEY, {
-                  expiresIn: "24h",
-                });
+                const token = jwt.sign(
+                  { userId: userId },
+                  process.env.JWT_TOKEN_KEY,
+                  {
+                    expiresIn: "24h",
+                  }
+                );
 
                 // Send back response with token
                 res.status(200).send({ token });
@@ -102,8 +106,9 @@ const loginUser = async (req, res) => {
   });
 };
 
+
 module.exports = {
   getUserById,
-  createUser,
+  signup,
   loginUser,
 };
