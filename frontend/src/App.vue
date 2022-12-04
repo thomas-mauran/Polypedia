@@ -32,6 +32,10 @@ const route = useRoute()
   font-family: "JejuGothic", regular;
 }
 
+input{
+  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
 .verticalDivCentered{
   display: flex;
   flex-direction: column;

@@ -1,5 +1,5 @@
 <script setup>
-import loginForm from "../components/loginForm.vue";
+import signupForm from "../components/signupForm.vue";
 
 </script>
 
@@ -12,12 +12,12 @@ import loginForm from "../components/loginForm.vue";
       </div>
 
       <div class="verticalDivCentered">
-        <h1 class="bigTitle" id="title">Welcome back</h1>
-        <loginForm id="formComponent"/>
+        <h1 class="bigTitle" id="title">Create an account</h1>
+        <signupForm id="formComponent"/>
       </div>
     </section>
     <section id="rightSection">
-      <img src="../assets/undraw_library.png" alt="Girl reading a library">
+      <img src="../assets/undraw_signup.png" alt="Girl reading a library">
     </section>
   </div>
 </template>

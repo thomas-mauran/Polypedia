@@ -16,7 +16,7 @@
 
         <button class="purpleBackground">Login</button>
         <p>or</p>
-        <RouterLink  class="btn purpleOutline" to="resetPassword">Create an account</RouterLink>
+        <RouterLink  class="btn purpleOutline" to="signup">Create an account</RouterLink>
 
       </div>
       <RouterLink  class="purpleText" to="resetPassword">forgot my password 😞</RouterLink>

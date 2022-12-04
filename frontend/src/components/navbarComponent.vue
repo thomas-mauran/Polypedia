@@ -10,7 +10,7 @@ import { RouterLink } from "vue-router";
     </RouterLink>
     <input type="text" placeholder="search a book">
     <RouterLink to="books/id" class="navItem">My books</RouterLink>
-    <RouterLink to="upload" class="navItem">My books</RouterLink>
+    <RouterLink to="upload" class="navItem">+ Upload a book</RouterLink>
     <RouterLink to="account" class="navItem">My account</RouterLink>
 
   </nav>
