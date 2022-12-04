@@ -1,6 +1,6 @@
 <script setup>
     import { RouterLink } from "vue-router"
-    import {ref} from "vue"
+    import {ref, defineEmits} from "vue"
 
     const username = ref('')
     const email = ref('')
@@ -8,8 +8,19 @@
     const confirmPassword = ref('')
 
 
+    const emit = defineEmits(['showMessageEvent'])
+
     function createAccount(){
-        console.log(username)
+        console.log("test")
+        if(username.value === ''|| email.value === ''|| password.value === ''|| confirmPassword.value === ''){
+            emit('showMessageEvent', 'You need to fill in all the gaps')
+        }
+        else if(password.value !== confirmPassword.value)
+        {
+            emit('showMessageEvent', "Both passwords aren't matching")
+            console.log("emit")
+
+        }
     }
     
 </script>
@@ -33,7 +44,7 @@
       
       <div class="horizontalDiv buttonDiv" type="button">
 
-        <button  class="btn purpleBackground" type="button" @click="createAccount()" >Create the account</button>
+        <button  class="btn purpleBackground" type="button" @click="createAccount" >Create the account</button>
 
 
       </div>
