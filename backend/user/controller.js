@@ -18,11 +18,11 @@ const getUserById = (req, res) => {
   });
 };
 
-
-
 // Create a new user
 const signup = async (req, res) => {
-  const { login, email, password } = req.body;
+  console.log("test");
+  const { username, email, password } = req.body;
+
 
   let cryptedPassword = await bcrypt.hash(password, 10);
 
@@ -32,18 +32,18 @@ const signup = async (req, res) => {
       return res.status(500).send({ error: error });
     }
     if (results.rows.length) {
-      res.status(403).json({ error: "This email is already used" });
+      return res.status(403).send({ error: "This email is already used" });
+    } else {
+      pool.query(
+        queries.addUser,
+        [username, email, cryptedPassword, false],
+        (error, results) => {
+          if (error) throw error;
+          res.status(201).send({ message: "User created with succes" });
+        }
+      );
     }
   });
-
-  pool.query(
-    queries.addUser,
-    [login, email, cryptedPassword, false],
-    (error, results) => {
-      if (error) throw error;
-      res.status(201).json({ message: "User created with succes" });
-    }
-  );
 };
 
 // Login function
@@ -105,7 +105,6 @@ const loginUser = async (req, res) => {
     }
   });
 };
-
 
 module.exports = {
   getUserById,
