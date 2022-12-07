@@ -3,44 +3,51 @@ import { RouterLink } from "vue-router";
 </script>
 <template>
   <nav class="horizontalDiv">
-    <RouterLink to="home"  class="horizontalDiv">
-
+    <div class="horizontalDiv">
       <img src="../assets/book.png" alt="opened book image" id="bookImg" />
-      <h1 id="polypediaTitle">Polypedia</h1>
-    </RouterLink>
-    <input type="text" placeholder="search a book">
+      <RouterLink to="home" id="polypediaTitle">
+        Polypedia
+      </RouterLink>
+    </div>
+    <input type="text" placeholder="search a book" id="searchBar"/>
     <RouterLink to="books/id" class="navItem">My books</RouterLink>
     <RouterLink to="upload" class="navItem">+ Upload a book</RouterLink>
     <RouterLink to="account" class="navItem">My account</RouterLink>
-
   </nav>
 </template>
 <style>
 
-#polypediaTitle{
-    text-decoration: none;
+
+#bookImg {
+  width: 40px;
 }
 
-.navItem{
-    color: #8185e4;
-   text-decoration: none;
-   margin: auto 50px;
-
+#polypediaTitle {
+  color: #5356b8;
+  text-decoration: none;
+  font-size: 1.4em;
+  font-weight: bold;
+  margin: auto 8px;
 }
 
-nav{
-    margin-top: 10px;
-    justify-content: space-around;
+.navItem {
+  color: #8185e4;
+  text-decoration: none;
+  margin: auto 50px;
 }
 
-nav input{
-    margin: auto 5vw;
-    width: 25vw;
-    height: 20px;
-    font-size: 1em;
-    background-color: transparent;
-    border: none;
-    border-bottom: 2px solid #8185e4;
+nav {
+  margin-top: 10px;
+  justify-content: space-around;
 }
 
+nav input {
+  margin: auto 5vw;
+  width: 25vw;
+  height: 20px;
+  font-size: 1em;
+  background-color: transparent;
+  border: none;
+  border-bottom: 2px solid #8185e4;
+}
 </style>

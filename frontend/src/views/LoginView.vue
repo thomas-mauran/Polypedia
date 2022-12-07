@@ -1,49 +1,69 @@
 <script setup>
 import loginForm from "../components/loginForm.vue";
 
+import { ref } from "vue";
+
+const showMessage = ref("");
+
+function changeMessage(m) {
+  console.log(m);
+  showMessage.value = m;
+}
 </script>
 
 <template>
   <div class="horizontalDiv">
     <section id="leftSection">
       <div class="horizontalDiv" id="logoDiv">
-        <img src="../assets/book.png" alt="opened book image" id="bookImg">
+        <img src="../assets/book.png" alt="opened book image" id="bookImg" />
         <h1 id="polypediaTitle">Polypedia</h1>
       </div>
 
       <div class="verticalDivCentered">
         <h1 class="bigTitle" id="title">Welcome back</h1>
-        <loginForm id="formComponent"/>
+        <div id="formDiv">
+          <h5>{{ showMessage }}</h5>
+
+          <loginForm
+            @showMessageEvent="(msg) => changeMessage(msg)"
+            id="formComponent"
+          />
+        </div>
       </div>
     </section>
     <section id="rightSection">
-      <img src="../assets/undraw_library.png" alt="Girl reading a library">
+      <img src="../assets/undraw_library.png" alt="Girl reading a library" />
     </section>
   </div>
 </template>
 
-<style>
+<style scoped>
 
-#formComponent{
-  margin-top: 10vh;
+#formDiv {
+  text-align: center;
+  margin-top: 20vh;
 }
 
-#logoDiv{
+#formDiv h5 {
+  color: red;
+}
+
+
+#logoDiv {
   vertical-align: middle;
   margin-top: 1vh;
 }
 
-#bookImg{
+#bookImg {
   width: 40px;
-  margin:  0px 20px;
+  margin: 0px 20px;
 }
 
-#polypediaTitle{
+#polypediaTitle {
   color: #5054cb;
   margin-top: auto;
   margin-bottom: auto;
-  font-family: 'Jost', sans-serif;
-  
+  font-family: "Jost", sans-serif;
 }
 
 #title {

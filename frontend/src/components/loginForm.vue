@@ -1,104 +1,81 @@
 <script setup>
-    import { RouterLink } from "vue-router"
+/* eslint-disable*/
 
-    
+import '../assets/css/loginSignupForm.css'
+
+import { RouterLink, useRouter } from "vue-router";
+import { defineEmits, ref } from "vue";
+
+const emit = defineEmits(["showMessageEvent"]);
+
+const router = useRouter()
+
+const email = ref('')
+const password = ref('')
+
+async function login() {
+  if (
+    email.value === "" ||
+    password.value === ""
+  ) {
+    emit("showMessageEvent", "You need to fill in all the gaps");
+  }else {
+    const url = `${process.env.VUE_APP_API_URL}/user/login`;
+
+    try{
+       fetch(url, {
+        method: "POST",
+
+        headers: {"Content-Type": "application/json; charset=UTF-8"},
+        body: JSON.stringify({
+          "email": email.value,
+          "password": password.value
+        })
+      }).then(async (response ) => {
+
+        let responseMsg = JSON.parse(await response.text())
+        if(!response.ok){
+        emit('showMessageEvent', responseMsg.error)
+      }
+      else{
+        localStorage.setItem('token', responseMsg.token)
+        router.push('home')
+
+      }
+      })
+
+      
+
+      } catch(error){
+        console.log(error)
+        emit("showMessageEvent", error)
+
+      }
+  }
+}
 </script>
 <template>
   <article class="verticalDivCentered">
     <form class="verticalDiv" id="form">
-      <label for="login">Login</label>
-      <input type="text" id="login" placeholder="yourEmail@address.com" />
+      <label for="email">Email</label>
+      <input type="text" id="email" placeholder="yourEmail@address.com" v-model="email"/>
 
       <label for="password">Password</label>
-      <input type="text" id="password" placeholder="veryStrongPassword" />
+      <input type="text" id="password" placeholder="veryStrongPassword" v-model="password"/>
 
       <div class="horizontalDiv buttonDiv" type="button">
-
-        <button class="purpleBackground">Login</button>
+        <button class="purpleBackground btn" @click="login">Login</button>
         <p>or</p>
-        <RouterLink  class="btn purpleOutline" to="signup">Create an account</RouterLink>
-
+        <RouterLink class="btn purpleOutline" to="signup"
+          >Create an account</RouterLink
+        >
       </div>
-      <RouterLink  class="purpleText" to="resetPassword">forgot my password 😞</RouterLink>
+      <RouterLink class="purpleText" to="resetPassword"
+        >forgot my password 😞</RouterLink
+      >
     </form>
   </article>
 </template>
 <style scoped>
-#form {
-  text-align: center;
-}
-
-#form p {
-  margin: 10px;
-}
-
-.purpleText {
-  color: #8185e4;
-  text-decoration: none;
-}
-form {
-  text-align: left;
-  margin: 40px;
-  font-size: 1.2em;
-}
-
-form label {
-  text-align: left;
-  margin: 20px 0px;
-}
-
-form input {
-font-size: 0.8em;
-  background-color: transparent;
-  border: none;
-  border-bottom: 2px solid black;
-}
-
-input:focus{
-    outline: none;
-}
-
-form button {
-  padding: 10px 20px;
-  margin: 10px;
-  background-color: transparent;
-  border: none;
-  border-radius: 5px;
-  font-weight: bold;
-  cursor: pointer;
- }
-
-.buttonDiv {
-  margin-top: 20px;
-  text-align: center;
-}
-
-.buttonDiv p {
-  padding-top: 7px;
-}
-
-.purpleBackground {
-  background-color: #8185e4;
-  color: white;
-}
-
-
-.btn{
-    padding: 10px 20px;
-  margin: 10px;
-  background-color: transparent;
-  border: none;
-  border-radius: 5px;
-  font-weight: bold;
-  font-size: 0.8em;
-  cursor: pointer;
-  text-decoration: none;
-
-}
-
-.purpleOutline {
-  border: 2px #8185e4 solid;
-  color: black;
-}
 
 </style>

@@ -22,7 +22,7 @@ function changeMessage(m) {
       <div class="verticalDivCentered">
         <h1 class="bigTitle" id="title">Create an account</h1>
         <div id="formDiv">
-          <p>{{ showMessage }}</p>
+          <h5>{{ showMessage }}</h5>
 
           <signupForm @showMessageEvent="(msg) => changeMessage(msg)" />
         </div>
@@ -34,13 +34,13 @@ function changeMessage(m) {
   </div>
 </template>
 
-<style>
+<style scoped>
 #formDiv {
   text-align: center;
   margin-top: 10vh;
 }
 
-#formDiv p {
+#formDiv h5 {
   color: red;
 }
 
