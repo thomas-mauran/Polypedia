@@ -25,6 +25,7 @@ export async function login(email, password) {
 
       if (res.status === 200) {
         setAuthToken(res.data.token)
+        setUserId(res.data.id)
         return [true];
       }
     } catch (error) {
@@ -36,6 +37,10 @@ export async function login(email, password) {
 export function setAuthToken(token){
     axios.defaults.headers.common['Authorization'] = `x-acces-token: ${token}`
     localStorage.setItem('AUTH_TOKEN_KEY', token)
+}
+
+function setUserId(id){
+  localStorage.setItem('USER_ID', id)
 }
 
 export function isLoggedIn(){

@@ -91,7 +91,7 @@ const loginUser = async (req, res) => {
                 );
 
                 // Send back response with token
-                res.status(200).send({ token });
+                res.status(200).send({ token, id: userId});
               }
             } catch (error) {
               return res.status(500).send({ error: error });
