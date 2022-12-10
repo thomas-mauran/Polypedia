@@ -4,7 +4,7 @@ import {useRouter} from 'vue-router'
 const router = useRouter()
 
 function disconnect(){
-    localStorage.removeItem('token')
+    localStorage.removeItem('AUTH_TOKEN_KEY')
     router.push("login")
 }
 

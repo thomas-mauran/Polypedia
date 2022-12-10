@@ -1,5 +1,7 @@
-// import decode from "jwt-decode";
+import decode from "jwt-decode";
 import axios from "axios";
+
+
 
 const baseUrl = process.env.VUE_APP_API_URL;
 
@@ -34,5 +36,28 @@ export async function login(email, password) {
 export function setAuthToken(token){
     axios.defaults.headers.common['Authorization'] = `x-acces-token: ${token}`
     localStorage.setItem('AUTH_TOKEN_KEY', token)
+}
+
+export function isLoggedIn(){
+    let authToken = localStorage.getItem('AUTH_TOKEN_KEY')
+    return authToken && !isTokenExpired(authToken)
+
+}
+
+function isTokenExpired(token) {
+    let expirationDate = getTokenExpirationDate(token)
+    return expirationDate < new Date()
+}
+
+function getTokenExpirationDate(encodedToken) {
+    let token = decode(encodedToken)
+    if (!token.exp) {
+        return null
+    }
+  
+    let date = new Date(0)
+    date.setUTCSeconds(token.exp)
+  
+    return date
 }
 
