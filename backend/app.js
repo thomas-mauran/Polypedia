@@ -3,6 +3,9 @@ const bodyParser = require("body-parser");
 
 const userRoutes = require("./user/routes")
 const bookRoutes = require("./book/routes")
+const authorRoutes = require("./author/routes")
+const tagRoutes = require("./tag/routes")
+const languageRoutes = require("./language/routes")
 
 // db connect
 
@@ -32,6 +35,10 @@ app.use(
 
 app.use("/user", userRoutes)
 app.use("/book/", bookRoutes)
+app.use("/author/", authorRoutes)
+app.use("/tag/", tagRoutes)
+app.use("/language/", languageRoutes)
+
 app.get("/", (req, res) => {
     res.send("Server is up")
 })

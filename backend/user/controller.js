@@ -23,7 +23,6 @@ const signup = async (req, res) => {
   console.log("test");
   const { username, email, password } = req.body;
 
-
   let cryptedPassword = await bcrypt.hash(password, 10);
 
   pool.query(queries.checkEmailExists, [email], (error, results) => {
@@ -38,7 +37,10 @@ const signup = async (req, res) => {
         queries.addUser,
         [username, email, cryptedPassword, false],
         (error, results) => {
-          if (error) throw error;
+          if (error) {
+            console.log(error);
+            return res.status(500).send({ error: error });
+          }
           res.status(201).send({ message: "User created with succes" });
         }
       );
@@ -91,7 +93,7 @@ const loginUser = async (req, res) => {
                 );
 
                 // Send back response with token
-                res.status(200).send({ token, id: userId});
+                res.status(200).send({ token, id: userId });
               }
             } catch (error) {
               return res.status(500).send({ error: error });

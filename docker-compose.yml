@@ -9,7 +9,7 @@ services:
       - POSTGRES_PASSWORD=1234
       - POSTGRES_DB=polypedia
     ports:
-    - '5455:5432'
+    - '5432:5432'
     volumes:
     - ./database/createDb.sql:/docker-entrypoint-initdb.d/createDb.sql
     networks:
@@ -35,7 +35,7 @@ services:
   #   container_name: polypedia-frontend
   #   build: ./frontend
   #   ports: 
-  #   - "80:80"
+  #   - "80:8080"
   #   - "443:443"
   #   volumes:
   #   - ./frontend:/app

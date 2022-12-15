@@ -4,6 +4,7 @@ module.exports = async (req, res, next) => {
     try{
         const token = req.headers.authorization
         console.log(token)
+        console.log("token")
         const decodedToken = await jwt.verify(token, process.env.JWT_TOKEN_KEY)
         const userId = decodedToken.userId
 
