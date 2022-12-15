@@ -4,6 +4,7 @@ import LoginView from "../views/LoginView";
 import SignupView from "../views/SignupView";
 import AccountView from "../views/AccountView";
 import HomeView from "../views/HomeView";
+import UploadView from "../views/UploadBook"
 
 import { isLoggedIn } from "../utils/auth";
 
@@ -41,6 +42,13 @@ const router = createRouter({
       path: "/account",
       name: "Account",
       component: AccountView,
+      meta: { navbar: true },
+    },
+
+    {
+      path: "/upload",
+      name: "Upload",
+      component: UploadView,
       meta: { navbar: true },
     },
   ],

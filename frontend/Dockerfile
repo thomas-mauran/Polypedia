@@ -1,15 +1,20 @@
-# FROM node:lts-alpine
+# FROM node:carbon-slim
+# # vue-cli reqires 8.10.0+ 
+
+# RUN apt-get -y update \
+#   && apt-get install -y git
+
+# RUN npm install -g @vue/cli
+
+# WORKDIR /src
+# COPY package*.json ./
+# RUN npm install
+# COPY . .
+# EXPOSE 8080
+
 # USER node
 
-# RUN mkdir -p /usr/src/app
-# WORKDIR /usr/src/app
-# RUN npm i @vue/cli-service-global
-# COPY . .
-# RUN npm install
-# RUN chmod 777 node_modules/
-# EXPOSE 8080
 # CMD ["npm", "run", "serve"]
-
 
 FROM node:lts-alpine
 RUN npm install -g http-server
