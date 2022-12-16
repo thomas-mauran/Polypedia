@@ -1,36 +1,76 @@
 <script setup>
-import { onMounted, ref } from "vue";
-import axios from "axios";
+import { ref } from "vue";
+import uploadBookForm from "../components/uploadBookForm.vue";
 
+const showMessage = ref("");
 
-const authors = ref([])
+// function changeMessage(m) {
+//   console.log(m);
+//   showMessage.value = m;
+// }
 
-async function fetchUserInfos() {
-
-  const url = `${process.env.VUE_APP_API_URL}/author/`;
-  try {
-    let res = await axios({
-      url: url,
-      method: "GET",
-    });
-
-    console.log(res.data[0])
-    if (res.status === 200) {
-      authors.value = res.data;
-    }
-  } catch (error) {
-    // console.log(error);
-  }
-}
-
-onMounted(() => {
-  fetchUserInfos();
-});
 </script>
 <template>
-    <div>
-        <h1>Upload</h1>
-        <h2>{{authors}}</h2>
+  <div>
+    <div class="horizontalDiv">
+      <section id="leftSection">
+        <div class="verticalDivCentered" id="formDiv">
+          <h5>{{ showMessage }}</h5>
+
+          <uploadBookForm id="form" />
+        </div>
+      </section>
+      <section id="rightSection">
+        <img src="../assets/undraw_library.png" alt="Girl reading a library" />
+      </section>
     </div>
+  </div>
 </template>
-<style></style>
+
+<style scoped>
+
+#formDiv {
+  text-align: center;
+  margin: 10vh 15vh;
+}
+
+#formDiv h5 {
+  color: red;
+}
+
+
+#logoDiv {
+  vertical-align: middle;
+  margin-top: 1vh;
+}
+
+#bookImg {
+  width: 40px;
+  margin: 0px 20px;
+}
+
+#polypediaTitle {
+  color: #5054cb;
+  margin-top: auto;
+  margin-bottom: auto;
+  font-family: "Jost", sans-serif;
+}
+
+#title {
+  margin-top: 5vh;
+}
+
+
+
+#rightSection img {
+  margin-top: 15vh;
+  width: 40vw;
+  min-width: 500px;
+}
+
+section {
+  width: 50%;
+  height: 100vh;
+}
+
+</style>

@@ -55,9 +55,7 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-  console.log("est");
-  console.log(to.meta.allowAnonymous);
-  console.log(isLoggedIn());
+
   if (!to.meta.allowAnonymous && !isLoggedIn())next({namle: "Login",});
     next();
 });
