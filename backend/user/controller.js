@@ -20,7 +20,6 @@ const getUserById = (req, res) => {
 
 // Create a new user
 const signup = async (req, res) => {
-  console.log("test");
   const { username, email, password } = req.body;
 
   let cryptedPassword = await bcrypt.hash(password, 10);
@@ -31,7 +30,7 @@ const signup = async (req, res) => {
       return res.status(500).send({ error: error });
     }
     if (results.rows.length) {
-      return res.status(403).send({ error: "This email is already used" });
+      return res.status(403).json("This email is already used" );
     } else {
       pool.query(
         queries.addUser,
@@ -41,7 +40,7 @@ const signup = async (req, res) => {
             console.log(error);
             return res.status(500).send({ error: error });
           }
-          res.status(201).send({ message: "User created with succes" });
+          res.status(201).send("ok");
         }
       );
     }
