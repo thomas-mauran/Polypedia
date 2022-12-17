@@ -27,7 +27,7 @@ async function createAccount(){
       const url = `${process.env.VUE_APP_API_URL}/user`;
 
       try{
-        console.log(username.value)
+
        fetch(url, {
         method: "POST",
 
@@ -37,11 +37,14 @@ async function createAccount(){
           "email": email.value,
           "password": password.value
         })
-      }).then(async (response ) => {
 
-        let responseMsg = JSON.parse(await response.text())
-        if(!response.ok){
-        emit('showMessageEvent', responseMsg.error)
+      }).then(async (response) => {
+
+        let responseText = await response.text()
+        
+        let responseMsg = responseText.error ? responseText.error : responseText
+      if(!response.ok){
+        emit('showMessageEvent', responseMsg)
       }
       else{
         router.push('login')

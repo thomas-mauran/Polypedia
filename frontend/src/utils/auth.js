@@ -23,19 +23,24 @@ export async function login(email, password) {
         },
       });
 
+
       if (res.status === 200) {
         setAuthToken(res.data.token)
         setUserId(res.data.id)
         return [true];
       }
     } catch (error) {
-      return [false, error.response.data.error];
+            
+    console.log(error)
+      let responseText = error.response.data
+        
+      let responseMsg = responseText.error ? responseText.error : responseText
+      return [false, responseMsg];
     }
   }
 }
 
 export function setAuthToken(token){
-    axios.defaults.headers.common['Authorization'] = `x-acces-token: ${token}`
     localStorage.setItem('AUTH_TOKEN_KEY', token)
 }
 
