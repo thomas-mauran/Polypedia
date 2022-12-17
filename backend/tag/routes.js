@@ -6,8 +6,8 @@ const validation = require('./validator')
 const auth = require("../middleware/auth")
 
 
-router.get("/",controller.getAllTags)
-router.post("/", validation.validateCreate, controller.insertTag)
+router.get("/", auth, controller.getAllTags)
+router.post("/", auth, validation.validateCreate, controller.insertTag)
 
 
 

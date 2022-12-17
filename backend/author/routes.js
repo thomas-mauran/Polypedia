@@ -7,7 +7,7 @@ const auth = require("../middleware/auth")
 
 
 router.get("/", auth, controller.getAllAuthors)
-router.post("/", validation.validateCreate, controller.insertAuthor)
+router.post("/", auth, validation.validateCreate, controller.insertAuthor)
 
 
 

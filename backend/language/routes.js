@@ -5,7 +5,7 @@ const router = Router()
 const auth = require("../middleware/auth")
 
 
-router.get("/",controller.getAllLanguages)
+router.get("/", auth ,controller.getAllLanguages)
 
 
 
