@@ -6,7 +6,7 @@ const validation = require('./validator')
 const auth = require("../middleware/auth")
 
 
-router.get("/",controller.getAllAuthors)
+router.get("/", auth, controller.getAllAuthors)
 router.post("/", validation.validateCreate, controller.insertAuthor)
 
 
