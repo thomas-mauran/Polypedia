@@ -16,6 +16,10 @@ async function fetchUserInfos() {
   try {
     let res = await axios({
       url: url,
+      headers:{
+        'x-access-token': `${localStorage.getItem('AUTH_TOKEN_KEY')}`,
+
+      },
       method: "GET",
     });
 
