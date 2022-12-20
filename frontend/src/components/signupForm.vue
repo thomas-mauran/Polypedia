@@ -14,7 +14,6 @@ const confirmPassword = ref('')
 const emit = defineEmits(['showMessageEvent'])
 
 async function createAccount(){
-    console.log("test")
     if(username.value === ''|| email.value === ''|| password.value === ''|| confirmPassword.value === ''){
         emit('showMessageEvent', 'You need to fill in all the gaps')
     }
@@ -52,8 +51,6 @@ async function createAccount(){
 
       }
       })
-
-      
 
       } catch(error){
         console.log(error)
