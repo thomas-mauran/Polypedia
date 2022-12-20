@@ -33,7 +33,7 @@ app.use(
 //app.use("/api/auth", userRoutes);
 // app.use("/api/question", questionRoutes)
 
-app.use("/user", userRoutes)
+app.use("/user/", userRoutes)
 app.use("/book/", bookRoutes)
 app.use("/author/", authorRoutes)
 app.use("/tag/", tagRoutes)
