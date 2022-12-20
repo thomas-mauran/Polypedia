@@ -5,14 +5,26 @@ const authorQueries = require("../author/queries");
 const fs = require("fs");
 const pdf2pic = require("pdf2pic");
 
-
 const getAllBooks = (req, res) => {
   pool.query(queries.getAllBooks, (error, results) => {
     if (error) {
       console.log(error);
       return res.status(500).send({ error: error });
     }
+    results.rows.forEach((element) => {
+      const imgUrl = `/files/img/${element.id}.1.jpeg`;
+      const fileExists = fs.existsSync(imgUrl)
 
+      let imageBase64;
+
+      if (fileExists) {
+        const imageFile = fs.readFileSync(imgUrl);
+        imageBase64 = imageFile.toString("base64");
+      } else {
+        imageBase64 = "";
+      }
+      element.image = imageBase64;
+    });
     res.status(200).json(results.rows);
   });
 };
@@ -104,7 +116,7 @@ const uploadBook = (req, res) => {
                     savePath: "/files/img", // output directory
                     format: "jpeg", // output file format
                     width: 1080,
-                    height: 1600
+                    height: 1600,
                   };
 
                   const storeAsImage = pdf2pic.fromPath(
@@ -113,13 +125,11 @@ const uploadBook = (req, res) => {
                   );
                   const pageToConvertAsImage = 1;
 
-                  try{
-                    storeAsImage(pageToConvertAsImage)
-                  }catch(error){
+                  try {
+                    storeAsImage(pageToConvertAsImage);
+                  } catch (error) {
                     return res.status(500).send(error);
-
                   }
-                  
                 }
                 return res.status(201).send("book uploaded");
               }

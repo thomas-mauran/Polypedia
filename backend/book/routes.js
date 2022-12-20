@@ -34,7 +34,7 @@ const upload = multer({
 
 const auth = require("../middleware/auth");
 
-router.get("/", auth, controller.getAllBooks);
+router.get("/", controller.getAllBooks);
 // router.post("/getByTag", auth, controller.getBooksByTagName)
 router.post(
   "/",
