@@ -16,7 +16,7 @@ const getAllTags = (req, res) => {
 const insertTag = (req, res) => {
   let { name, description } = req.body
   // Check if name of the tag is already used
-  pool.query(queries.getTagByName, [name], (error, results) => {
+  pool.query(queries.getByName, [name], (error, results) => {
     if (error) {
       console.log(error);
       return res.status(500).send({ error: error });
