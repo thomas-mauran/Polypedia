@@ -16,7 +16,7 @@ const getAllAuthors = (req, res) => {
 const insertAuthor = (req, res) => {
     let { fullname } = req.body
     // Check if fullname of the author is already used
-    pool.query(queries.getAuthorByName, [fullname], (error, results) => {
+    pool.query(queries.getByName, [fullname], (error, results) => {
       if (error) {
         console.log(error);
         return res.status(500).send({ error: error });
