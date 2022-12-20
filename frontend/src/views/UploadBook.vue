@@ -4,10 +4,11 @@ import uploadBookForm from "../components/uploadBookForm.vue";
 
 const showMessage = ref("");
 
-// function changeMessage(m) {
-//   console.log(m);
-//   showMessage.value = m;
-// }
+
+function changeMessage(m) {
+  window.scrollTo(0,0)
+  showMessage.value = m;
+}
 
 </script>
 <template>
@@ -17,7 +18,7 @@ const showMessage = ref("");
         <div class="verticalDivCentered" id="formDiv">
           <h5>{{ showMessage }}</h5>
 
-          <uploadBookForm id="form" />
+          <uploadBookForm  @showMessageEvent="(msg) => changeMessage(msg)" id="form" />
         </div>
       </section>
       <section id="rightSection">
@@ -35,7 +36,8 @@ const showMessage = ref("");
 }
 
 #formDiv h5 {
-  color: red;
+  color: rgb(206, 103, 103);
+  font-size: 1.2em;
 }
 
 

@@ -28,6 +28,9 @@ services:
     - backend
     volumes:
     - ./backend:/usr/src/app
+    - /mnt/data/polypedia/files/pdf:/files/pdf
+    - /mnt/data/polypedia/files/img:/files/img
+
     extra_hosts:
     - "host.docker.internal:host-gateway"
   
