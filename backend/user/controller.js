@@ -87,7 +87,7 @@ const loginUser = async (req, res) => {
                   { userId: userId },
                   process.env.JWT_TOKEN_KEY,
                   {
-                    expiresIn: "24h",
+                    expiresIn: "20m",
                   }
                 );
 
