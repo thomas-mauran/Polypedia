@@ -13,7 +13,7 @@ const getAllBooks = (req, res) => {
     }
     results.rows.forEach((element) => {
       const imgUrl = `/files/img/${element.id}.1.jpeg`;
-      const fileExists = fs.existsSync(imgUrl)
+      const fileExists = fs.existsSync(imgUrl);
 
       let imageBase64;
 
@@ -41,7 +41,12 @@ const getBooksByTagName = (req, res) => {
   });
 };
 
-const uploadBook = (req, res) => {
+const  uploadBook = async (req, res) => {
+  console.log({"passed": req.file.mimetype})
+  if (req.file === "badFile") {
+    console.log("bagzgdiqh dqs ")
+    return res.status(415).send({ error: "File must be a pdf" });
+  }
   try {
     let { title, language, description, pageNumber, file } = req.body;
     let tags = JSON.parse(req.body["tags"]);
@@ -62,7 +67,7 @@ const uploadBook = (req, res) => {
           pool.query(
             queries.getNewlyCreatedBook,
             [title, description, pageNumber, language],
-            (error, results) => {
+            async (error, results) => {
               if (error || results.rows.length === 0) {
                 console.log(error);
                 return res.status(500).send({ error: error });
@@ -100,8 +105,12 @@ const uploadBook = (req, res) => {
                 });
 
                 if (req.file) {
+                  const fileName = `${bookId}-${req.file.originalname}`
+                    .toLocaleLowerCase()
+                    .split(" ")
+                    .join("-");
                   fs.writeFile(
-                    `/files/pdf/${bookId}-${req.file.originalname}`,
+                    `/files/pdf/${fileName}`,
                     req.file.buffer,
                     (err) => {
                       if (err) {
@@ -120,13 +129,13 @@ const uploadBook = (req, res) => {
                   };
 
                   const storeAsImage = pdf2pic.fromPath(
-                    `/files/pdf/${bookId}-${req.file.originalname}`,
+                    `/files/pdf/${fileName}`,
                     options
                   );
                   const pageToConvertAsImage = 1;
 
                   try {
-                    storeAsImage(pageToConvertAsImage);
+                    await storeAsImage(pageToConvertAsImage);
                   } catch (error) {
                     return res.status(500).send(error);
                   }

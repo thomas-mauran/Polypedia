@@ -9,8 +9,8 @@ module.exports = {
             language: Joi.number().required(),
             authors: Joi.string(),
             tags: Joi.array(),
-            file: Joi.string().required().messages({
-              'string.base': "You must select a file to upload"
+            file: Joi.string().valid("application/pdf").required().messages({
+              'string.base': "You must select a file to upload",
         })})
 
         const object = {
