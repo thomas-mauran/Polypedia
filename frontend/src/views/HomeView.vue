@@ -16,6 +16,10 @@ console.log (urlBook)
 async function getBook(){
     axios
       .get(urlBook, {
+        headers:{
+          "x-access-token": `${localStorage.getItem("AUTH_TOKEN_KEY")}`,
+
+        }
 
       }).then(async(response)=> {
         response.data.forEach((element) => {

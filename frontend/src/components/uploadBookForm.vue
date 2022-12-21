@@ -57,6 +57,7 @@ async function uploadBook() {
     axios
       .post(url, formData, {
         headers: {
+          "x-access-token": `${localStorage.getItem("AUTH_TOKEN_KEY")}`,
           "Content-Type": "multipart/form-data",
         },
       })
