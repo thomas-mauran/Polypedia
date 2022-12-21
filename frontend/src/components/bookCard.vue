@@ -1,5 +1,6 @@
 <script setup>
 /* eslint-disable */
+import { RouterLink } from 'vue-router';
 
 const props = defineProps({
     bookId: Int16Array,
@@ -8,16 +9,25 @@ const props = defineProps({
     bookTitle: String
 })
 
+const link = `book/${props.bookId}`
+
 </script>
 <template>
 
-    <article>
+    <RouterLink :to="link">
         <img :src="imgPath" :alt="imgAlt"/>
         <h3>{{bookTitle}}</h3>
-    </article>
+    </RouterLink>
 
 </template>
 <style scoped>
+
+a{
+    color: black;
+    cursor: pointer;
+    text-decoration: none;
+    max-width: 200px;
+}
 
 img{
     width: 200px;
