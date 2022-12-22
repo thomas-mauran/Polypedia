@@ -5,27 +5,87 @@ const authorQueries = require("../author/queries");
 const fs = require("fs");
 const pdf2pic = require("pdf2pic");
 
+// Get a book info using his id
+const getBookById = (req, res) => {
+  const id = parseInt(req.params.id);
+  // We get the book infos
+  pool.query(queries.getBookById, [id], async (error, results) => {
+    if (error) {
+      console.log(error);
+      return res.status(500).send({ error: error });
+    }
+    if (results.rows.length === 0)
+      res.status(404).json({ message: `no books with the id : ${id}` });
+    else {
+      const data = results.rows[0];
+
+      // We get the list of tag associated
+
+      pool.query(queries.getTagsByBookId, [id], async (error, results) => {
+        if (error) {
+          console.log(error);
+          return res.status(500).send({ error: error });
+        } else {
+          data.tags = results.rows;
+
+          // We get the list of authors
+          pool.query(
+            queries.getAuthorsByBookId,
+            [id],
+            async (error, results) => {
+              if (error) {
+                console.log(error);
+                return res.status(500).send({ error: error });
+              } else {
+                data.authors = results.rows;
+
+                // We retrieve the book buffer
+                const pdfName = `${data.id}-${data.title}`
+                  .toLocaleLowerCase()
+                  .split(" ")
+                  .join("-");
+                const pdfPath = `/files/pdf/${pdfName}`;
+                fs.access(pdfPath, (err) => {
+                  if (err) return res.status(500).send({ error: err });
+
+                  fs.readFile(pdfPath, (err, pdfFileData) => {
+                    if (err) return res.status(500).send({ error: err });
+
+                    data.pdfFile = pdfFileData;
+                    res.status(200).json(data);
+                  });
+                });
+              }
+            }
+          );
+        }
+      });
+    }
+  });
+};
+
 const getAllBooks = (req, res) => {
   pool.query(queries.getAllBooks, (error, results) => {
     if (error) {
       console.log(error);
       return res.status(500).send({ error: error });
     }
-    results.rows.forEach((element) => {
-      const imgUrl = `/files/img/${element.id}.1.jpeg`;
-      const fileExists = fs.existsSync(imgUrl);
+    for (let i = 0; i < results.rows.length; i++) {
+      results.rows.forEach((element) => {
+        const imgUrl = `/files/img/${element.id}.1.jpeg`;
+        let imageBase64;
 
-      let imageBase64;
-
-      if (fileExists) {
-        const imageFile = fs.readFileSync(imgUrl);
-        imageBase64 = imageFile.toString("base64");
-      } else {
-        imageBase64 = "";
-      }
-      element.image = imageBase64;
-    });
-    res.status(200).json(results.rows);
+        if (fs.existsSync(imgUrl)) {
+          const imageFile = fs.readFileSync(imgUrl);
+          imageBase64 = imageFile.toString("base64");
+          element.image = imageBase64;
+        }
+        else{
+          element.image = ""
+        }
+      });
+      if (i === results.rows.length - 1) res.status(200).send(results.rows);
+    }
   });
 };
 
@@ -41,10 +101,10 @@ const getBooksByTagName = (req, res) => {
   });
 };
 
-const  uploadBook = async (req, res) => {
-  console.log({"passed": req.file.mimetype})
+const uploadBook = async (req, res) => {
+  console.log({ passed: req.file.mimetype });
   if (req.file === "badFile") {
-    console.log("bagzgdiqh dqs ")
+    console.log("bagzgdiqh dqs ");
     return res.status(415).send({ error: "File must be a pdf" });
   }
   try {
@@ -73,6 +133,7 @@ const  uploadBook = async (req, res) => {
                 return res.status(500).send({ error: error });
               } else {
                 const bookId = results.rows[0].id;
+                const bookTitle = results.rows[0].title;
 
                 // We loop on each authors bookId and add them to the intertable
                 authors.forEach((element) => {
@@ -105,7 +166,7 @@ const  uploadBook = async (req, res) => {
                 });
 
                 if (req.file) {
-                  const fileName = `${bookId}-${req.file.originalname}`
+                  const fileName = `${bookId}-${bookTitle}`
                     .toLocaleLowerCase()
                     .split(" ")
                     .join("-");
@@ -176,4 +237,5 @@ module.exports = {
   getAllBooks,
   getBooksByTagName,
   uploadBook,
+  getBookById,
 };

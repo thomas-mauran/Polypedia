@@ -5,17 +5,17 @@ import { RouterLink } from "vue-router";
   <nav class="horizontalDiv">
     <div class="horizontalDiv">
       <img src="../assets/book.png" alt="opened book image" id="bookImg" />
-      <RouterLink to="home" id="polypediaTitle">
+      <RouterLink to="/home" id="polypediaTitle">
         Polypedia
       </RouterLink>
     </div>
     <input type="text" placeholder="search a book" id="searchBar"/>
-    <RouterLink to="books/id" class="navItem">My books</RouterLink>
-    <RouterLink to="upload" class="navItem">+ Upload a book</RouterLink>
-    <RouterLink to="account" class="navItem">My account</RouterLink>
+    <RouterLink to="/myBooks" class="navItem">My books</RouterLink>
+    <RouterLink to="/upload" class="navItem">+ Upload a book</RouterLink>
+    <RouterLink to="/account" class="navItem">My account</RouterLink>
   </nav>
 </template>
-<style>
+<style scoped>
 
 
 #bookImg {
@@ -37,8 +37,10 @@ import { RouterLink } from "vue-router";
 }
 
 nav {
-  margin-top: 10px;
+  padding: 20px 0px;
+  font-size: 1.4em;
   justify-content: space-around;
+  box-shadow: 0px 0px 15px 3px black;
 }
 
 nav input {
