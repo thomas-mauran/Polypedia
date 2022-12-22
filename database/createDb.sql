@@ -313,3 +313,4 @@ INSERT INTO languages ("name") VALUES('Uzbek');
 INSERT INTO languages ("name") VALUES('Vietnamese');
 INSERT INTO languages ("name") VALUES('Welsh');
 INSERT INTO languages ("name") VALUES('Xhosa');
+
