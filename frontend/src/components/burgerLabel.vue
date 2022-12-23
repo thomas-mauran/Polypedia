@@ -1,5 +1,6 @@
 <script setup>
 /* eslint-disable */
+import prettyLabel from "../components/prettyLabel.vue"
 
 const props = defineProps({
   title: String,
@@ -8,6 +9,10 @@ const props = defineProps({
     default: "",
   },
   isBig: {
+    type: Boolean,
+    default: false,
+  },
+  prettyLabel: {
     type: Boolean,
     default: false,
   },
@@ -23,7 +28,8 @@ const props = defineProps({
     <h2>{{ title }} :</h2>
     <p v-if="text !== ''">{{ text }}</p>
     <div v-else class="tagDiv">
-      <p class="tag" v-for="item in list" :key="item.id">{{ item.name }}</p>
+        <prettyLabel v-if="prettyLabel" class="tag" v-for="item in list" :key="item.id" :text="item.name"/>
+        <p v-else="prettyLabel" class="tag" v-for="item in list" >{{ item.name }}</p>
     </div>
   </div>
   <div v-else class="horizontalDiv burgerLabelDiv">
@@ -34,7 +40,11 @@ const props = defineProps({
 
 <style scoped>
 
-
+.tagDiv{
+    display:flex;
+    flex-wrap: wrap;
+    width: 100%;
+}
 .left {
   text-align: left;
 }

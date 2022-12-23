@@ -57,16 +57,19 @@ onMounted(() => {
         <BurgerLabel isBig title="Author" :text="bookAuthors.fullname" />
         <BurgerLabel isBig title="Description" :text="bookInfo.description" />
         <BurgerLabel title="Number of pages" :text="bookInfo.number_of_pages" />
-        <BurgerLabel title="Tags" isBig :list="bookTags" />
+        <BurgerLabel title="Tags" isBig prettyLabel :list="bookTags" />
         <BurgerLabel title="Language" :text="bookInfo.language_name" />
         <BurgerLabel title="Downloads" :text="bookInfo.downloads" />
       </div>
     </Slide>
   </section>
 </template>
-<style>
+
+<style >
+
+
 .bm-burger-button {
-  margin-top: 110px;
+  top: 110px;
 }
 
 .bm-burger-bars {
@@ -74,7 +77,7 @@ onMounted(() => {
 }
 
 .bm-menu {
-  margin-top: 80px;
+  margin-top: 8vh;
   background-color: #dbdcf6;
 }
 .bm-overlay {
@@ -98,12 +101,13 @@ onMounted(() => {
 }
 
 #container {
-  margin-top: 5vh;
   height: 90vh;
 }
 .pdfLoader {
-  margin: 10px;
+  margin: 20px;
   width: 50%;
-  height: 100%;
+  height: 95%;
 }
+
+
 </style>
