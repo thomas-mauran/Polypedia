@@ -9,6 +9,49 @@ services:
       - POSTGRES_PASSWORD=1234
       - POSTGRES_DB=polypedia
     ports:
-    - '5455:5432'
+    - '5432:5432'
     volumes:
     - ./database/createDb.sql:/docker-entrypoint-initdb.d/createDb.sql
+    networks:
+    - backend
+    extra_hosts:
+    - "host.docker.internal:host-gateway"
+
+  api:
+    depends_on:
+    - postgres
+    container_name: polypedia-api
+    build: ./backend
+    ports: 
+    - "3000:3000"
+    networks:
+    - backend
+    volumes:
+    - ./backend:/usr/src/app
+    - /mnt/data/polypedia/files/pdf:/files/pdf
+    - /mnt/data/polypedia/files/img:/files/img
+
+    extra_hosts:
+    - "host.docker.internal:host-gateway"
+  
+  # frontend:
+  #   container_name: polypedia-frontend
+  #   build: ./frontend
+  #   ports: 
+  #   - "80:8080"
+  #   - "443:443"
+  #   volumes:
+  #   - ./frontend:/app
+  #   stdin_open: true
+  #   tty: true
+  #   environment:
+  #   - CHOKIDAR_USEPOLLING=true
+    
+      
+
+networks:
+  backend:
+    driver: bridge
+
+  
+

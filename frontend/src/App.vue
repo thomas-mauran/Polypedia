@@ -1,26 +1,73 @@
-<template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
-</template>
+<script setup>
+import {  RouterView, useRoute} from 'vue-router'
 
-<script>
-import HelloWorld from './components/HelloWorld.vue'
+import navbar from "./components/navbarComponent"
+const route = useRoute()
 
-export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
-}
+
 </script>
 
+<template>
+
+  <main>
+    <navbar v-if="route.meta.navbar"/>
+
+  </main>
+  <RouterView />
+
+</template>
+
+
+
 <style>
+
+@import url('https://fonts.googleapis.com/css2?family=Itim&family=Jost:wght@700&display=swap');
+
+@font-face {
+  font-family: 'JejuGothic';
+  src: url('./fonts/JejuGothic-Regular.ttf');
+}
+
+*{
+  font-family: "JejuGothic", regular;
+}
+
+input{
+  font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+.verticalDivCentered{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+.bigTitle{
+  font-family: 'Itim', cursive;
+  font-size: 2em;
+}
+
+.verticalDiv{
+  display: flex;
+  flex-direction: column;
+}
+
+.horizontalDiv{
+  display: flex;
+  flex-direction: row;
+}
+
+*{
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 </style>
