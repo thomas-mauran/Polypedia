@@ -65,11 +65,15 @@ const getBookById = (req, res) => {
 };
 
 const getAllBooks = (req, res) => {
-  pool.query(queries.getAllBooks, (error, results) => {
+  const {bookTitle} = req.body
+  console.log(bookTitle)
+  pool.query(queries.getAllBooks, [`${bookTitle}%`],(error, results) => {
     if (error) {
       console.log(error);
       return res.status(500).send({ error: error });
     }
+    if(results.rows.length < 1) return res.status(404).send("No book with this title")
+
     for (let i = 0; i < results.rows.length; i++) {
       results.rows.forEach((element) => {
         const imgUrl = `/files/img/${element.id}.1.jpeg`;

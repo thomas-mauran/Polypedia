@@ -20,7 +20,7 @@ async function tryLogin() {
   if (!response[0]) {
     emit("showMessageEvent", response[1]);
   } else {
-    router.push("home");
+    router.push("books");
   }
 }
 </script>

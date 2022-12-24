@@ -70,7 +70,7 @@ async function uploadBook() {
         if (response.status !== 201) {
           emit("showMessageEvent", responseMsg);
         } else {
-          router.push("home");
+          router.push("books");
           emit("showMessageEvent", "Book uploaded");
         }
       }).catch(error => {

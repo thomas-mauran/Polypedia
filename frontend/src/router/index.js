@@ -3,7 +3,7 @@ import { createRouter, createWebHashHistory } from "vue-router";
 import LoginView from "../views/LoginView";
 import SignupView from "../views/SignupView";
 import AccountView from "../views/AccountView";
-import HomeView from "../views/HomeView";
+import BooksView from "../views/BooksView";
 import UploadView from "../views/UploadBook"
 import BookView from "../views/BookView"
 
@@ -18,12 +18,15 @@ const router = createRouter({
       component: LoginView,
       meta: { allowAnonymous: true },
     },
+
+
     {
-      path: "/home",
-      name: "Home",
-      component: HomeView,
+      path: "/books/:bookTitle?",
+      name: "Books",
+      component: BooksView,
       meta: { navbar: true },
     },
+
 
     {
       path: "/login",

@@ -1,15 +1,26 @@
 <script setup>
 import { RouterLink } from "vue-router";
+import { ref, computed } from "vue"
+
+const text = ref("")
+
+
+const url = computed(() => {
+  return `/books/${text.value}`
+
+})
+
 </script>
 <template>
   <nav class="horizontalDiv">
     <div class="horizontalDiv">
       <img src="../assets/book.png" alt="opened book image" id="bookImg" />
-      <RouterLink to="/home" id="polypediaTitle">
-        Polypedia
-      </RouterLink>
+      <RouterLink to="/books" id="polypediaTitle"> Polypedia </RouterLink>
     </div>
-    <input type="text" placeholder="search a book" id="searchBar"/>
+    <div class="horizontalDiv">
+      <input type="text" placeholder="search a book" id="searchBar" v-model="text"/>
+      <RouterLink :to="url" id="searchBtn"><img id="searchIcon" src="../assets/searchLogo.png" alt="loop icon for search button"></RouterLink>
+    </div>
     <RouterLink to="/myBooks" class="navItem">My books</RouterLink>
     <RouterLink to="/upload" class="navItem">+ Upload a book</RouterLink>
     <RouterLink to="/account" class="navItem">My account</RouterLink>
@@ -18,6 +29,15 @@ import { RouterLink } from "vue-router";
 <style scoped>
 
 
+#searchIcon{
+  width: 25px;
+  cursor: pointer;
+}
+
+#searchBtn{
+  background-color: transparent;
+  border: none;
+}
 #bookImg {
   width: 40px;
 }
@@ -44,7 +64,7 @@ nav {
 }
 
 nav input {
-  margin: auto 5vw;
+  margin: auto 05px auto 5vw;
   width: 25vw;
   height: 20px;
   font-size: 1em;
