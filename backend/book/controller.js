@@ -56,8 +56,6 @@ const getAllBooks = async (req, res) => {
   try {
     // Get the search term from the request body
     const bookTitle = req.headers["booktitle"];
-    console.log(req.headers)
-    console.log(bookTitle)
 
     // Query the database for books with titles that match the search term
     const result = await pool.query(queries.getAllBooks, [`${bookTitle}%`]);

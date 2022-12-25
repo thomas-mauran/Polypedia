@@ -4,10 +4,10 @@ const router = Router()
 const validation = require('./validator')
 
 const auth = require("../middleware/auth")
-
+const adminCheck = require("../middleware/adminCheck")
 
 router.get("/", auth, controller.getAllTags)
-router.post("/", auth, validation.validateCreate, controller.insertTag)
+router.post("/", adminCheck, validation.validateCreate, controller.insertTag)
 
 
 

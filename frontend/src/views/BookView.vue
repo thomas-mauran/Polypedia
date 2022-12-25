@@ -111,7 +111,6 @@ onMounted(() => {
 
         <BurgerLabel isBig title="Title" :text="bookInfo.title" />
         <BurgerLabel title="Title" :text="bookInfo.id" />
-
         <BurgerLabel isBig title="Author" :text="bookAuthors.fullname" />
         <BurgerLabel isBig title="Description" :text="bookInfo.description" />
         <BurgerLabel title="Number of pages" :text="bookInfo.number_of_pages" />

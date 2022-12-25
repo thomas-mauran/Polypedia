@@ -10,6 +10,9 @@ const url = computed(() => {
 
 })
 
+const isUserAdmin = ref(localStorage.getItem("IS_ADMIN"))
+console.log(isUserAdmin)
+
 </script>
 <template>
   <nav class="horizontalDiv">
@@ -23,10 +26,13 @@ const url = computed(() => {
     </div>
     <RouterLink to="/likedBooks" class="navItem">Liked books</RouterLink>
     <RouterLink to="/upload" class="navItem">+ Upload a book</RouterLink>
+    <RouterLink v-if="isUserAdmin === 'true'" to="/admin" class="navItem">Admin Pannel</RouterLink>
     <RouterLink to="/account" class="navItem">My account</RouterLink>
+
   </nav>
 </template>
 <style scoped>
+
 
 
 #searchIcon{

@@ -12,104 +12,83 @@ const getUserById = (req, res) => {
       console.log(error);
       return res.status(500).send({ error: error });
     }
-    if (results.rows.length === 0)
-      res.status(404).json({ message: `no users with the id : ${id}` });
+    if (results.rows.length === 0) res.status(404).json({ message: `no users with the id : ${id}` });
     else res.status(200).json(results.rows);
   });
 };
 
 // Create a new user
 const signup = async (req, res) => {
-  const { username, email, password } = req.body;
+  try {
+    const { username, email, password } = req.body;
+    const cryptedPassword = await bcrypt.hash(password, 10);
 
-  let cryptedPassword = await bcrypt.hash(password, 10);
+    // we check if the mail isn't already used
+    const emailExists = await pool.query(queries.checkEmailExists, [email]);
+    if (emailExists.rows.length) {
+      return res.status(403).send("This email is already in use");
+    }
 
-  pool.query(queries.checkEmailExists, [email], (error, results) => {
-    if (error) {
-      console.log(error);
-      return res.status(500).send({ error: error });
-    }
-    if (results.rows.length) {
-      return res.status(403).json("This email is already used" );
-    } else {
-      pool.query(
-        queries.addUser,
-        [username, email, cryptedPassword, false],
-        (error, results) => {
-          if (error) {
-            console.log(error);
-            return res.status(500).send({ error: error });
-          }
-          res.status(201).send("ok");
-        }
-      );
-    }
-  });
+    // we insert the iser
+    await pool.query(queries.addUser, [username, email, cryptedPassword, false]);
+    res.sendStatus(201);
+  } catch (error) {
+    console.error(error);
+    res.sendStatus(500);
+  }
 };
 
 // Login function
 const loginUser = async (req, res) => {
-  const { email, password } = req.body;
-  let dbPassword;
-  let userId;
+  try {
+    const { email, password } = req.body;
 
-  // Check if email exists in the db
-  pool.query(queries.checkEmailExists, [email], (error, results) => {
-    if (error) {
-      console.log(error);
-      return res.status(500).send({ error: error });
+    // We check if the email exists in the db
+    const user = await pool.query(queries.getUserByEmail, [email]);
+    if (user.rows.length < 1) {
+      return res.status(404).send({ error: "Email not found" });
     }
-    if (results.rows.length < 1) {
-      res.status(404).json({ error: "Email not found" });
-    } else {
-      // get the password associated with this email
-      pool.query(queries.getPasswordByEmail, [email], (error, results) => {
-        if (error) {
-          console.log(error);
-          return res.status(500).send({ error: error });
-        }
 
-        userId = results.rows[0].id;
-        dbPassword = results.rows[0].password;
+    const dbPassword = user.rows[0].password;
+    const userId = user.rows[0].id;
+    const is_admin = user.rows[0].is_admin;
 
-        // compare the password sent by the user to the one inside the bd
-        try {
-          let b = bcrypt.compare(password, dbPassword).then((valid) => {
-            try {
-              // If they are not the same cancel
-              if (!valid) {
-                return res.status(401).json({ error: "Incorrect password" });
-              }
-              // If they are the same
-              if (valid) {
-                // Create a jwt token for the user
-                const token = jwt.sign(
-                  { userId: userId },
-                  process.env.JWT_TOKEN_KEY,
-                  {
-                    expiresIn: "20m",
-                  }
-                );
+    console.log(user);
+    console.log(password);
+    // we compare argument password to db crypted password
 
-                // Send back response with token
-                res.status(200).send({ token, id: userId });
-              }
-            } catch (error) {
-              return res.status(500).send({ error: error });
-            }
-          });
-        } catch (error) {
-          console.log(error);
-          return res.status(500).send({ error: error });
-        }
-      });
+    const validPassword = await bcrypt.compare(password, dbPassword);
+    if (!validPassword) {
+      return res.status(401).send({ error: "Incorrect password" });
     }
-  });
+    // We create a token and send it
+    const token = jwt.sign({ userId }, process.env.JWT_TOKEN_KEY, { expiresIn: "20m" });
+    res.send({ token, id: userId, is_admin });
+  } catch (error) {
+    console.error(error);
+    res.status(500);
+  }
+};
+
+const isUserAdmin = async (req, res) => {
+  try {
+    const userId = req.params.id;
+
+    const isAdminResult = await pool.query(queries.isUserAdmin, [userId]);
+
+    if (isAdminResult.rows.length < 1) {
+      res.status(401).send();
+    }
+    res.status(200).send();
+  } catch (error) {
+    console.log(error);
+    res.status(500).send();
+  }
 };
 
 module.exports = {
   getUserById,
   signup,
   loginUser,
+  isUserAdmin,
 };
-

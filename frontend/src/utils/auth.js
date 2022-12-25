@@ -26,6 +26,7 @@ export async function login(email, password) {
 
       if (res.status === 200) {
         setAuthToken(res.data.token)
+        setAdminBool(res.data.is_admin)
         setUserId(res.data.id)
         return [true];
       }
@@ -42,6 +43,11 @@ export async function login(email, password) {
 
 export function setAuthToken(token){
     localStorage.setItem('AUTH_TOKEN_KEY', token)
+}
+
+export function setAdminBool(is_admin){
+  localStorage.setItem('IS_ADMIN', is_admin)
+
 }
 
 function setUserId(id){

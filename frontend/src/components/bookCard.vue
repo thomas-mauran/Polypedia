@@ -31,17 +31,34 @@ a{
     text-decoration: none;
     max-width: 200px;
     margin: 25px 5vw;
+    transition: 0.1s ease-in-out;
+
 }
+
+a:hover{
+    transform: translateY(-10px);
+
+}
+
+a:hover img{
+    box-shadow: 10px 10px 15px  black;
+
+}
+
 
 img{
     width: 200px;
     box-shadow: 2px 2px 5px  black;
     margin-bottom: 20px;
+    transition: 0.1s ease-in-out;
 }
+
+
 
 #noThumbnail{
     box-shadow: none;
     max-width: 200px;
     margin-top: 48%;
 }
+
 </style>
