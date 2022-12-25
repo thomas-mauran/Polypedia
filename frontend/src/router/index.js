@@ -6,6 +6,7 @@ import AccountView from "../views/AccountView";
 import BooksView from "../views/BooksView";
 import UploadView from "../views/UploadBook"
 import BookView from "../views/BookView"
+import LikedBooksView from "../views/LikedBooksView"
 
 import { isLoggedIn } from "../utils/auth";
 
@@ -24,6 +25,13 @@ const router = createRouter({
       path: "/books/:bookTitle?",
       name: "Books",
       component: BooksView,
+      meta: { navbar: true },
+    },
+
+    {
+      path: "/likedBooks",
+      name: "Liked",
+      component: LikedBooksView,
       meta: { navbar: true },
     },
 

@@ -13,6 +13,7 @@ const insertAuthorJoin = "INSERT INTO books_authors (book_id, author_id) VALUES(
 const addLike = "INSERT INTO books_users (book_id, user_id) VALUES ($1, $2);"
 const removeLike = "DELETE FROM books_users WHERE book_id = $1 AND user_id = $2;"
 const isLiked = "SELECT * FROM books_users WHERE book_id = $1 AND user_id = $2; "
+const getLikedBooks = "SELECT book_id FROM books_users WHERE user_id = $1"
 
 module.exports = {
     getAllBooks,
@@ -26,6 +27,7 @@ module.exports = {
     getAuthorsByBookId,
     addLike,
     removeLike,
-    isLiked
+    isLiked,
+    getLikedBooks
 
 }

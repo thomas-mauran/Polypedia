@@ -51,6 +51,7 @@ const getBookById = async (req, res) => {
     return res.status(500).send({ error });
   }
 };
+
 const getAllBooks = async (req, res) => {
   try {
     // Get the search term from the request body
@@ -67,6 +68,47 @@ const getAllBooks = async (req, res) => {
     // Iterate over the book every book to add the image to each
     result.rows.forEach((element) => {
       const imgUrl = `/files/img/${element.id}.1.jpeg`;
+      let imageBase64;
+      if (fs.existsSync(imgUrl)) {
+        // If the image file exists, read it from the file system
+        const imageFile = fs.readFileSync(imgUrl);
+        // Convert the image file to base64 encoding
+        imageBase64 = imageFile.toString("base64");
+        // Add the image data to the book data
+        element.image = imageBase64;
+      } else {
+        // If the image file does not exist, set the image field to an empty string
+        element.image = "";
+      }
+    });
+    // Return the book data from result.rows
+    res.status(200).send(result.rows);
+  } catch (error) {
+    console.log(error);
+    // If an error occurs, return a 500 response
+    return res.status(500).send({ error: error });
+  }
+};
+
+
+const getLikedBooks = async (req, res) => {
+  try {
+
+    const userToken = req.params.userToken;
+
+    const decoded = jwt.verify(userToken, process.env.JWT_TOKEN_KEY);
+    const userId = decoded.userId;
+
+    // Query the database for books with titles that match the search term
+    const result = await pool.query(queries.getLikedBooks, [userId]);
+    if (result.rows.length < 1) {
+      // If no books were found return a 404 response
+      return res.status(404).send("No book with this title");
+    }
+
+    // Iterate over the book every book to add the image to each
+    result.rows.forEach((element) => {
+      const imgUrl = `/files/img/${element.book_id}.1.jpeg`;
       let imageBase64;
       if (fs.existsSync(imgUrl)) {
         // If the image file exists, read it from the file system
@@ -281,4 +323,5 @@ const unlikeBook = async (req, res) => {
   getBookById,
   likeBook,
   unlikeBook,
+  getLikedBooks
 };

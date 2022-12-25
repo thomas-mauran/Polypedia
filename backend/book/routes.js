@@ -23,6 +23,7 @@ router.post(
 
 router.post("/like/:id", auth, controller.likeBook);
 router.post("/unlike/:id", auth, controller.unlikeBook);
+router.get("/likedBooks/:userToken", auth, controller.getLikedBooks)
 
 
 module.exports = router;

@@ -16,7 +16,7 @@ const description = ref("");
 const selectedLanguage = ref(15);
 const selectedTags = ref([]);
 
-const selectedAuthors = ref(1);
+const selectedAuthors = ref(87);
 const isAuthorFieldOpen = ref(false)
 
 const file = ref(null);
@@ -87,7 +87,7 @@ async function uploadBook() {
 
 function createAuthorBtnClicked() {
   isAuthorFieldOpen.value = !isAuthorFieldOpen.value
-  if(!isAuthorFieldOpen.value) selectedAuthors.value = 1
+  if(!isAuthorFieldOpen.value) selectedAuthors.value = 87
   else selectedAuthors.value = ""
 }
 

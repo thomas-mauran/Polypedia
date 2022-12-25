@@ -21,7 +21,7 @@ const url = computed(() => {
       <input type="text" placeholder="search a book" id="searchBar" v-model="text"/>
       <RouterLink :to="url" id="searchBtn"><img id="searchIcon" src="../assets/searchLogo.png" alt="loop icon for search button"></RouterLink>
     </div>
-    <RouterLink to="/myBooks" class="navItem">My books</RouterLink>
+    <RouterLink to="/likedBooks" class="navItem">Liked books</RouterLink>
     <RouterLink to="/upload" class="navItem">+ Upload a book</RouterLink>
     <RouterLink to="/account" class="navItem">My account</RouterLink>
   </nav>
