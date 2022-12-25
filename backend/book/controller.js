@@ -9,9 +9,9 @@ const pdf2pic = require("pdf2pic");
 const getBookById = async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    const { userToken } = req.body;
+    const token = req.headers["x-access-token"];
 
-    const decoded = jwt.verify(userToken, process.env.JWT_TOKEN_KEY);
+    const decoded = jwt.verify(token, process.env.JWT_TOKEN_KEY);
     const userId = decoded.userId;
 
     // We get the book infos
@@ -55,8 +55,9 @@ const getBookById = async (req, res) => {
 const getAllBooks = async (req, res) => {
   try {
     // Get the search term from the request body
-    const { bookTitle } = req.body;
-    console.log(bookTitle);
+    const bookTitle = req.headers["booktitle"];
+    console.log(req.headers)
+    console.log(bookTitle)
 
     // Query the database for books with titles that match the search term
     const result = await pool.query(queries.getAllBooks, [`${bookTitle}%`]);

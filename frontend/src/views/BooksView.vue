@@ -26,9 +26,11 @@ async function getBook(title) {
 
 
   axios
-    .post(urlBook, {"bookTitle" : title.toLowerCase()}, {
+    .get(urlBook,  {
       headers: {
         "x-access-token": `${localStorage.getItem("AUTH_TOKEN_KEY")}`,
+        "booktitle": `${title.toLowerCase()}`,
+
       },
     })
     .then(async (response) => {

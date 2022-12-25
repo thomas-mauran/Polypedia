@@ -9,9 +9,9 @@ const storage = multer.memoryStorage();
 
 const upload = multer({storage});
 
-router.post("/search", auth, controller.getAllBooks);
+router.get("/search", auth, controller.getAllBooks);
 // router.post("/id", auth, controller.getBooksByTagName)
-router.post("/:id", auth, controller.getBookById);
+router.get("/:id", auth, controller.getBookById);
 
 router.post(
   "/",

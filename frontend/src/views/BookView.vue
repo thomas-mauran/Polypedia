@@ -24,9 +24,8 @@ console.log(urlBook);
 
 async function fetchBook() {
   axios
-    .post(
+    .get(
       urlBook,
-      { userToken: token },
       {
         headers: {
           "x-access-token": `${localStorage.getItem("AUTH_TOKEN_KEY")}`,
