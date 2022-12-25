@@ -110,6 +110,8 @@ onMounted(() => {
         <h1>Informations</h1>
 
         <BurgerLabel isBig title="Title" :text="bookInfo.title" />
+        <BurgerLabel title="Title" :text="bookInfo.id" />
+
         <BurgerLabel isBig title="Author" :text="bookAuthors.fullname" />
         <BurgerLabel isBig title="Description" :text="bookInfo.description" />
         <BurgerLabel title="Number of pages" :text="bookInfo.number_of_pages" />
@@ -148,8 +150,13 @@ onMounted(() => {
 }
 
 .bm-menu {
+  box-shadow: inset 0 7px 9px -7px black;
+
   margin-top: 8vh;
+  margin-bottom: 2vh;
   background-color: #dbdcf6;
+  max-height: calc(105vh - 8rem);
+      overflow-y: auto;
 }
 
 .bm-cross {
