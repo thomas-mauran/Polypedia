@@ -103,7 +103,7 @@ ALTER TABLE "books_users" ADD CONSTRAINT "books_users_fk1" FOREIGN KEY ("user_id
 
 -- TRIGGERS
 
--- trigger to add a like to 
+-- trigger to add a like to the books counter when inserting on user_books
 
 
 CREATE OR REPLACE FUNCTION increment_likes_function()
@@ -116,13 +116,28 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-
-
-
 CREATE TRIGGER increment_likes
 AFTER INSERT ON books_users
 FOR EACH ROW
 EXECUTE PROCEDURE increment_likes_function();
+
+
+-- trigger to decrement likest on a books counter when inserting on user_books
+
+CREATE OR REPLACE FUNCTION decrement_likes_function()
+RETURNS TRIGGER AS $$
+BEGIN
+  UPDATE books
+  SET number_of_likes = number_of_likes - 1
+  WHERE id = OLD.book_id;
+  RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER decrement_likes
+AFTER DELETE ON books_users
+FOR EACH ROW
+EXECUTE PROCEDURE decrement_likes_function();
 
 -- Default User admin
 -- login : admin

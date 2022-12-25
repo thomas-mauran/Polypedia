@@ -9,6 +9,11 @@ const insertBook = "INSERT INTO books (title, description, number_of_pages, lang
 const insertTagJoin = "INSERT INTO books_tags (book_id, tag_id) VALUES($1, $2);"
 const insertAuthorJoin = "INSERT INTO books_authors (book_id, author_id) VALUES($1, $2);"
 
+
+const addLike = "INSERT INTO books_users (book_id, user_id) VALUES ($1, $2);"
+const removeLike = "DELETE FROM books_users WHERE book_id = $1 AND user_id = $2;"
+const isLiked = "SELECT * FROM books_users WHERE book_id = $1 AND user_id = $2; "
+
 module.exports = {
     getAllBooks,
     getBooksByTagName,
@@ -18,6 +23,9 @@ module.exports = {
     insertAuthorJoin,
     getBookById,
     getTagsByBookId,
-    getAuthorsByBookId
+    getAuthorsByBookId,
+    addLike,
+    removeLike,
+    isLiked
 
 }

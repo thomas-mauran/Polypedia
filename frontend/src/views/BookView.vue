@@ -14,6 +14,9 @@ const bookTags = ref([]);
 
 const pdfData = ref(null);
 
+const isLiked = ref(false);
+const token = localStorage.getItem("AUTH_TOKEN_KEY");
+
 // const numPages = ref(0);
 const urlBook = `${process.env.VUE_APP_API_URL}/book/${route.params.id}`;
 
@@ -21,15 +24,20 @@ console.log(urlBook);
 
 async function fetchBook() {
   axios
-    .get(urlBook, {
-      headers: {
-        "x-access-token": `${localStorage.getItem("AUTH_TOKEN_KEY")}`,
-      },
-    })
+    .post(
+      urlBook,
+      { userToken: token },
+      {
+        headers: {
+          "x-access-token": `${localStorage.getItem("AUTH_TOKEN_KEY")}`,
+        },
+      }
+    )
     .then(async (response) => {
       bookInfo.value = response.data;
       bookAuthors.value = response.data.authors[0];
       bookTags.value = response.data.tags;
+      isLiked.value = response.data.isLiked;
       let pdf = await response.data.pdfFile.data;
 
       const pdfBuffer = await new Uint8Array(pdf);
@@ -42,6 +50,55 @@ async function fetchBook() {
     });
 }
 
+function likeBook() {
+  isLiked.value = !isLiked.value;
+
+  // We like the book
+  if (isLiked.value) {
+    bookInfo.value.number_of_likes += 1;
+    const url = `${process.env.VUE_APP_API_URL}/book/like/${bookInfo.value.id}`;
+
+    axios
+      .post(
+        url,
+        { userToken: token },
+        {
+          headers: {
+            "x-access-token": `${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        console.log(response.status);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+  // We unlike the book
+  else {
+    bookInfo.value.number_of_likes -= 1;
+    const url = `${process.env.VUE_APP_API_URL}/book/unlike/${bookInfo.value.id}`;
+
+    axios
+      .post(
+        url,
+        { userToken: token },
+        {
+          headers: {
+            "x-access-token": `${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        console.log(response.status);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+}
+
 onMounted(() => {
   fetchBook();
 });
@@ -49,7 +106,7 @@ onMounted(() => {
 <template>
   <section id="container">
     <object :data="pdfData" type="application/pdf" class="pdfLoader"></object>
-    <Slide isOpen="true" left width="400">
+    <Slide noOverlay disableOutsideClick isOpen="true" left width="400">
       <div class="verticalDiv">
         <h1>Informations</h1>
 
@@ -60,13 +117,28 @@ onMounted(() => {
         <BurgerLabel title="Tags" isBig prettyLabel :list="bookTags" />
         <BurgerLabel title="Language" :text="bookInfo.language_name" />
         <BurgerLabel title="Likes" :text="bookInfo.number_of_likes" />
+        <button type="button" @click="likeBook" id="likeBtn">
+          <img v-if="isLiked" src="../assets/liked.png" alt="Heart logo meaning we liked the book" />
+          <img v-if="!isLiked" src="../assets/notLiked.png" alt="Heart logo meaning we liked the book" />
+        </button>
       </div>
     </Slide>
   </section>
 </template>
 
-<style >
+<style>
+#likeBtn {
+  width: fit-content;
+  align-self: center;
+  padding: 5px 10px;
+  border: none;
+  background-color: transparent;
+}
 
+#likeBtn img {
+  width: 40px;
+  cursor: pointer;
+}
 
 .bm-burger-button {
   top: 110px;
@@ -80,9 +152,7 @@ onMounted(() => {
   margin-top: 8vh;
   background-color: #dbdcf6;
 }
-.bm-overlay {
-  background: rgba(0, 0, 0, 0);
-}
+
 .bm-cross {
   background: black;
 }
@@ -108,6 +178,4 @@ onMounted(() => {
   width: 50%;
   height: 95%;
 }
-
-
 </style>

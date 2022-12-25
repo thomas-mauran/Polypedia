@@ -1,99 +1,109 @@
 const pool = require("../db");
 const queries = require("./queries");
-
+const jwt = require("jsonwebtoken");
 const authorQueries = require("../author/queries");
 const fs = require("fs");
 const pdf2pic = require("pdf2pic");
 
 // Get a book info using his id
-const getBookById = (req, res) => {
-  const id = parseInt(req.params.id);
-  // We get the book infos
-  pool.query(queries.getBookById, [id], async (error, results) => {
-    if (error) {
-      console.log(error);
-      return res.status(500).send({ error: error });
+const getBookById = async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const { userToken } = req.body;
+
+    const decoded = jwt.verify(userToken, process.env.JWT_TOKEN_KEY);
+    const userId = decoded.userId;
+
+    // We get the book infos
+    const result = await pool.query(queries.getBookById, [id]);
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: `no books with the id : ${id}` });
     }
-    if (results.rows.length === 0) res.status(404).json({ message: `no books with the id : ${id}` });
-    else {
-      const data = results.rows[0];
+    const data = result.rows[0];
 
-      // We get the list of tag associated
+    // We get the list of tag associated
+    const tagsResult = await pool.query(queries.getTagsByBookId, [id]);
+    data.tags = tagsResult.rows;
 
-      pool.query(queries.getTagsByBookId, [id], async (error, results) => {
-        if (error) {
-          console.log(error);
-          return res.status(500).send({ error: error });
-        } else {
-          data.tags = results.rows;
+    // We get the list of authors
+    const authorsResult = await pool.query(queries.getAuthorsByBookId, [id]);
+    data.authors = authorsResult.rows;
 
-          // We get the list of authors
-          pool.query(queries.getAuthorsByBookId, [id], async (error, results) => {
-            if (error) {
-              console.log(error);
-              return res.status(500).send({ error: error });
-            } else {
-              data.authors = results.rows;
+    // We check if the book is liked by the user
+    const isLikedResult = await pool.query(queries.isLiked, [id, userId]);
+    data.isLiked = isLikedResult.rows.length > 0 ? true : false
 
-              // We retrieve the book buffer
-              const pdfName = `${data.id}-${data.title}`.toLocaleLowerCase().split(" ").join("-");
-              const pdfPath = `/files/pdf/${pdfName}`;
-              fs.access(pdfPath, (err) => {
-                if (err) return res.status(500).send({ error: err });
+    // We retrieve the book buffer
+    const pdfName = `${data.id}-${data.title}`.toLowerCase().split(" ").join("-");
+    const pdfPath = `/files/pdf/${pdfName}`;
+    fs.access(pdfPath, (err) => {
+      if (err) return res.status(500).send({ error: err });
 
-                fs.readFile(pdfPath, (err, pdfFileData) => {
-                  if (err) return res.status(500).send({ error: err });
+      fs.readFile(pdfPath, (err, pdfFileData) => {
+        if (err) return res.status(500).send({ error: err });
 
-                  data.pdfFile = pdfFileData;
-                  res.status(200).json(data);
-                });
-              });
-            }
-          });
-        }
+        data.pdfFile = pdfFileData;
+        res.status(200).json(data);
       });
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({ error });
+  }
+};
+const getAllBooks = async (req, res) => {
+  try {
+    // Get the search term from the request body
+    const { bookTitle } = req.body;
+    console.log(bookTitle);
+
+    // Query the database for books with titles that match the search term
+    const result = await pool.query(queries.getAllBooks, [`${bookTitle}%`]);
+    if (result.rows.length < 1) {
+      // If no books were found return a 404 response
+      return res.status(404).send("No book with this title");
     }
-  });
+
+    // Iterate over the book every book to add the image to each
+    result.rows.forEach((element) => {
+      const imgUrl = `/files/img/${element.id}.1.jpeg`;
+      let imageBase64;
+      if (fs.existsSync(imgUrl)) {
+        // If the image file exists, read it from the file system
+        const imageFile = fs.readFileSync(imgUrl);
+        // Convert the image file to base64 encoding
+        imageBase64 = imageFile.toString("base64");
+        // Add the image data to the book data
+        element.image = imageBase64;
+      } else {
+        // If the image file does not exist, set the image field to an empty string
+        element.image = "";
+      }
+    });
+    // Return the book data from result.rows
+    res.status(200).send(result.rows);
+  } catch (error) {
+    console.log(error);
+    // If an error occurs, return a 500 response
+    return res.status(500).send({ error: error });
+  }
 };
 
-const getAllBooks = (req, res) => {
-  const { bookTitle } = req.body;
-  console.log(bookTitle);
-  pool.query(queries.getAllBooks, [`${bookTitle}%`], (error, results) => {
-    if (error) {
-      console.log(error);
-      return res.status(500).send({ error: error });
-    }
-    if (results.rows.length < 1) return res.status(404).send("No book with this title");
+const getBooksByTagName = async (req, res) => {
+  try {
+    // Get the tag name from the request body
+    let { tag } = req.body;
 
-    for (let i = 0; i < results.rows.length; i++) {
-      results.rows.forEach((element) => {
-        const imgUrl = `/files/img/${element.id}.1.jpeg`;
-        let imageBase64;
+    // Query the database for books with the specified tag
+    const result = await pool.query(queries.getBooksByTagName, [tag]);
 
-        if (fs.existsSync(imgUrl)) {
-          const imageFile = fs.readFileSync(imgUrl);
-          imageBase64 = imageFile.toString("base64");
-          element.image = imageBase64;
-        } else {
-          element.image = "";
-        }
-      });
-      if (i === results.rows.length - 1) res.status(200).send(results.rows);
-    }
-  });
-};
-
-const getBooksByTagName = (req, res) => {
-  let { tag } = req.body;
-  pool.query(queries.getBooksByTagName, [tag], (error, results) => {
-    if (error) {
-      console.log(error);
-      return res.status(500).send({ error: error });
-    }
-
-    res.status(200).json(results.rows);
-  });
+    // Return the book data in the response
+    res.status(200).json(result.rows);
+  } catch (error) {
+    console.log(error);
+    // If an error occurs, return a 500 response
+    return res.status(500).send({ error: error });
+  }
 };
 
 const uploadBook = async (req, res) => {
@@ -104,7 +114,7 @@ const uploadBook = async (req, res) => {
     let { title, language, description, pageNumber, file } = req.body;
     let tags = JSON.parse(req.body["tags"]);
     let authors = JSON.parse(req.body["authors"]);
-    console.log(authors)
+    console.log(authors);
 
     if (Number.isInteger(authors)) authors = [authors];
 
@@ -221,9 +231,54 @@ const createIfNotExists = async (attributeName, customQueries) => {
   }
 };
 
-module.exports = {
+const likeBook = async (req, res) => {
+  const bookId = req.params.id;
+  const { userToken } = req.body;
+
+  const decoded = jwt.verify(userToken, process.env.JWT_TOKEN_KEY);
+  const userId = decoded.userId;
+  try {
+    const result = await pool.query(queries.getBookById, [bookId]);
+
+    if (result.rows.length > 0) {
+      const addLikeResult = await pool.query(queries.addLike, [bookId, userId]);
+      if (addLikeResult) return res.status(200);
+      return res.status(500);
+    } else {
+      return res.status(404).send("Book Id not found");
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send("internal server error");
+  }
+};
+
+
+const unlikeBook = async (req, res) => {
+  const bookId = req.params.id;
+  const { userToken } = req.body;
+
+  const decoded = jwt.verify(userToken, process.env.JWT_TOKEN_KEY);
+  const userId = decoded.userId;
+  try {
+    const result = await pool.query(queries.getBookById, [bookId]);
+
+    if (result.rows.length > 0) {
+      const removeLikeResult = await pool.query(queries.removeLike, [bookId, userId]);
+      if (removeLikeResult) return res.status(200);
+      return res.status(500);
+    } else {
+      return res.status(404).send("Book Id not found");
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send("internal server error");
+  }
+};module.exports = {
   getAllBooks,
   getBooksByTagName,
   uploadBook,
   getBookById,
+  likeBook,
+  unlikeBook,
 };

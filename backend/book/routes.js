@@ -11,7 +11,7 @@ const upload = multer({storage});
 
 router.post("/search", auth, controller.getAllBooks);
 // router.post("/id", auth, controller.getBooksByTagName)
-router.get("/:id", auth, controller.getBookById);
+router.post("/:id", auth, controller.getBookById);
 
 router.post(
   "/",
@@ -20,5 +20,9 @@ router.post(
   validator.validateCreate,
   controller.uploadBook
 );
+
+router.post("/like/:id", auth, controller.likeBook);
+router.post("/unlike/:id", auth, controller.unlikeBook);
+
 
 module.exports = router;
