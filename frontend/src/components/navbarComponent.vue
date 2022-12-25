@@ -35,6 +35,8 @@ const url = computed(() => {
 }
 
 #searchBtn{
+  margin-top: auto;
+
   background-color: transparent;
   border: none;
 }
@@ -66,7 +68,6 @@ nav {
 nav input {
   margin: auto 05px auto 5vw;
   width: 25vw;
-  height: 20px;
   font-size: 1em;
   background-color: transparent;
   border: none;

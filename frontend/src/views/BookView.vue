@@ -110,7 +110,7 @@ onMounted(() => {
       <div class="verticalDiv">
         <h1>Informations</h1>
 
-        <BurgerLabel title="Title" :text="bookInfo.title" />
+        <BurgerLabel isBig title="Title" :text="bookInfo.title" />
         <BurgerLabel isBig title="Author" :text="bookAuthors.fullname" />
         <BurgerLabel isBig title="Description" :text="bookInfo.description" />
         <BurgerLabel title="Number of pages" :text="bookInfo.number_of_pages" />

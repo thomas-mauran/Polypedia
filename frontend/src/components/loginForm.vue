@@ -37,7 +37,7 @@ async function tryLogin() {
 
       <label for="password">Password</label>
       <input
-        type="text"
+      type="password"
         id="password"
         placeholder="veryStrongPassword"
         v-model="password"
