@@ -17,7 +17,7 @@ CREATE TABLE "books" (
 	"description" VARCHAR(500) NOT NULL,
 	"number_of_pages" integer NOT NULL,
 	"language_id" integer NOT NULL,
-	"downloads" integer NOT NULL,
+	"number_of_likes" integer NOT NULL,
 	CONSTRAINT "books_pk" PRIMARY KEY ("id")
 ) WITH (
   OIDS=FALSE
@@ -101,9 +101,28 @@ ALTER TABLE "books_users" ADD CONSTRAINT "books_users_fk1" FOREIGN KEY ("user_id
 
 
 
+-- TRIGGERS
+
+-- trigger to add a like to 
+
+
+CREATE OR REPLACE FUNCTION increment_likes_function()
+RETURNS TRIGGER AS $$
+BEGIN
+  UPDATE books
+  SET number_of_likes = number_of_likes + 1
+  WHERE id = NEW.book_id;
+  RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
 
 
 
+
+CREATE TRIGGER increment_likes
+AFTER INSERT ON books_users
+FOR EACH ROW
+EXECUTE PROCEDURE increment_likes_function();
 
 -- Default User admin
 -- login : admin

@@ -14,8 +14,7 @@ const getBookById = (req, res) => {
       console.log(error);
       return res.status(500).send({ error: error });
     }
-    if (results.rows.length === 0)
-      res.status(404).json({ message: `no books with the id : ${id}` });
+    if (results.rows.length === 0) res.status(404).json({ message: `no books with the id : ${id}` });
     else {
       const data = results.rows[0];
 
@@ -29,35 +28,28 @@ const getBookById = (req, res) => {
           data.tags = results.rows;
 
           // We get the list of authors
-          pool.query(
-            queries.getAuthorsByBookId,
-            [id],
-            async (error, results) => {
-              if (error) {
-                console.log(error);
-                return res.status(500).send({ error: error });
-              } else {
-                data.authors = results.rows;
+          pool.query(queries.getAuthorsByBookId, [id], async (error, results) => {
+            if (error) {
+              console.log(error);
+              return res.status(500).send({ error: error });
+            } else {
+              data.authors = results.rows;
 
-                // We retrieve the book buffer
-                const pdfName = `${data.id}-${data.title}`
-                  .toLocaleLowerCase()
-                  .split(" ")
-                  .join("-");
-                const pdfPath = `/files/pdf/${pdfName}`;
-                fs.access(pdfPath, (err) => {
+              // We retrieve the book buffer
+              const pdfName = `${data.id}-${data.title}`.toLocaleLowerCase().split(" ").join("-");
+              const pdfPath = `/files/pdf/${pdfName}`;
+              fs.access(pdfPath, (err) => {
+                if (err) return res.status(500).send({ error: err });
+
+                fs.readFile(pdfPath, (err, pdfFileData) => {
                   if (err) return res.status(500).send({ error: err });
 
-                  fs.readFile(pdfPath, (err, pdfFileData) => {
-                    if (err) return res.status(500).send({ error: err });
-
-                    data.pdfFile = pdfFileData;
-                    res.status(200).json(data);
-                  });
+                  data.pdfFile = pdfFileData;
+                  res.status(200).json(data);
                 });
-              }
+              });
             }
-          );
+          });
         }
       });
     }
@@ -65,14 +57,14 @@ const getBookById = (req, res) => {
 };
 
 const getAllBooks = (req, res) => {
-  const {bookTitle} = req.body
-  console.log(bookTitle)
-  pool.query(queries.getAllBooks, [`${bookTitle}%`],(error, results) => {
+  const { bookTitle } = req.body;
+  console.log(bookTitle);
+  pool.query(queries.getAllBooks, [`${bookTitle}%`], (error, results) => {
     if (error) {
       console.log(error);
       return res.status(500).send({ error: error });
     }
-    if(results.rows.length < 1) return res.status(404).send("No book with this title")
+    if (results.rows.length < 1) return res.status(404).send("No book with this title");
 
     for (let i = 0; i < results.rows.length; i++) {
       results.rows.forEach((element) => {
@@ -83,9 +75,8 @@ const getAllBooks = (req, res) => {
           const imageFile = fs.readFileSync(imgUrl);
           imageBase64 = imageFile.toString("base64");
           element.image = imageBase64;
-        }
-        else{
-          element.image = ""
+        } else {
+          element.image = "";
         }
       });
       if (i === results.rows.length - 1) res.status(200).send(results.rows);
@@ -106,112 +97,84 @@ const getBooksByTagName = (req, res) => {
 };
 
 const uploadBook = async (req, res) => {
-  console.log({ passed: req.file.mimetype });
   if (req.file === "badFile") {
-    console.log("bagzgdiqh dqs ");
     return res.status(415).send({ error: "File must be a pdf" });
   }
   try {
     let { title, language, description, pageNumber, file } = req.body;
     let tags = JSON.parse(req.body["tags"]);
     let authors = JSON.parse(req.body["authors"]);
+    console.log(authors)
 
     if (Number.isInteger(authors)) authors = [authors];
 
     // We try to insert the book
-    pool.query(
-      queries.insertBook,
-      [title, description, pageNumber, language],
-      (error, results) => {
-        if (error) {
-          console.log(error);
-          return res.status(500).send({ error: error });
-        } else {
-          // We retrieve the new book inserted
-          pool.query(
-            queries.getNewlyCreatedBook,
-            [title, description, pageNumber, language],
-            async (error, results) => {
-              if (error || results.rows.length === 0) {
+    pool.query(queries.insertBook, [title, description, pageNumber, language], (error, results) => {
+      if (error) {
+        console.log(error);
+        return res.status(500).send({ error: error });
+      } else {
+        // We retrieve the new book inserted
+        pool.query(queries.getNewlyCreatedBook, [title, description, pageNumber, language], async (error, results) => {
+          if (error || results.rows.length === 0) {
+            console.log(error);
+            return res.status(500).send({ error: error });
+          } else {
+            const bookId = results.rows[0].id;
+            const bookTitle = results.rows[0].title;
+
+            // We loop on each authors bookId and add them to the intertable
+            authors.forEach(async (element) => {
+              let author_id = element;
+              // if it's a string it means we need create it in the author db
+              if (typeof element === "string") {
+                author_id = await createIfNotExists(element, authorQueries);
+              }
+              // we did not catch an error by returning false so we can insert in middle table
+              if (author_id) updateJoinTable(bookId, author_id, "Author", authorQueries);
+            });
+
+            // We loop on each tags bookId and add them to the intertable
+            tags.forEach((element) => {
+              if (updateJoinTable(bookId, element, "Tag", authorQueries) === false) {
                 console.log(error);
-                return res.status(500).send({ error: error });
-              } else {
-                const bookId = results.rows[0].id;
-                const bookTitle = results.rows[0].title;
-
-                // We loop on each authors bookId and add them to the intertable
-                authors.forEach((element) => {
-                  if (
-                    updateJoinTable(
-                      bookId,
-                      element,
-                      "Author",
-                      authorQueries
-                    ) === false
-                  ) {
-                    console.log(error);
-                    return res.status(404).send({
-                      error: `author id : ${element}, not found in the database`,
-                    });
-                  }
+                return res.status(404).send({
+                  error: `tag id : ${element}, not found in the database`,
                 });
+              }
+            });
 
-                // We loop on each tags bookId and add them to the intertable
-                tags.forEach((element) => {
-                  if (
-                    updateJoinTable(bookId, element, "Tag", authorQueries) ===
-                    false
-                  ) {
-                    console.log(error);
-                    return res.status(404).send({
-                      error: `tag id : ${element}, not found in the database`,
-                    });
-                  }
-                });
-
-                if (req.file) {
-                  const fileName = `${bookId}-${bookTitle}`
-                    .toLocaleLowerCase()
-                    .split(" ")
-                    .join("-");
-                  fs.writeFile(
-                    `/files/pdf/${fileName}`,
-                    req.file.buffer,
-                    (err) => {
-                      if (err) {
-                        return res.status(500).send(err);
-                      }
-                    }
-                  );
-
-                  const options = {
-                    density: 500, // output pixels per inch
-                    saveFilename: `${bookId}`, // output file name
-                    savePath: "/files/img", // output directory
-                    format: "jpeg", // output file format
-                    width: 1080,
-                    height: 1600,
-                  };
-
-                  const storeAsImage = pdf2pic.fromPath(
-                    `/files/pdf/${fileName}`,
-                    options
-                  );
-                  const pageToConvertAsImage = 1;
-
-                  try {
-                    await storeAsImage(pageToConvertAsImage);
-                  } catch (error) {
-                    return res.status(500).send(error);
-                  }
+            if (req.file) {
+              const fileName = `${bookId}-${bookTitle}`.toLocaleLowerCase().split(" ").join("-");
+              fs.writeFile(`/files/pdf/${fileName}`, req.file.buffer, (err) => {
+                if (err) {
+                  return res.status(500).send(err);
                 }
-                return res.status(201).send("book uploaded");
+              });
+
+              const options = {
+                density: 500, // output pixels per inch
+                saveFilename: `${bookId}`, // output file name
+                savePath: "/files/img", // output directory
+                format: "jpeg", // output file format
+                width: 1080,
+                height: 1600,
+              };
+
+              const storeAsImage = pdf2pic.fromPath(`/files/pdf/${fileName}`, options);
+              const pageToConvertAsImage = 1;
+
+              try {
+                await storeAsImage(pageToConvertAsImage);
+              } catch (error) {
+                return res.status(500).send(error);
               }
             }
-          );
-        }
+            return res.status(201).send("book uploaded");
+          }
+        });
       }
-    );
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).send({ error: error });
@@ -220,6 +183,7 @@ const uploadBook = async (req, res) => {
 
 const updateJoinTable = (bookId, attributeId, secondTable, customQueries) => {
   let queryName = `insert${secondTable}Join`;
+
   // We check if the attributeId exists in his table
   pool.query(customQueries.getById, [attributeId], (error) => {
     if (error) {
@@ -229,12 +193,32 @@ const updateJoinTable = (bookId, attributeId, secondTable, customQueries) => {
       // If it exists we make the link between the book and the attribute Id
       pool.query(queries[queryName], [bookId, attributeId], (error) => {
         if (error) return false;
-        else {
-          return true;
-        }
+        return true;
       });
     }
   });
+};
+
+const createIfNotExists = async (attributeName, customQueries) => {
+  try {
+    // We check if the attributeId exists in his table
+    const results = await pool.query(customQueries.getByName, [attributeName]);
+    if (results.rows.length === 0) {
+      // it does not exists so we insert the attribute
+      await pool.query(customQueries.insertAuthor, [attributeName]);
+
+      // We then retrieve the id
+      const results = await pool.query(customQueries.getByName, [attributeName]);
+
+      return results.rows[0].id;
+    }
+    // Else the results.rows is not empty meaning it exists with this fullname so we return it's id
+    else {
+      return results.rows[0].id;
+    }
+  } catch (error) {
+    return false;
+  }
 };
 
 module.exports = {

@@ -15,7 +15,10 @@ const pageNumber = ref(10);
 const description = ref("");
 const selectedLanguage = ref(15);
 const selectedTags = ref([]);
+
 const selectedAuthors = ref(1);
+const isAuthorFieldOpen = ref(false)
+
 const file = ref(null);
 
 const authors = ref([]);
@@ -51,7 +54,7 @@ async function uploadBook() {
     formData.append("title", title.value);
     formData.append("description", description.value);
     formData.append("pageNumber", pageNumber.value);
-    formData.append("authors", JSON.stringify(selectedAuthors.value));
+    formData.append("authors", JSON.stringify([selectedAuthors.value]));
     formData.append("tags", JSON.stringify(selectedTags.value));
     formData.append("language", JSON.stringify(selectedLanguage.value));
     axios
@@ -82,6 +85,12 @@ async function uploadBook() {
   }
 }
 
+function createAuthorBtnClicked() {
+  isAuthorFieldOpen.value = !isAuthorFieldOpen.value
+  if(!isAuthorFieldOpen.value) selectedAuthors.value = 1
+  else selectedAuthors.value = ""
+}
+
 onMounted(() => {
   fetchAllValue();
 });
@@ -110,11 +119,17 @@ onMounted(() => {
       <input type="number" v-model="pageNumber" min="0" />
 
       <h3>Authors</h3>
-      <select name="authors" id="authors" v-model="selectedAuthors">
+      <select v-if="!isAuthorFieldOpen" name="authors" id="authors" v-model="selectedAuthors">
         <option v-for="author in authors" :key="author.id" :value="author.id">
           {{ author.fullname }}
         </option>
       </select>
+      <input v-if="isAuthorFieldOpen"
+        type="text"
+        placeholder="Author fullname"
+        v-model="selectedAuthors"
+      />
+      <button id="createAuthorBtn" @click="createAuthorBtnClicked" type="button"> Create an author </button>
 
       <h3>Tags</h3>
       <section id="tagSection">
@@ -141,7 +156,7 @@ onMounted(() => {
       </select>
 
       <h3>Import pdf</h3>
-      <input type="file" name="file" id="pdfFile" @change="onChangeFile" />
+      <input accept="application/pdf" type="file" name="file" id="pdfFile" @change="onChangeFile" />
 
       <button class="purpleBackground btn" type="button" @click="uploadBook">
         Upload
@@ -150,6 +165,17 @@ onMounted(() => {
   </article>
 </template>
 <style scoped>
+
+#createAuthorBtn{
+  background-color: #8185e4;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 0px;
+  margin: 10px 0px;
+  margin-right: auto;
+}
+
 article {
   width: 40vw;
 }

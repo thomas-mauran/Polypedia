@@ -59,7 +59,7 @@ onMounted(() => {
         <BurgerLabel title="Number of pages" :text="bookInfo.number_of_pages" />
         <BurgerLabel title="Tags" isBig prettyLabel :list="bookTags" />
         <BurgerLabel title="Language" :text="bookInfo.language_name" />
-        <BurgerLabel title="Downloads" :text="bookInfo.downloads" />
+        <BurgerLabel title="Likes" :text="bookInfo.number_of_likes" />
       </div>
     </Slide>
   </section>

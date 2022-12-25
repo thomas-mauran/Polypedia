@@ -30,7 +30,7 @@ a{
     cursor: pointer;
     text-decoration: none;
     max-width: 200px;
-    margin: 0px 5vw;
+    margin: 25px 5vw;
 }
 
 img{
