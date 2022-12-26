@@ -35,11 +35,11 @@ app.use(
 //app.use("/api/auth", userRoutes);
 // app.use("/api/question", questionRoutes)
 
-app.use("/user/", userRoutes)
-app.use("/book/", bookRoutes)
-app.use("/author/", authorRoutes)
-app.use("/tag/", tagRoutes)
-app.use("/language/", languageRoutes)
+app.use("/users/", userRoutes)
+app.use("/books/", bookRoutes)
+app.use("/authors/", authorRoutes)
+app.use("/tags/", tagRoutes)
+app.use("/languages/", languageRoutes)
 
 app.get("/", (req, res) => {
     res.send("Server is up")

@@ -4,17 +4,32 @@ const jwt = require("jsonwebtoken");
 const pool = require("../db");
 const queries = require("./queries");
 
-// Get a user info using his id
-const getUserById = (req, res) => {
-  const id = parseInt(req.params.id);
-  pool.query(queries.getUserById, [id], (error, results) => {
-    if (error) {
-      console.log(error);
-      return res.status(500).send({ error: error });
+
+
+const getAll = async (req, res) => {
+  try {
+    const results = await pool.query(queries.getAll);
+    res.status(200).json(results.rows);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({ error: error });
+  }
+};
+
+
+// To get a user using it's id 
+const getUserById = async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const results = await pool.query(queries.getUserById, [id]);
+    if (results.rows.length === 0) {
+      return res.status(404).json({ message: `no users with the id : ${id}` });
     }
-    if (results.rows.length === 0) res.status(404).json({ message: `no users with the id : ${id}` });
-    else res.status(200).json(results.rows);
-  });
+    res.status(200).json(results.rows);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({ error: error });
+  }
 };
 
 // Create a new user
@@ -91,4 +106,5 @@ module.exports = {
   signup,
   loginUser,
   isUserAdmin,
+  getAll
 };

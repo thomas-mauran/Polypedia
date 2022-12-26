@@ -1,8 +1,8 @@
 const pool = require("../db");
 const queries = require("./queries");
 
-const getAllTags = (req, res) => {
-  pool.query(queries.getAllTags, (error, results) => {
+const getAll = (req, res) => {
+  pool.query(queries.getAll, (error, results) => {
     if (error) {
       console.log(error);
       return res.status(500).send({ error: error });
@@ -13,36 +13,25 @@ const getAllTags = (req, res) => {
   });
 };
 
-const insertTag = (req, res) => {
-  let { name, description } = req.body
-  // Check if name of the tag is already used
-  pool.query(queries.getByName, [name], (error, results) => {
-    if (error) {
+
+  const insert = async (req, res) => {
+    try {
+      let { name, description } = req.body
+      const results = await pool.query(queries.getByName, [name]);
+      if (results.rows.length > 0) {
+        return res.status(403).json({ error: "Tag already exists" });
+      }
+      await pool.query(queries.insert, [name, description]);
+      res.status(201).send({ message: "Tag created" });
+    } catch (error) {
       console.log(error);
       return res.status(500).send({ error: error });
     }
+  };
 
-    if (results.rows.length > 0) {
-      res.status(403).json({ error: "Tag already exists" });
-    }else{
-      pool.query(queries.insertTag, [name, description], (error, results) => {
-        if (error) {
-          console.log(error);
-          return res.status(500).send({ error: error });
-        }
-  
-        res.status(201).send({ message: "Tag created" });
-    
-      });
-    }
-  });
-
-  // Not exists so insert
-  
-};
 
 
 module.exports = {
-    getAllTags,
-    insertTag
+  getAll,
+    insert
 }

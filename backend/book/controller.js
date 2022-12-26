@@ -52,13 +52,25 @@ const getBookById = async (req, res) => {
   }
 };
 
-const getAllBooks = async (req, res) => {
+
+const getAll = async (req, res) => {
+  try {
+    const results = await pool.query(queries.getAll);
+    res.status(200).json(results.rows);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({ error: error });
+  }
+};
+
+
+const search = async (req, res) => {
   try {
     // Get the search term from the request body
     const bookTitle = req.headers["booktitle"];
 
     // Query the database for books with titles that match the search term
-    const result = await pool.query(queries.getAllBooks, [`${bookTitle}%`]);
+    const result = await pool.query(queries.searchBook, [`${bookTitle}%`]);
     if (result.rows.length < 1) {
       // If no books were found return a 404 response
       return res.status(404).send("No book with this title");
@@ -130,32 +142,15 @@ const getLikedBooks = async (req, res) => {
   }
 };
 
-const getBooksByTagName = async (req, res) => {
-  try {
-    // Get the tag name from the request body
-    let { tag } = req.body;
-
-    // Query the database for books with the specified tag
-    const result = await pool.query(queries.getBooksByTagName, [tag]);
-
-    // Return the book data in the response
-    res.status(200).json(result.rows);
-  } catch (error) {
-    console.log(error);
-    // If an error occurs, return a 500 response
-    return res.status(500).send({ error: error });
-  }
-};
-
+// Too scared to refactor 
 const uploadBook = async (req, res) => {
-  if (req.file === "badFile") {
+  if (!req.file) {
     return res.status(415).send({ error: "File must be a pdf" });
   }
   try {
     let { title, language, description, pageNumber, file } = req.body;
     let tags = JSON.parse(req.body["tags"]);
     let authors = JSON.parse(req.body["authors"]);
-    console.log(authors);
 
     if (Number.isInteger(authors)) authors = [authors];
 
@@ -232,31 +227,29 @@ const uploadBook = async (req, res) => {
   }
 };
 
-const updateJoinTable = (bookId, attributeId, secondTable, customQueries) => {
+const updateJoinTable = async (bookId, attributeId, secondTable, customQueries) => {
+  // We build the query name 
   let queryName = `insert${secondTable}Join`;
-
-  // We check if the attributeId exists in his table
-  pool.query(customQueries.getById, [attributeId], (error) => {
-    if (error) {
-      console.log({ error: error });
-      return false;
-    } else {
-      // If it exists we make the link between the book and the attribute Id
-      pool.query(queries[queryName], [bookId, attributeId], (error) => {
-        if (error) return false;
-        return true;
-      });
-    }
-  });
+  try {
+    const results = await pool.query(customQueries.getById, [attributeId]);
+    await pool.query(queries[queryName], [bookId, attributeId]);
+    return true;
+  } catch (error) {
+    console.log({ error: error });
+    return false;
+  }
 };
 
+
+
+// !!! caution for the moment we can only insert 1 attribute need to be refactored 
 const createIfNotExists = async (attributeName, customQueries) => {
   try {
     // We check if the attributeId exists in his table
     const results = await pool.query(customQueries.getByName, [attributeName]);
     if (results.rows.length === 0) {
       // it does not exists so we insert the attribute
-      await pool.query(customQueries.insertAuthor, [attributeName]);
+      await pool.query(customQueries.insert, [attributeName]);
 
       // We then retrieve the id
       const results = await pool.query(customQueries.getByName, [attributeName]);
@@ -316,11 +309,12 @@ const unlikeBook = async (req, res) => {
     return res.status(500).send("internal server error");
   }
 };module.exports = {
-  getAllBooks,
-  getBooksByTagName,
+  getAll,
   uploadBook,
   getBookById,
   likeBook,
   unlikeBook,
-  getLikedBooks
+  getLikedBooks,
+  search
+
 };

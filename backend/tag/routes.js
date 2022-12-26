@@ -6,8 +6,8 @@ const validation = require('./validator')
 const auth = require("../middleware/auth")
 const adminCheck = require("../middleware/adminCheck")
 
-router.get("/", auth, controller.getAllTags)
-router.post("/", adminCheck, validation.validateCreate, controller.insertTag)
+router.get("/", auth, controller.getAll)
+router.post("/", adminCheck, validation.validateCreate, controller.insert)
 
 
 
