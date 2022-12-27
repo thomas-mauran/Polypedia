@@ -10,7 +10,7 @@ import {useRoute } from "vue-router"
 const route = useRoute()
 
 const bookList = ref([]);
-const urlBook = `${process.env.VUE_APP_API_URL}/book/search`;
+const urlBook = `${process.env.VUE_APP_API_URL}/books/search`;
 
 const bookTitle = ref("")
 

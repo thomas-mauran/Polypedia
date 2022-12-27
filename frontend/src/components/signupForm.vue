@@ -23,7 +23,7 @@ async function createAccount(){
         console.log("emit")
     }
     else{
-      const url = `${process.env.VUE_APP_API_URL}/user`;
+      const url = `${process.env.VUE_APP_API_URL}/users`;
 
       try{
 

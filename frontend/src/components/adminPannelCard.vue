@@ -3,7 +3,7 @@
 
 import { RouterLink } from "vue-router";
 
-import { ref, onMounted } from "vue";
+import { ref, onMounted, defineProps} from "vue";
 
 // const imagePath = ref("")
 const imageAlt = ref("");

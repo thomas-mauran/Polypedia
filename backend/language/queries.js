@@ -1,4 +1,4 @@
-const getAll = "SELECT * FROM languages";
+const getAll = "SELECT * FROM languages;";
 module.exports = {
     getAll,
 }

@@ -14,7 +14,7 @@ const router = useRouter();
 async function fetchUserInfos() {
     if(!userId) router.push('login')
 
-  const url = `${process.env.VUE_APP_API_URL}/user/${userId}`;
+  const url = `${process.env.VUE_APP_API_URL}/users/${userId}`;
   try {
     let res = await axios({
       url: url,

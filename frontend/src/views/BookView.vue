@@ -18,7 +18,7 @@ const isLiked = ref(false);
 const token = localStorage.getItem("AUTH_TOKEN_KEY");
 
 // const numPages = ref(0);
-const urlBook = `${process.env.VUE_APP_API_URL}/book/${route.params.id}`;
+const urlBook = `${process.env.VUE_APP_API_URL}/books/${route.params.id}`;
 
 console.log(urlBook);
 
@@ -55,7 +55,7 @@ function likeBook() {
   // We like the book
   if (isLiked.value) {
     bookInfo.value.number_of_likes += 1;
-    const url = `${process.env.VUE_APP_API_URL}/book/like/${bookInfo.value.id}`;
+    const url = `${process.env.VUE_APP_API_URL}/books/like/${bookInfo.value.id}`;
 
     axios
       .post(
@@ -77,7 +77,7 @@ function likeBook() {
   // We unlike the book
   else {
     bookInfo.value.number_of_likes -= 1;
-    const url = `${process.env.VUE_APP_API_URL}/book/unlike/${bookInfo.value.id}`;
+    const url = `${process.env.VUE_APP_API_URL}/books/unlike/${bookInfo.value.id}`;
 
     axios
       .post(

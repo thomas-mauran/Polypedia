@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 
 const pool = require("../db");
 const queries = require("./queries");
-
+const bookQueries = require("../book/queries")
 
 
 const getAll = async (req, res) => {
@@ -21,7 +21,7 @@ const getAll = async (req, res) => {
 const getUserById = async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    const results = await pool.query(queries.getUserById, [id]);
+    const results = await pool.query(queries.getById, [id]);
     if (results.rows.length === 0) {
       return res.status(404).json({ message: `no users with the id : ${id}` });
     }
@@ -68,8 +68,6 @@ const loginUser = async (req, res) => {
     const userId = user.rows[0].id;
     const is_admin = user.rows[0].is_admin;
 
-    console.log(user);
-    console.log(password);
     // we compare argument password to db crypted password
 
     const validPassword = await bcrypt.compare(password, dbPassword);
@@ -101,10 +99,37 @@ const isUserAdmin = async (req, res) => {
   }
 };
 
+const deleteFromDb = async (req, res) => {
+  try{
+    const id = req.params.id
+
+    const idExist = await pool.query(queries.getById, [id]);
+
+    if(idExist.rows.length < 1) return res.status(404).send("id not found")
+    
+    const getAllLikedBooks = await pool.query(bookQueries.getLikedBooks, [id])
+
+    getAllLikedBooks.rows.forEach(async (bookId) => {
+      await pool.query(bookQueries.removeLike, [bookId])
+    })
+
+    await pool.query(queries.deleteInter, [id])
+    await pool.query(queries.deleteFromDb, [id])
+
+    return res.status(200).send()
+
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({ error: error });
+  }
+
+}
+
 module.exports = {
   getUserById,
   signup,
   loginUser,
   isUserAdmin,
-  getAll
+  getAll,
+  deleteFromDb
 };

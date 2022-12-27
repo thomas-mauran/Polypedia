@@ -8,6 +8,7 @@ const adminCheck = require("../middleware/adminCheck")
 
 router.get("/", auth, controller.getAll)
 router.post("/", adminCheck, validation.validateCreate, controller.insert)
+router.delete("/:id", adminCheck, controller.deleteFromDb)
 
 
 

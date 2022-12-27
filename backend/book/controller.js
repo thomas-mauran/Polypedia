@@ -15,7 +15,7 @@ const getBookById = async (req, res) => {
     const userId = decoded.userId;
 
     // We get the book infos
-    const result = await pool.query(queries.getBookById, [id]);
+    const result = await pool.query(queries.getById, [id]);
     if (result.rows.length === 0) {
       return res.status(404).json({ message: `no books with the id : ${id}` });
     }
@@ -31,7 +31,7 @@ const getBookById = async (req, res) => {
 
     // We check if the book is liked by the user
     const isLikedResult = await pool.query(queries.isLiked, [id, userId]);
-    data.isLiked = isLikedResult.rows.length > 0 ? true : false
+    data.isLiked = isLikedResult.rows.length > 0 ? true : false;
 
     // We retrieve the book buffer
     const pdfName = `${data.id}-${data.title}`.toLowerCase().split(" ").join("-");
@@ -52,7 +52,6 @@ const getBookById = async (req, res) => {
   }
 };
 
-
 const getAll = async (req, res) => {
   try {
     const results = await pool.query(queries.getAll);
@@ -62,7 +61,6 @@ const getAll = async (req, res) => {
     return res.status(500).send({ error: error });
   }
 };
-
 
 const search = async (req, res) => {
   try {
@@ -101,10 +99,8 @@ const search = async (req, res) => {
   }
 };
 
-
 const getLikedBooks = async (req, res) => {
   try {
-
     const userToken = req.params.userToken;
 
     const decoded = jwt.verify(userToken, process.env.JWT_TOKEN_KEY);
@@ -142,7 +138,7 @@ const getLikedBooks = async (req, res) => {
   }
 };
 
-// Too scared to refactor 
+// Too scared to refactor
 const uploadBook = async (req, res) => {
   if (!req.file) {
     return res.status(415).send({ error: "File must be a pdf" });
@@ -228,7 +224,7 @@ const uploadBook = async (req, res) => {
 };
 
 const updateJoinTable = async (bookId, attributeId, secondTable, customQueries) => {
-  // We build the query name 
+  // We build the query name
   let queryName = `insert${secondTable}Join`;
   try {
     const results = await pool.query(customQueries.getById, [attributeId]);
@@ -240,9 +236,7 @@ const updateJoinTable = async (bookId, attributeId, secondTable, customQueries) 
   }
 };
 
-
-
-// !!! caution for the moment we can only insert 1 attribute need to be refactored 
+// !!! caution for the moment we can only insert 1 attribute need to be refactored
 const createIfNotExists = async (attributeName, customQueries) => {
   try {
     // We check if the attributeId exists in his table
@@ -272,7 +266,7 @@ const likeBook = async (req, res) => {
   const decoded = jwt.verify(userToken, process.env.JWT_TOKEN_KEY);
   const userId = decoded.userId;
   try {
-    const result = await pool.query(queries.getBookById, [bookId]);
+    const result = await pool.query(queries.getById, [bookId]);
 
     if (result.rows.length > 0) {
       const addLikeResult = await pool.query(queries.addLike, [bookId, userId]);
@@ -287,7 +281,6 @@ const likeBook = async (req, res) => {
   }
 };
 
-
 const unlikeBook = async (req, res) => {
   const bookId = req.params.id;
   const { userToken } = req.body;
@@ -295,7 +288,7 @@ const unlikeBook = async (req, res) => {
   const decoded = jwt.verify(userToken, process.env.JWT_TOKEN_KEY);
   const userId = decoded.userId;
   try {
-    const result = await pool.query(queries.getBookById, [bookId]);
+    const result = await pool.query(queries.getById, [bookId]);
 
     if (result.rows.length > 0) {
       const removeLikeResult = await pool.query(queries.removeLike, [bookId, userId]);
@@ -308,13 +301,46 @@ const unlikeBook = async (req, res) => {
     console.log(error);
     return res.status(500).send("internal server error");
   }
-};module.exports = {
+};
+
+const deleteFromDb = async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    const idExist = await pool.query(queries.getById, [id]);
+    const title = idExist.rows[0].title;
+
+    if (idExist.rows.length < 1) return res.status(404).send("id not found");
+
+    await pool.query(queries.deleteInterAuthor, [id]);
+    await pool.query(queries.deleteInterTag, [id]);
+    await pool.query(queries.deleteInterUsers, [id]);
+
+    await pool.query(queries.deleteFromDb, [id]);
+
+    const imgPath = `/files/img/${id}.1.jpeg`;
+    const imageExist = await fs.promises.access(imgPath);
+    if (imageExist) await fs.promises.unlink(imgPath);
+
+    const pdfName = `${id}-${title}`.toLowerCase().split(" ").join("-");
+    const pdfPath = `/files/pdf/${pdfName}`;
+
+    const pdfExists = await fs.promises.access(pdfPath);
+    if (pdfExists) await fs.promises.unlink(pdfPath);
+
+    return res.status(200).send();
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({ error: error });
+  }
+};
+module.exports = {
   getAll,
   uploadBook,
   getBookById,
   likeBook,
   unlikeBook,
   getLikedBooks,
-  search
-
+  search,
+  deleteFromDb,
 };

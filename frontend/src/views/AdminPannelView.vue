@@ -5,10 +5,10 @@ import adminPannelCard from "../components/adminPannelCard.vue";
   <section>
     <h2>Admin pannel</h2>
     <div class="adminWrapper">
-      <adminPannelCard title="Tags" imagePath="adminLogos/tags.png" imgAlt="Tag icon" categorie="tag" />
-      <adminPannelCard title="Users" imagePath="adminLogos/users.png" imgAlt="Tag icon" categorie="tag" />
-      <adminPannelCard title="Authors" imagePath="adminLogos/authors.png" imgAlt="Tag icon" categorie="tag" />
-      <adminPannelCard title="Books" imagePath="adminLogos/books.png" imgAlt="Tag icon" categorie="tag" />
+      <adminPannelCard title="Tags" imagePath="adminLogos/tags.png" imgAlt="Tag icon" categorie="tags" />
+      <adminPannelCard title="Users" imagePath="adminLogos/users.png" imgAlt="Tag icon" categorie="users" />
+      <adminPannelCard title="Authors" imagePath="adminLogos/authors.png" imgAlt="Tag icon" categorie="authors" />
+      <adminPannelCard title="Books" imagePath="adminLogos/books.png" imgAlt="Tag icon" categorie="books" />
     </div>
   </section>
 </template>

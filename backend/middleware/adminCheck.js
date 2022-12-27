@@ -11,17 +11,18 @@ module.exports = async (req, res, next) => {
     const decoded = jwt.verify(token, process.env.JWT_TOKEN_KEY);
 
 
-    const user = await pool.query(queries.getUserById, [decoded.userId]);
+    const user = await pool.query(queries.getById, [decoded.userId]);
     if (!user) {
       return res.status(401).send('Unauthorized');
     }
-    if(!user.is_admin){
+    if(!user.rows[0].is_admin){
       return res.status(401).send('Unauthorized');
     }
     
     next();
 
   } catch (error) {
+    console.log(error)
     return res.status(401).send('Unauthorized');
   }
 };

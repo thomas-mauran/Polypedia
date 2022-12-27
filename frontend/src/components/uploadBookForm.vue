@@ -32,9 +32,9 @@ function onChangeFile(event) {
 }
 
 async function fetchAllValue() {
-  tags.value = await fetchAll("tag");
-  authors.value = await fetchAll("author");
-  languages.value = await fetchAll("language");
+  tags.value = await fetchAll("tags");
+  authors.value = await fetchAll("authors");
+  languages.value = await fetchAll("languages");
 }
 
 async function uploadBook() {
@@ -48,7 +48,7 @@ async function uploadBook() {
   ) {
     emit("showMessageEvent", "You need to fill in all the gaps");
   } else {
-    const url = `${process.env.VUE_APP_API_URL}/book`;
+    const url = `${process.env.VUE_APP_API_URL}/books`;
 
     formData.append("file", file.value);
     formData.append("title", title.value);

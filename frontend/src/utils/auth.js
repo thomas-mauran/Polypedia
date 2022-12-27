@@ -6,7 +6,7 @@ import axios from "axios";
 const baseUrl = process.env.VUE_APP_API_URL;
 
 export async function login(email, password) {
-  const url = `${baseUrl}/user/login`;
+  const url = `${baseUrl}/users/login`;
 
   if (email === "" || password === "") {
     return [false, "You need to fill in all the gaps"];

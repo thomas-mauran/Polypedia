@@ -3,7 +3,7 @@
 import { RouterLink } from 'vue-router';
 
 const props = defineProps({
-    bookId: Int16Array,
+    bookId: Number,
     imgPath: String,
     imgAlt: String,
     bookTitle: String

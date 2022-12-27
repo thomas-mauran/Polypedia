@@ -8,6 +8,7 @@ import UploadView from "../views/UploadBook";
 import BookView from "../views/BookView";
 import LikedBooksView from "../views/LikedBooksView";
 import AdminPannelView from "../views/AdminPannelView";
+import AdminCategory from "../views/AdminCategory";
 
 import { isLoggedIn } from "../utils/auth";
 
@@ -73,29 +74,38 @@ const router = createRouter({
     {
       path: "/admin",
       name: "Admin Pannel",
-      beforeEnter(to, from, next) {
-
-        const url = `${process.env.VUE_APP_API_URL}/user/isAdmin/${localStorage.getItem("USER_ID")}`;
-        axios
-          .get(url, {
-            headers: {
-              "x-access-token": `${localStorage.getItem("AUTH_TOKEN_KEY")}`,
-            },
-          })
-          .then(async (response) => {
-            
-            if(response.status !== 200) next({name: "/books"})
-            next()
-          })
-          .catch((error) => {
-            next({name: "/books"})
-          });
-      },
+      beforeEnter(to, from, next) {beforeEnterAdmin(to, from, next)},
       component: AdminPannelView,
+      meta: { navbar: true },
+    },
+    {
+      path: "/admin/:category",
+      name: "Admin Tag Control",
+      beforeEnter(to, from, next) {beforeEnterAdmin(to, from, next)},
+      component: AdminCategory,
       meta: { navbar: true },
     },
   ],
 });
+
+function beforeEnterAdmin(to, from, next) {
+
+  const url = `${process.env.VUE_APP_API_URL}/users/isAdmin/${localStorage.getItem("USER_ID")}`;
+  axios
+    .get(url, {
+      headers: {
+        "x-access-token": `${localStorage.getItem("AUTH_TOKEN_KEY")}`,
+      },
+    })
+    .then(async (response) => {
+      
+      if(response.status !== 200) next({name: "/books"})
+      next()
+    })
+    .catch((error) => {
+      next({name: "/books"})
+    });
+}
 
 router.beforeEach(async (to, from, next) => {
   if (!to.meta.allowAnonymous && !isLoggedIn()) {

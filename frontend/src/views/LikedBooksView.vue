@@ -6,7 +6,7 @@ import axios from "axios";
 import { onMounted, ref } from "vue";
 
 const bookList = ref([]);
-const urlBook = `${process.env.VUE_APP_API_URL}/book/likedBooks/${localStorage.getItem("AUTH_TOKEN_KEY")}`;
+const urlBook = `${process.env.VUE_APP_API_URL}/books/likedBooks/${localStorage.getItem("AUTH_TOKEN_KEY")}`;
 
 async function getBook() {
   axios

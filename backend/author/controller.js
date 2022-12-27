@@ -26,9 +26,29 @@ const insert = async (req, res) => {
   }
 };
 
+const deleteFromDb = async (req, res) => {
+  try{
+    const id = req.params.id
+
+    const idExist = await pool.query(queries.getById, [id]);
+
+    if(idExist.rows.length < 1) return res.status(404).send("id not found")
+
+    await pool.query(queries.deleteInter, [id])
+    await pool.query(queries.deleteFromDb, [id])
+
+    return res.status(200).send()
+
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({ error: error });
+  }
+
+}
 
 
 module.exports = {
     getAll,
-    insert
+    insert,
+    deleteFromDb
 }
