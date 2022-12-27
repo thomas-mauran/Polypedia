@@ -3,9 +3,9 @@ const Joi = require('joi')
 module.exports = {
     validateSignup: (req, res, next) => {
         const schema = Joi.object({
-          username: Joi.string().max(75).required(),
+          username: Joi.string().min(4).max(75).required(),
           email: Joi.string().email().required(),
-          password: Joi.string().max(255).required(),
+          password: Joi.string().min(4).max(255).required(),
         });
         const result = schema.validate(req.body);
         if (result.error) {

@@ -20,7 +20,7 @@ async function tryLogin() {
   if (!response[0]) {
     emit("showMessageEvent", response[1]);
   } else {
-    router.push("home");
+    router.push("books");
   }
 }
 </script>
@@ -37,7 +37,7 @@ async function tryLogin() {
 
       <label for="password">Password</label>
       <input
-        type="text"
+      type="password"
         id="password"
         placeholder="veryStrongPassword"
         v-model="password"

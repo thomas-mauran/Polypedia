@@ -3,16 +3,18 @@ import { useRouter } from "vue-router";
 import { onMounted, ref } from "vue";
 import axios from "axios";
 
-const router = useRouter();
+
 
 const username = ref("");
 const email = ref("");
 const userId = localStorage.getItem("USER_ID")
+const router = useRouter();
+
 
 async function fetchUserInfos() {
     if(!userId) router.push('login')
 
-  const url = `${process.env.VUE_APP_API_URL}/user/${userId}`;
+  const url = `${process.env.VUE_APP_API_URL}/users/${userId}`;
   try {
     let res = await axios({
       url: url,
@@ -32,11 +34,14 @@ async function fetchUserInfos() {
   }
 }
 
-function disconnect() {
-  localStorage.removeItem("AUTH_TOKEN_KEY");
-  localStorage.removeItem("USER_ID");
-  router.push("login");
+function disconnect(){
+
+localStorage.removeItem("AUTH_TOKEN_KEY");
+localStorage.removeItem("USER_ID");
+localStorage.removeItem("IS_ADMIN");
+router.push("login");
 }
+
 
 onMounted(() => {
   fetchUserInfos();

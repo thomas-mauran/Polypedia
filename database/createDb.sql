@@ -17,7 +17,7 @@ CREATE TABLE "books" (
 	"description" VARCHAR(500) NOT NULL,
 	"number_of_pages" integer NOT NULL,
 	"language_id" integer NOT NULL,
-	"downloads" integer NOT NULL,
+	"number_of_likes" integer NOT NULL,
 	CONSTRAINT "books_pk" PRIMARY KEY ("id")
 ) WITH (
   OIDS=FALSE
@@ -101,9 +101,43 @@ ALTER TABLE "books_users" ADD CONSTRAINT "books_users_fk1" FOREIGN KEY ("user_id
 
 
 
+-- TRIGGERS
+
+-- trigger to add a like to the books counter when inserting on user_books
 
 
+CREATE OR REPLACE FUNCTION increment_likes_function()
+RETURNS TRIGGER AS $$
+BEGIN
+  UPDATE books
+  SET number_of_likes = number_of_likes + 1
+  WHERE id = NEW.book_id;
+  RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
 
+CREATE TRIGGER increment_likes
+AFTER INSERT ON books_users
+FOR EACH ROW
+EXECUTE PROCEDURE increment_likes_function();
+
+
+-- trigger to decrement likest on a books counter when inserting on user_books
+
+CREATE OR REPLACE FUNCTION decrement_likes_function()
+RETURNS TRIGGER AS $$
+BEGIN
+  UPDATE books
+  SET number_of_likes = number_of_likes - 1
+  WHERE id = OLD.book_id;
+  RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER decrement_likes
+AFTER DELETE ON books_users
+FOR EACH ROW
+EXECUTE PROCEDURE decrement_likes_function();
 
 -- Default User admin
 -- login : admin
@@ -231,7 +265,7 @@ INSERT INTO tags("name", "description")VALUES('Speculative Fiction', 'Speculativ
 INSERT INTO tags("name", "description")VALUES('Science Fiction', 'Sci-fi novels are speculative stories with imagined elements that don’t exist in the real world. Some are inspired by “hard” natural sciences like physics, chemistry, and astronomy; others are inspired by “soft” social sciences like psychology, anthropology, and sociology. Common elements of sci-fi novels include time travel, space exploration, and futuristic societies. ');
 INSERT INTO tags("name", "description")VALUES('Fantasy', 'Fantasy novels are speculative fiction stories with imaginary characters set in imaginary universes. They’re inspired by mythology and folklore and often include elements of magic. The genre attracts both children and adults; well-known titles include Alice’s Adventures in Wonderland by Lewis Carroll and the Harry Potter series by J.K. Rowling.');
 INSERT INTO tags("name", "description")VALUES('Dystopian', 'Dystopian novels are a genre of science fiction. They’re set in societies viewed as worse than the one in which we live. Dystopian fiction exists in contrast to utopian fiction, which is set in societies viewed as better than the one in which we live.');
-INSERT INTO tags("name", "description")VALUES('Magical Realism', '. Magical realism novels depict the world truthfully, plus add magical elements. The fantastical elements aren’t viewed as odd or unique; they’re considered normal in the world in which the story takes place. The genre was born out of the realist art movement and is closely associated with Latin American authors. ');
+INSERT INTO tags("name", "description")VALUES('Magical Realism', 'Magical realism novels depict the world truthfully, plus add magical elements. The fantastical elements aren’t viewed as odd or unique; they’re considered normal in the world in which the story takes place. The genre was born out of the realist art movement and is closely associated with Latin American authors. ');
 INSERT INTO tags("name", "description")VALUES('Realist Literature', 'Realist fiction novels are set in a time and place that could actually happen in the real world. They depict real people, places, and stories in order to be as truthful as possible. Realist works of fiction remain true to everyday life and abide by the laws of nature as we currently understand them.');
 INSERT INTO tags("name", "description")VALUES('Manga', 'Manga is a type of Japanese comic book, which often contains material that is intended for adults.');
 INSERT INTO tags("name", "description")VALUES('Comics', 'A comic book is a magazine that contains stories told in pictures. ');
