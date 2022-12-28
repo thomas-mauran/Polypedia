@@ -3,6 +3,7 @@
 import { useRouter } from "vue-router";
 
 import FormData from "form-data";
+import loadingGif from "../components/loadingGif.vue"
 
 import { fetchAll } from "../utils/fetchers";
 import { defineEmits, onMounted, ref } from "vue";
@@ -25,6 +26,8 @@ const authors = ref([]);
 const tags = ref([]);
 const languages = ref([]);
 
+const loading = ref(true)
+
 
 function onChangeFile(event) {
   file.value = event.target.files[0];
@@ -32,12 +35,18 @@ function onChangeFile(event) {
 }
 
 async function fetchAllValue() {
+  loading.value = true
+
   tags.value = await fetchAll("tags");
   authors.value = await fetchAll("authors");
   languages.value = await fetchAll("languages");
+  loading.value = false
+
 }
 
 async function uploadBook() {
+  loading.value = true
+
   let formData = new FormData();
   console.log(formData)
 
@@ -76,9 +85,13 @@ async function uploadBook() {
           router.push("books");
           emit("showMessageEvent", "Book uploaded");
         }
+        loading.value = false
+
       }).catch(error => {
         console.log(error)
         emit("showMessageEvent", error.response.data);
+        loading.value = false
+
 
       });
 
@@ -96,6 +109,7 @@ onMounted(() => {
 });
 </script>
 <template>
+  <loadingGif v-if="loading"/>
   <article class="verticalDivCentered">
     <form class="verticalDiv" id="form">
       <h2>Upload a book</h2>

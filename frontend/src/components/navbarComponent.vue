@@ -61,14 +61,16 @@ console.log(isUserAdmin)
 .navItem {
   color: #8185e4;
   text-decoration: none;
-  margin: auto 50px;
+  margin: auto 3vw;
+  width: fit-content;
+  white-space: nowrap;
 }
 
 nav {
   padding: 20px 0px;
-  font-size: 1.4em;
-  justify-content: space-around;
+  font-size: 1.2em;
   box-shadow: 0px 0px 15px 3px black;
+  text-overflow:ellipsis;
 }
 
 nav input {
@@ -79,4 +81,22 @@ nav input {
   border: none;
   border-bottom: 2px solid #8185e4;
 }
+
+@media (max-width: 1400px) {
+  .navItem {
+    margin: auto 2vw;
+
+  }
+}
+
+@media (max-width: 1200px) {
+  .navItem {
+    margin: auto 1vw;
+    font-size: 0.8em;
+  }
+}
+
+
 </style>
+
+

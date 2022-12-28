@@ -1,7 +1,9 @@
 <script setup>
 import { watch, onMounted, ref, defineProps } from "vue";
 import { fetchAll } from "../utils/fetchers";
+
 import adminDeleteBtnVue from "./adminDeleteBtn.vue";
+import loadingGif from "./loadingGif.vue"
 
 /* eslint-disable */
 const props = defineProps({
@@ -12,6 +14,7 @@ const data = ref([]);
 const attributes = ref([]);
 
 const emit = defineEmits(["showMessageEventPass"]);
+const loading = ref(true)
 
 
 watch(() => {
@@ -19,9 +22,13 @@ watch(() => {
 });
 
 async function fetchData() {
+  loading.value = true
+
   data.value = await fetchAll(props.category);
   attributes.value = Object.keys(data.value[0]) ? Object.keys(data.value[0]) : 0;
   console.log(data.value);
+  loading.value = false
+
 }
 
 function trimText(text) {
@@ -48,6 +55,7 @@ onMounted(() => {
 
 <template>
   <section class="verticalDiv">
+    <loadingGif v-if="loading"/>
 
     <div>
       <ul class="headingOfList">

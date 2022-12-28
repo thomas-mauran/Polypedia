@@ -5,6 +5,7 @@ import { useRoute } from "vue-router";
 import { Slide } from "vue3-burger-menu";
 
 import BurgerLabel from "../components/burgerLabel.vue";
+import loadingGif from "../components/loadingGif.vue"
 
 const route = useRoute();
 
@@ -16,6 +17,8 @@ const pdfData = ref(null);
 
 const isLiked = ref(false);
 const token = localStorage.getItem("AUTH_TOKEN_KEY");
+const loading = ref(true)
+
 
 // const numPages = ref(0);
 const urlBook = `${process.env.VUE_APP_API_URL}/books/${route.params.id}`;
@@ -23,6 +26,8 @@ const urlBook = `${process.env.VUE_APP_API_URL}/books/${route.params.id}`;
 console.log(urlBook);
 
 async function fetchBook() {
+  loading.value = true;
+
   axios
     .get(
       urlBook,
@@ -43,8 +48,12 @@ async function fetchBook() {
       const blob = new Blob([pdfBuffer], { type: "application/pdf" });
       pdfData.value = URL.createObjectURL(blob);
       console.log(bookInfo.value);
+      loading.value = false;
+
     })
     .catch((error) => {
+      loading.value = false;
+
       console.log(error);
     });
 }
@@ -68,6 +77,7 @@ function likeBook() {
         }
       )
       .then((response) => {
+        
         console.log(response.status);
       })
       .catch((error) => {
@@ -99,11 +109,15 @@ function likeBook() {
 }
 
 onMounted(() => {
+
   fetchBook();
+
 });
 </script>
 <template>
   <section id="container">
+    <loadingGif v-if="loading"/>
+
     <object :data="pdfData" type="application/pdf" class="pdfLoader"></object>
     <Slide noOverlay disableOutsideClick isOpen="true" left width="400">
       <div class="verticalDiv">
@@ -151,7 +165,7 @@ onMounted(() => {
 .bm-menu {
   box-shadow: inset 0 7px 9px -7px black;
 
-  margin-top: 8vh;
+  margin-top: 9vh;
   margin-bottom: 2vh;
   background-color: #dbdcf6;
   max-height: calc(105vh - 8rem);

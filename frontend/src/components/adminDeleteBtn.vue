@@ -1,6 +1,7 @@
 <script setup>
-import { defineProps, defineEmits } from "vue";
+import { defineProps, defineEmits, ref} from "vue";
 import axios from "axios";
+import loadingGif from "../components/loadingGif.vue"
 
 const emit = defineEmits(["showMessageEvent"]);
 
@@ -10,10 +11,12 @@ const props = defineProps({
     category: String,
 })
 
+const loading = ref(false)
 
 
 async function callDelete(){
     const url = `${process.env.VUE_APP_API_URL}/${props.category}/${props.elemId}`;
+    loading.value = true
 
     axios
       .delete(url, {
@@ -24,9 +27,12 @@ async function callDelete(){
         emit("showMessageEvent", props.elemId);
 
         console.log(response)
+        loading.value = false
 
       }).catch((error) => {
         console.log(error)
+        loading.value = false
+
       })
       
 }
@@ -34,6 +40,8 @@ async function callDelete(){
 </script>
 
 <template>
+    <loadingGif v-if="loading"/>
+
     <button type="button" @click="callDelete"><img src="../assets/trash.png" alt="trashcan image"> </button>
 </template>
 
