@@ -1,7 +1,7 @@
 <script setup>
 import { defineProps, defineEmits, ref} from "vue";
 import axios from "axios";
-import loadingGif from "../components/loadingGif.vue"
+import loadingGif from "@/components/loadingGif.vue"
 
 const emit = defineEmits(["showMessageEvent"]);
 
@@ -42,7 +42,7 @@ async function callDelete(){
 <template>
     <loadingGif v-if="loading"/>
 
-    <button type="button" @click="callDelete"><img src="../assets/trash.png" alt="trashcan image"> </button>
+    <button type="button" @click="callDelete"><img src="@/assets/trash.png" alt="trashcan image"> </button>
 </template>
 
 <style scoped>

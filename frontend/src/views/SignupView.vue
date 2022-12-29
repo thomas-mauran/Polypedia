@@ -1,5 +1,5 @@
 <script setup>
-import signupForm from "../components/signupForm.vue";
+import signupForm from "@/components/signupForm.vue";
 
 import { ref } from "vue";
 
@@ -15,7 +15,7 @@ function changeMessage(m) {
   <div class="horizontalDiv">
     <section id="leftSection">
       <div class="horizontalDiv" id="logoDiv">
-        <img src="../assets/book.png" alt="opened book image" id="bookImg" />
+        <img src="@/assets/book.png" alt="opened book image" id="bookImg" />
         <h1 id="polypediaTitle">Polypedia</h1>
       </div>
 
@@ -29,7 +29,7 @@ function changeMessage(m) {
       </div>
     </section>
     <section id="rightSection">
-      <img src="../assets/undraw_signup.png" alt="Girl reading a library" />
+      <img src="@/assets/undraw_signup.png" alt="Girl reading a library" />
     </section>
   </div>
 </template>

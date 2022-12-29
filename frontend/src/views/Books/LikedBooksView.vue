@@ -1,40 +1,22 @@
-
 <script setup>
 /* eslint-disable */
 
-import bookCard from "@/components/bookCard.vue";
-import loadingGif from "../components/loadingGif.vue";
-
+import bookCard from "@/components/books/bookCard.vue";
 import axios from "axios";
-import { onMounted, ref, watch } from "vue";
-import { useRoute } from "vue-router";
-
-const route = useRoute();
+import { onMounted, ref } from "vue";
+import loadingGif from "@/components/loadingGif.vue"
 
 const bookList = ref([]);
-const urlBook = `${process.env.VUE_APP_API_URL}/books/search`;
+const urlBook = `${process.env.VUE_APP_API_URL}/books/likedBooks/${localStorage.getItem("AUTH_TOKEN_KEY")}`;
+const loading = ref(true)
 
-const bookTitle = ref("");
-const loading = ref(true);
-
-watch(
-  () => route.params.bookTitle,
-  (newValue) => {
-    bookTitle.value = newValue;
-    getBook(bookTitle.value);
-  }
-);
-
-if (bookTitle !== route.params.bookTitle) getBook();
-
-async function getBook(title) {
-  loading.value = true;
+async function getBook() {
+  loading.value = true
 
   axios
     .get(urlBook, {
       headers: {
         "x-access-token": `${localStorage.getItem("AUTH_TOKEN_KEY")}`,
-        booktitle: `${title.toLowerCase()}`,
       },
     })
     .then(async (response) => {
@@ -44,39 +26,40 @@ async function getBook(title) {
       });
       bookList.value = response.data;
       console.log(bookList.value);
-      loading.value = false;
+      loading.value = false
 
     })
     .catch((error) => {
       console.log(error);
       bookList.value = [];
-      loading.value = false;
+      loading.value = false
 
     });
+
 }
 
 onMounted(() => {
-  getBook(route.params.bookTitle);
+  getBook();
 });
 </script>
 <template>
   <section>
-    <loadingGif v-if="loading" />
+    <loadingGif v-if="loading"/>
 
     <div class="noBooksDiv" v-if="bookList.length < 1">
-      <img id="noBookImg" src="../assets/404noBooks.gif" alt="Books not found gif of a book getting stealed by an ovni" />
+      <img id="noBookImg" src="@/assets/noLikesAnimation.gif" alt="Books not found gif of a book getting stealed by an ovni" />
 
-      <h2>404 No books found with this title</h2>
+      <h2>You did not like any book yet !</h2>
     </div>
 
     <div v-else>
-      <h1>Latest books</h1>
+      <h1>Books you liked</h1>
 
       <section>
         <bookCard
           v-for="book in bookList"
-          :key="book.id"
-          :bookId="book.id"
+          :key="book.book_id"
+          :bookId="book.book_id"
           :imgPath="book.image"
           imgAlt="Thumbnail of the book"
           :bookTitle="book.title" />

@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from "vue";
-import uploadBookForm from "../components/uploadBookForm.vue";
+import uploadBookForm from "@/components/books/uploadBookForm.vue";
 
 const showMessage = ref("");
 
@@ -22,7 +22,7 @@ function changeMessage(m) {
         </div>
       </section>
       <section id="rightSection">
-        <img src="../assets/undraw_library.png" alt="Girl reading a library" />
+        <img src="@/assets/undraw_library.png" alt="Girl reading a library" />
       </section>
     </div>
   </div>

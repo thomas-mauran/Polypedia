@@ -3,9 +3,9 @@
 import { useRouter } from "vue-router";
 
 import FormData from "form-data";
-import loadingGif from "../components/loadingGif.vue"
+import loadingGif from "@/components/loadingGif.vue"
 
-import { fetchAll } from "../utils/fetchers";
+import { fetchAll } from "@/utils/fetchers";
 import { defineEmits, onMounted, ref } from "vue";
 import axios from "axios";
 const emit = defineEmits(["showMessageEvent"]);

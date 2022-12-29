@@ -1,7 +1,7 @@
 <script setup></script>
 <template>
   <div class="loaderWrapper">
-    <img src="../assets/loading.gif" alt="loading gif animation with a purple orb" />
+    <img src="@/assets/loading.gif" alt="loading gif animation with a purple orb" />
     <div class="greyBackground"></div>
   </div>
   

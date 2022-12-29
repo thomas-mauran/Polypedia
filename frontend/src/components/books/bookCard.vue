@@ -17,7 +17,7 @@ const link = `book/${props.bookId}`
 <template>
 
     <RouterLink :to="link">
-        <img v-if="imgPath === blackImage" src="../assets/no-pictures.png" alt="No image" id="noThumbnail">
+        <img v-if="imgPath === blackImage" src="@/assets/no-pictures.png" alt="No image" id="noThumbnail">
         <img v-else :src="imgPath" :alt="imgAlt"/>
         <h3>{{bookTitle}}</h3>
     </RouterLink>

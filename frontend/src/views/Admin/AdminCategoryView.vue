@@ -2,7 +2,7 @@
 import { ref, onBeforeMount } from "vue";
 import { RouterLink, useRoute } from "vue-router";
 
-import adminTable from "../components/adminTable.vue";
+import adminTable from "@/components/admin/adminTable";
 
 const route = useRoute();
 
@@ -26,7 +26,7 @@ onBeforeMount(() => {
       <h1 id="title">{{ currentCategory }} pannel</h1>
 
       <h5 id="message" v-if="showMessage !== ''">{{ showMessage }}</h5>
-      <RouterLink  :to="createUrl"><img id="createBtn" src="../assets/createBtn.png" alt="create a new element" /></RouterLink>
+      <RouterLink  :to="createUrl"><img id="createBtn" src="@/assets/createBtn.png" alt="create a new element" /></RouterLink>
     </div>
     <adminTable @showMessageEventPass="(msg) => changeMessage(msg)" :category="currentCategory" />
   </section>

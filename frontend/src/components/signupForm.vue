@@ -1,5 +1,5 @@
 <script setup>
-import '../assets/css/loginSignupForm.css'
+import '@/assets/css/loginSignupForm.css'
 import { RouterLink, useRouter} from "vue-router"
 import {ref, defineEmits} from "vue"
 

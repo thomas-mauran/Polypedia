@@ -1,5 +1,5 @@
 <script setup>
-import adminPannelCard from "../components/adminPannelCard.vue";
+import adminPannelCard from "@/components/admin/adminPannelCard";
 </script>
 <template>
   <section>

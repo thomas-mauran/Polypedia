@@ -1,8 +1,8 @@
 <script setup>
 /* eslint-disable*/
 
-import "../assets/css/loginSignupForm.css";
-import { login } from "../utils/auth";
+import "@/assets/css/loginSignupForm.css";
+import { login } from "@/utils/auth";
 
 import { RouterLink, useRouter } from "vue-router";
 import { defineEmits, ref } from "vue";

@@ -4,8 +4,8 @@ import { onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 import { Slide } from "vue3-burger-menu";
 
-import BurgerLabel from "../components/burgerLabel.vue";
-import loadingGif from "../components/loadingGif.vue"
+import BurgerLabel from "@/components/burgerLabel.vue";
+import loadingGif from "@/components/loadingGif.vue"
 
 const route = useRoute();
 
@@ -132,8 +132,8 @@ onMounted(() => {
         <BurgerLabel title="Language" :text="bookInfo.language_name" />
         <BurgerLabel title="Likes" :text="bookInfo.number_of_likes" />
         <button type="button" @click="likeBook" id="likeBtn">
-          <img v-if="isLiked" src="../assets/liked.png" alt="Heart logo meaning we liked the book" />
-          <img v-if="!isLiked" src="../assets/notLiked.png" alt="Heart logo meaning we liked the book" />
+          <img v-if="isLiked" src="@/assets/liked.png" alt="Heart logo meaning we liked the book" />
+          <img v-if="!isLiked" src="@/assets/notLiked.png" alt="Heart logo meaning we liked the book" />
         </button>
       </div>
     </Slide>

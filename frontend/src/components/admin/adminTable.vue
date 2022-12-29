@@ -1,9 +1,9 @@
 <script setup>
 import { watch, onMounted, ref, defineProps } from "vue";
-import { fetchAll } from "../utils/fetchers";
+import { fetchAll } from "@/utils/fetchers";
 
-import adminDeleteBtnVue from "./adminDeleteBtn.vue";
-import loadingGif from "./loadingGif.vue"
+import adminDeleteBtnVue from "@/components/admin/adminDeleteBtn";
+import loadingGif from "@/components/loadingGif"
 
 /* eslint-disable */
 const props = defineProps({
