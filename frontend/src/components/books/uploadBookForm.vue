@@ -55,6 +55,8 @@ async function uploadBook() {
     description.value === "" ||
     pageNumber.value === ""
   ) {
+    loading.value = false
+
     emit("showMessageEvent", "You need to fill in all the gaps");
   } else {
     const url = `${process.env.VUE_APP_API_URL}/books`;
@@ -80,12 +82,15 @@ async function uploadBook() {
         //   ? responseText.error
         //   : responseText;
         if (response.status !== 201) {
+
           emit("showMessageEvent", responseMsg);
+          loading.value = false
         } else {
           router.push("books");
           emit("showMessageEvent", "Book uploaded");
+          loading.value = false
+
         }
-        loading.value = false
 
       }).catch(error => {
         console.log(error)

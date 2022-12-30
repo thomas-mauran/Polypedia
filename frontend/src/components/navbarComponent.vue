@@ -1,19 +1,24 @@
 <script setup>
-import { RouterLink } from "vue-router";
+import { RouterLink,  useRouter } from "vue-router";
 import { ref, computed } from "vue"
 
 const text = ref("")
-
+const router = useRouter()
 
 const url = computed(() => {
   return `/books/${text.value}`
 
 })
 
+function searchBook(){
+  router.push(url.value)
+}
+
 const isUserAdmin = ref(localStorage.getItem("IS_ADMIN"))
 console.log(isUserAdmin)
 
 </script>
+
 <template>
   <nav class="horizontalDiv">
     <div class="horizontalDiv">
@@ -21,7 +26,7 @@ console.log(isUserAdmin)
       <RouterLink to="/books" id="polypediaTitle"> Polypedia </RouterLink>
     </div>
     <div class="horizontalDiv">
-      <input type="text" placeholder="search a book" id="searchBar" v-model="text"/>
+      <input type="text" placeholder="search a book" id="searchBar" v-model="text" v-on:keyup.enter="searchBook"/>
       <RouterLink :to="url" id="searchBtn"><img id="searchIcon" src="../assets/searchLogo.png" alt="loop icon for search button"></RouterLink>
     </div>
     <RouterLink to="/likedBooks" class="navItem">Liked books</RouterLink>
@@ -31,6 +36,7 @@ console.log(isUserAdmin)
 
   </nav>
 </template>
+
 <style scoped>
 
 
