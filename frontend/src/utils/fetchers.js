@@ -21,3 +21,26 @@ export async function fetchAll(type) {
     return [];
   }
 }
+
+export async function fetchAttributes(category) {
+  const url = `${urlBase}/${category}/attributes`;
+  try {
+    let res = await axios({
+      url: url,
+      headers: {
+        "x-access-token": `${localStorage.getItem("AUTH_TOKEN_KEY")}`,
+      },
+      method: "GET",
+    });
+
+    if (res.status === 200) {
+      return res.data;
+    }
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+
+

@@ -6,6 +6,7 @@ module.exports = {
           username: Joi.string().min(4).max(75).required(),
           email: Joi.string().email().required(),
           password: Joi.string().min(4).max(255).required(),
+          is_admin: Joi.boolean()
         });
         const result = schema.validate(req.body);
         if (result.error) {

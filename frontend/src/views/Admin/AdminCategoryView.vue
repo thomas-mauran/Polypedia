@@ -17,15 +17,22 @@ function changeMessage(m) {
 
 onBeforeMount(() => {
   currentCategory.value = route.params.category;
-  createUrl.value = `/admin/${route.params.category}/create`;
+  
+  // We bypass for books since it's already coded and very specific case 
+  if(currentCategory.value === "books"){
+    createUrl.value = "/upload"
+  }else{
+    createUrl.value = `/admin/${route.params.category}/create`;
+  }
 });
 </script>
 <template>
   <section class="verticalDiv">
+    <h5 id="message" v-if="showMessage !== ''">{{ showMessage }}</h5>
+
     <div class="horizontalDiv">
       <h1 id="title">{{ currentCategory }} pannel</h1>
 
-      <h5 id="message" v-if="showMessage !== ''">{{ showMessage }}</h5>
       <RouterLink  :to="createUrl"><img id="createBtn" src="@/assets/createBtn.png" alt="create a new element" /></RouterLink>
     </div>
     <adminTable @showMessageEventPass="(msg) => changeMessage(msg)" :category="currentCategory" />
@@ -62,7 +69,7 @@ a {
   padding: 20px 10px;
   width: 30%;
   font-size: 1em;
-  margin: 30px auto;
+  margin: 10px auto;
   color: white;
   border-radius: 10px;
   background-color: rgb(42, 146, 42);

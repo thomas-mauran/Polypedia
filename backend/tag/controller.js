@@ -1,6 +1,27 @@
 const pool = require("../db");
 const queries = require("./queries");
 
+
+
+const getAttributes = (req, res) => {
+  const attributes = [
+    {
+      name: "name",
+      type: "text",
+      placeholder: "Name of the tag",
+      value: ""
+    },
+    {
+      name: "description",
+      type: "text",
+      placeholder: "Description of the tag",
+      value: ""
+    },
+
+  ]
+  return res.status(200).send(attributes)
+}
+
 const getAll = (req, res) => {
   pool.query(queries.getAll, (error, results) => {
     if (error) {
@@ -50,5 +71,6 @@ const deleteFromDb = async (req, res) => {
 module.exports = {
   getAll,
   insert,
-  deleteFromDb
+  deleteFromDb,
+  getAttributes
 };

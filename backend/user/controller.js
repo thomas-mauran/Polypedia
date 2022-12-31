@@ -6,6 +6,37 @@ const queries = require("./queries");
 const bookQueries = require("../book/queries")
 
 
+const getAttributes = (req, res) => {
+  const attributes = [
+    {
+      name: "username",
+      type: "text",
+      placeholder: "this is the username of the user",
+      value: ""
+    },
+    {
+      name: "email",
+      type: "text",
+      placeholder: "email@email.com",
+      value: ""
+    },
+    {
+      name: "password",
+      type: "text",
+      placeholder: "Strong password",
+      value: ""
+    },
+    {
+      name: "is_admin",
+      type: "checkbox",
+      placeholder: "",
+      value: false
+    },
+  ]
+  return res.status(200).send(attributes)
+}
+
+
 const getAll = async (req, res) => {
   try {
     const results = await pool.query(queries.getAll);
@@ -35,7 +66,27 @@ const getUserById = async (req, res) => {
 // Create a new user
 const signup = async (req, res) => {
   try {
+    // If we have the token and the user is admin it means we are sending from the admin pannel
+    // So we wanna be able to retrieve the is_admin value 
+
+    const token = req.headers["x-access-token"];
+    const decoded = jwt.verify(token, process.env.JWT_TOKEN_KEY);
+    const userId = decoded.userId;
+    const isAdminResult = await pool.query(queries.isUserAdmin, [userId]);
+
+
     const { username, email, password } = req.body;
+    let is_admin;
+    
+    console.log(isAdminResult.rows)
+    if (isAdminResult.rows.length > 0 ) {
+      is_admin = req.body.is_admin;
+    }
+    console.log(is_admin)
+    let is_adminValue = is_admin !== undefined ? is_admin : false
+
+    console.log(is_adminValue)
+
     const cryptedPassword = await bcrypt.hash(password, 10);
 
     // we check if the mail isn't already used
@@ -45,7 +96,7 @@ const signup = async (req, res) => {
     }
 
     // we insert the iser
-    await pool.query(queries.addUser, [username, email, cryptedPassword, false]);
+    await pool.query(queries.addUser, [username, email, cryptedPassword, is_adminValue]);
     res.sendStatus(201);
   } catch (error) {
     console.error(error);
@@ -131,5 +182,6 @@ module.exports = {
   loginUser,
   isUserAdmin,
   getAll,
-  deleteFromDb
+  deleteFromDb,
+  getAttributes
 };

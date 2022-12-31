@@ -9,6 +9,8 @@ import BookList from "@/views/Books/BookList";
 import LikedBooksView from "@/views/Books/LikedBooksView";
 import AdminPannelView from "@/views/Admin/AdminPannelView";
 import AdminCategory from "@/views/Admin/AdminCategoryView";
+import AdminCreateUpdateView from "@/views/Admin/AdminCreateUpdateView";
+import notFoundView from "@/views/NotFoundView"
 
 import { isLoggedIn } from "@/utils/auth";
 
@@ -80,10 +82,22 @@ const router = createRouter({
     },
     {
       path: "/admin/:category",
-      name: "Admin Tag Control",
+      name: "Admin category",
       beforeEnter(to, from, next) {beforeEnterAdmin(to, from, next)},
       component: AdminCategory,
       meta: { navbar: true },
+    },
+    {
+      path: "/admin/:category/:action/:id?",
+      name: "Admin create update",
+      beforeEnter(to, from, next) {beforeEnterAdmin(to, from, next)},
+      component: AdminCreateUpdateView,
+      meta: { navbar: true },
+    },
+    {
+      path: "/:pathMatch(.*)",
+      name: "Not Found ",
+      component: notFoundView,
     },
   ],
 });

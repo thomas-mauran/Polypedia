@@ -23,7 +23,6 @@ const loading = ref(true)
 // const numPages = ref(0);
 const urlBook = `${process.env.VUE_APP_API_URL}/books/${route.params.id}`;
 
-console.log(urlBook);
 
 async function fetchBook() {
   loading.value = true;
@@ -38,16 +37,16 @@ async function fetchBook() {
       }
     )
     .then(async (response) => {
-      bookInfo.value = response.data;
-      bookAuthors.value = response.data.authors[0];
+      bookInfo.value = response.data
       bookTags.value = response.data.tags;
       isLiked.value = response.data.isLiked;
+      bookAuthors.value = response.data.authors.length > 0 ? response.data.authors[0] : "undefined";
+
       let pdf = await response.data.pdfFile.data;
 
       const pdfBuffer = await new Uint8Array(pdf);
       const blob = new Blob([pdfBuffer], { type: "application/pdf" });
       pdfData.value = URL.createObjectURL(blob);
-      console.log(bookInfo.value);
       loading.value = false;
 
     })
@@ -77,7 +76,6 @@ function likeBook() {
         }
       )
       .then((response) => {
-        
         console.log(response.status);
       })
       .catch((error) => {
