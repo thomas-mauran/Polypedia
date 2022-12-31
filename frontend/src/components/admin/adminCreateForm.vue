@@ -65,7 +65,6 @@ console.log(props);
         <input :id="'attribute-' + index" v-model="attribute.value"  :type="attribute.type" :placeholder="attribute.name" />
       </div>
       <button class="purpleBackground btn" type="button" @click="sendData">Create</button>
-      <!-- NEED TO MAKE THE CREATE FORM MAYBE USE FORM OR VMODAL BOTH WITH VFOR -->
     </form>
   </article>
 </template>

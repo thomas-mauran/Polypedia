@@ -10,6 +10,7 @@ const storage = multer.memoryStorage();
 
 const upload = multer({ storage });
 
+// router.get("/attributes", adminCheck, controller.getAttributes)
 router.get("/", auth, controller.getAll);
 router.post("/", auth, upload.single("file"), validator.validateCreate, controller.uploadBook);
 router.delete("/:id", adminCheck, controller.deleteFromDb);

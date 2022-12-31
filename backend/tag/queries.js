@@ -3,6 +3,8 @@ const getByName = "SELECT * FROM tags WHERE name = $1;"
 const getById = "SELECT * FROM tags WHERE id = $1;"
 
 const insert = "INSERT INTO tags (name, description) VALUES($1, $2);"
+const update = 'UPDATE tags SET "name"=$2, "description"=$3 WHERE id=$1'
+
 
 const deleteFromDb = "DELETE FROM tags WHERE id = $1;"
 const deleteInter = "DELETE FROM books_tags WHERE tag_id = $1;"
@@ -14,6 +16,7 @@ module.exports = {
     getById,
     insert,
     deleteFromDb,
-    deleteInter
+    deleteInter,
+    update
 
 }

@@ -1,9 +1,9 @@
 <script setup>
 import { watch, onMounted, ref, defineProps } from "vue";
 import { fetchAll } from "@/utils/fetchers";
-
+import { RouterLink } from "vue-router";
 import adminDeleteBtnVue from "@/components/admin/adminDeleteBtn";
-import loadingGif from "@/components/loadingGif"
+import loadingGif from "@/components/loadingGif";
 
 /* eslint-disable */
 const props = defineProps({
@@ -14,21 +14,19 @@ const data = ref([]);
 const attributes = ref([]);
 
 const emit = defineEmits(["showMessageEventPass"]);
-const loading = ref(true)
-
+const loading = ref(true);
 
 watch(() => {
   data.value, fetchData;
 });
 
 async function fetchData() {
-  loading.value = true
+  loading.value = true;
 
   data.value = await fetchAll(props.category);
   attributes.value = Object.keys(data.value[0]) ? Object.keys(data.value[0]) : 0;
   console.log(data.value);
-  loading.value = false
-
+  loading.value = false;
 }
 
 function trimText(text) {
@@ -41,21 +39,24 @@ function formatAttributeName(text) {
   return text.replaceAll("_", " ");
 }
 
-
-function passMessage(id){
-    const index = data.value.findIndex(item => item.id === id)
-    data.value.splice(index, 1)
-    emit("showMessageEventPass", id)
+function passMessage(id) {
+  const index = data.value.findIndex((item) => item.id === id);
+  data.value.splice(index, 1);
+  emit("showMessageEventPass", id);
 }
 
-onMounted(() => {
-  fetchData();
+function updateUrl(id) {
+  return (updateUrl.value = `/admin/${props.category}/update/${id}`);
+}
+
+onMounted(async () => {
+  await fetchData();
 });
 </script>
 
 <template>
   <section class="verticalDiv">
-    <loadingGif v-if="loading"/>
+    <loadingGif v-if="loading" />
 
     <div>
       <ul class="headingOfList">
@@ -66,55 +67,58 @@ onMounted(() => {
         <li v-for="(attributeName, index) in attributes">
           <p>{{ trimText(line[attributeName]) }}</p>
         </li>
-        <adminDeleteBtnVue @showMessageEvent="(id) => passMessage(id)" :elemId="line.id" :category="category" class="specialBtn"/>
+        <RouterLink id="updateBtn" :to="updateUrl(line.id)"><img  src="@/assets/edit.png" alt="create a new element" /></RouterLink>
+
+        <adminDeleteBtnVue @showMessageEvent="(id) => passMessage(id)" :elemId="line.id" :category="category" class="specialBtn" />
       </ul>
     </div>
   </section>
 </template>
 <style scoped>
+#updateBtn{
+  display: flex;
+
+}
+#updateBtn img{
+  width: 35px;
+  margin:auto 30px auto 20px;
+}
 section {
   display: flex;
   align-items: center;
 }
-
 
 section ul {
   display: flex;
   flex-direction: row;
 }
 
-
-li{
-    list-style: none;
-    padding: 30px 100px;
-    text-align: center;
-    width: 35%;
-
-
+li {
+  list-style: none;
+  padding: 30px 100px;
+  text-align: center;
+  width: 35%;
 }
 .lines {
-    box-shadow: 0px 0px 9px 0px rgba(0,0,0,0.2);
-    margin: 20px 0px ;
-    border-radius: 6px;
-
+  box-shadow: 0px 0px 9px 0px rgba(0, 0, 0, 0.2);
+  margin: 20px 0px;
+  border-radius: 6px;
 }
 
-
-.lines li:first-child, .headingOfList li:first-child{
-    width: 5%;
+.lines li:first-child,
+.headingOfList li:first-child {
+  width: 5%;
 }
 
-
-
-ul{
-    box-shadow: 0px 0px 9px 0px rgba(0,0,0,0.2);
+ul {
+  box-shadow: 0px 0px 9px 0px rgba(0, 0, 0, 0.2);
 }
 
-.headingOfList{
-    background-color: rgb(218, 195, 248);
+.headingOfList {
+  background-color: rgb(218, 195, 248);
 }
-.specialBtn{
-    margin-left: auto;
-    margin-right: 20px;
+.specialBtn {
+  margin-left: auto;
+  margin-right: 30px;
 }
 </style>
