@@ -5,9 +5,8 @@ const authorQueries = require("../author/queries");
 const fs = require("fs");
 const pdf2pic = require("pdf2pic");
 
-
-
-
+// Simple function to get a boolean out of a filePath exists 
+const fileExistsFunction = async path => !!(await fs.promises.stat(path).catch(e => false));
 
 // Get a book info using his id
 const getBookById = async (req, res) => {
@@ -40,16 +39,11 @@ const getBookById = async (req, res) => {
     // We retrieve the book buffer
     const pdfName = `${data.id}-${data.title}`.toLowerCase().split(" ").join("-");
     const pdfPath = `/files/pdf/${pdfName}`;
-    fs.access(pdfPath, (err) => {
-      if (err) return res.status(500).send({ error: err });
 
-      fs.readFile(pdfPath, (err, pdfFileData) => {
-        if (err) return res.status(500).send({ error: err });
+    const fileExists = await fileExistsFunction(pdfPath);
+    if (fileExists) data.pdfFile = await fs.promises.readFile(pdfPath);
 
-        data.pdfFile = pdfFileData;
-        res.status(200).json(data);
-      });
-    });
+    res.status(200).json(data);
   } catch (error) {
     console.log(error);
     return res.status(500).send({ error });
@@ -323,13 +317,13 @@ const deleteFromDb = async (req, res) => {
     await pool.query(queries.deleteFromDb, [id]);
 
     const imgPath = `/files/img/${id}.1.jpeg`;
-    const imageExist = await fs.promises.access(imgPath);
+    const imageExist = await fileExistsFunction(imgPath);
     if (imageExist) await fs.promises.unlink(imgPath);
 
     const pdfName = `${id}-${title}`.toLowerCase().split(" ").join("-");
     const pdfPath = `/files/pdf/${pdfName}`;
 
-    const pdfExists = await fs.promises.access(pdfPath);
+    const pdfExists = await fileExistsFunction(pdfPath);
     if (pdfExists) await fs.promises.unlink(pdfPath);
 
     return res.status(200).send();
@@ -338,6 +332,103 @@ const deleteFromDb = async (req, res) => {
     return res.status(500).send({ error: error });
   }
 };
+
+const update = async (req, res) => {
+  try {
+    if (req.file !== undefined && req.file !== null && req.file.mimetype !== "application/pdf") return res.status(415).send("file must be a pdf");
+    let { title, language, description, pageNumber } = req.body;
+    let tags = JSON.parse(req.body["tags"]);
+    let authors = JSON.parse(req.body["authors"]);
+
+    if (Number.isInteger(authors)) authors = [authors];
+    let id = req.params.id;
+
+    // We delete each tag and each author of the book to add the new ones
+    await pool.query(queries.deleteInterAuthor, [id]);
+    await pool.query(queries.deleteInterTag, [id]);
+
+    // We loop on each authors bookId and add them to the intertable
+    authors.forEach(async (element) => {
+      let author_id = element;
+      // if it's a string it means we need create it in the author db
+      if (typeof element === "string") {
+        author_id = await createIfNotExists(element, authorQueries);
+      }
+      // we did not catch an error by returning false so we can insert in middle table
+      if (author_id) updateJoinTable(id, author_id, "Author", authorQueries);
+      else {
+        return res.status(422).send(`${element} must be less than 100 characters`);
+      }
+    });
+
+    // We loop on each tags bookId and add them to the intertable
+    tags.forEach((element) => {
+      if (updateJoinTable(id, element, "Tag", authorQueries) === false) {
+        console.log(error);
+        return res.status(404).send({
+          error: `tag id : ${element}, not found in the database`,
+        });
+      }
+    });
+
+    const oldDataRaw = await pool.query(queries.getById, [id]);
+
+    // No book with this id
+    if (oldDataRaw.rows.length < 1) return res.status(404).send(`No book with the id ${id} found`);
+
+    const oldData = oldDataRaw.rows[0];
+
+    // The client sent a new pdf so we delete and add the new one
+    const pdfName = `${id}-${oldData.title}`.toLowerCase().split(" ").join("-");
+    const oldPath = `/files/pdf/${pdfName}`;
+
+    const newName = `${id}-${title}`.toLowerCase().split(" ").join("-");
+    const newPath = `/files/pdf/${newName}`;
+
+    if (req.file) {
+      // We delete the pdf
+      const pdfExists = await fileExistsFunction(oldPath);
+      if (pdfExists) await fs.promises.unlink(oldPath);
+
+      // We delete the image
+      const imgExists = await fileExistsFunction(`/files/img/${id}.1.jpeg`);
+      if (imgExists) await fs.promises.unlink(`/files/img/${id}.1.jpeg`);
+
+
+      const writed = await fs.promises.writeFile(newPath, req.file.buffer);
+      const newFileExists = await fileExistsFunction(newPath);
+      if (newFileExists) {
+        const options = {
+          density: 500, // output pixels per inch
+          saveFilename: `${id}`, // output file name
+          savePath: "/files/img", // output directory
+          format: "jpeg", // output file format
+          width: 1080,
+          height: 1600,
+        };
+
+        const storeAsImage = pdf2pic.fromPath(newPath, options);
+        const pageToConvertAsImage = 1;
+
+        await storeAsImage(pageToConvertAsImage);
+      }
+    } else {
+      // We rename the book with the new title if the title changed
+      if (oldData.title !== title) {
+
+        await fs.promises.rename(oldPath, newPath);
+      }
+    }
+
+    await pool.query(queries.update, [id, title, description, pageNumber, language]);
+
+    res.status(204).send({ message: "Book updated" });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({ error: error });
+  }
+};
+
 module.exports = {
   getAll,
   uploadBook,
@@ -347,5 +438,5 @@ module.exports = {
   getLikedBooks,
   search,
   deleteFromDb,
-  
+  update,
 };

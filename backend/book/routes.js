@@ -10,14 +10,13 @@ const storage = multer.memoryStorage();
 
 const upload = multer({ storage });
 
-// router.get("/attributes", adminCheck, controller.getAttributes)
 router.get("/", auth, controller.getAll);
 router.post("/", auth, upload.single("file"), validator.validateCreate, controller.uploadBook);
 router.delete("/:id", adminCheck, controller.deleteFromDb);
 
 router.get("/search", auth, controller.search);
-// router.post("/id", auth, controller.getBooksByTagName)
 router.get("/:id", auth, controller.getBookById);
+router.post("/:id", adminCheck, upload.single("file"), validator.validateUpdate, controller.update)
 
 router.post("/like/:id", auth, controller.likeBook);
 router.post("/unlike/:id", auth, controller.unlikeBook);

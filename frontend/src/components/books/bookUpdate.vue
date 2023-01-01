@@ -81,11 +81,11 @@ async function uploadBook() {
         // let responseMsg = responseText.error
         //   ? responseText.error
         //   : responseText;
-        if (response.status !== 201) {
+        if (response.status !== 204) {
           emit("showMessageEvent", responseMsg);
           loading.value = false;
         } else {
-          router.push("books");
+          router.replace("/admin/books");
           emit("showMessageEvent", "Book uploaded");
           loading.value = false;
         }
@@ -169,7 +169,8 @@ onMounted(() => {
           </option>
         </select>
 
-        <h3>Import pdf</h3>
+        <h3>Upload another pdf</h3>
+        <p>If you wanna change the pdf file for this book you just need to select a new one using the button down bellow</p>
         <input accept="application/pdf" type="file" name="file" id="pdfFile" @change="onChangeFile" />
 
         <button class="purpleBackground btn" type="button" @click="uploadBook">Upload</button>

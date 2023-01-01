@@ -8,6 +8,7 @@ const getAll = "SELECT id, title, description FROM books"
 const isLiked = "SELECT * FROM books_users WHERE book_id = $1 AND user_id = $2; "
 const searchBook = "SELECT * FROM books WHERE LOWER(title) LIKE $1 ORDER BY id desc LIMIT 20;"
 
+const update = 'UPDATE books SET "title"=$2, "description"=$3, "number_of_pages"=$4, "language_id"=$5 WHERE id=$1'
 
 
 const insertBook = "INSERT INTO books (title, description, number_of_pages, language_id, number_of_likes) VALUES($1, $2, $3, $4, 0);"
@@ -34,6 +35,8 @@ module.exports = {
     getAll,
     isLiked,
     searchBook,
+    
+    update,
 
     insertBook,
     insertTagJoin,

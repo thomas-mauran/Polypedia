@@ -24,8 +24,10 @@ async function fetchData() {
   loading.value = true;
 
   data.value = await fetchAll(props.category);
-  attributes.value = Object.keys(data.value[0]) ? Object.keys(data.value[0]) : 0;
-  console.log(data.value);
+  if(data.value.length > 0){
+    attributes.value = Object.keys(data.value[0]) ? Object.keys(data.value[0]) : 0;
+
+  }
   loading.value = false;
 }
 
@@ -63,6 +65,7 @@ onMounted(async () => {
         <li v-for="attribute in attributes">{{ formatAttributeName(attribute) }}</li>
       </ul>
 
+      <h3 v-if="data.length === 0"> No {{ props.category }} in the database</h3>
       <ul v-for="line in data" class="lines">
         <li v-for="(attributeName, index) in attributes">
           <p>{{ trimText(line[attributeName]) }}</p>

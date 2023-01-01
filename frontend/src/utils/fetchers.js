@@ -16,6 +16,9 @@ export async function fetchAll(type) {
     if (res.status === 200) {
       return res.data;
     }
+    else{
+      return []
+    }
   } catch (error) {
     console.log(error);
     return [];
