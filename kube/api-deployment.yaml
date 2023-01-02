@@ -14,7 +14,6 @@ spec:
   template:
     metadata:
       labels:
-        # network/backend: "true"
         service: api
     spec:
       containers:
