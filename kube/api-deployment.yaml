@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    service: api
+  name: api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: api
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        # network/backend: "true"
+        service: api
+    spec:
+      containers:
+        - name: api-deployment
+          envFrom:
+            - configMapRef:
+                  name: api-configmap
+          image: thomasmauran/polypedia_api
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+          resources: {}
+
+      restartPolicy: Always
+
+status: {}

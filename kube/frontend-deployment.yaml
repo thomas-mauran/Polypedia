@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    service: frontend
+  name: frontend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      service: frontend
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        service: frontend
+    spec:
+      containers:
+        - env:
+            - name: CHOKIDAR_USEPOLLING
+              value: "true"
+          image: thomasmauran/polypedia_frontend
+          imagePullPolicy: Always
+          name: frontend-deployment
+          ports:
+            - containerPort: 80
+            - containerPort: 443
+          resources: {}
+          stdin: true
+          tty: true
+
+      restartPolicy: Always
+

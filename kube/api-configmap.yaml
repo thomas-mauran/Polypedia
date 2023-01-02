@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: api-configmap
+data:
+  PORT: "3000"
+  DB: "polypedia"
+  DIALECT: "postgres"
+  USER: "admin"
+  PASSWORD: "1234"
+  HOST: postgres
+  DBPORT: "5432"
+  JWT_TOKEN_KEY: "sdjk2doz"
