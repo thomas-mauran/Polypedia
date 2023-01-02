@@ -3,7 +3,7 @@
 import { useRouter } from "vue-router";
 
 import FormData from "form-data";
-import loadingGif from "@/components/loadingGif.vue"
+import loadingGif from "@/components/loadingGif.vue";
 
 import { fetchAll } from "@/utils/fetchers";
 import { defineEmits, onMounted, ref } from "vue";
@@ -18,7 +18,7 @@ const selectedLanguage = ref(15);
 const selectedTags = ref([]);
 
 const selectedAuthors = ref(87);
-const isAuthorFieldOpen = ref(false)
+const isAuthorFieldOpen = ref(false);
 
 const file = ref(null);
 
@@ -26,8 +26,7 @@ const authors = ref([]);
 const tags = ref([]);
 const languages = ref([]);
 
-const loading = ref(true)
-
+const loading = ref(true);
 
 function onChangeFile(event) {
   file.value = event.target.files[0];
@@ -35,27 +34,22 @@ function onChangeFile(event) {
 }
 
 async function fetchAllValue() {
-  loading.value = true
+  loading.value = true;
 
   tags.value = await fetchAll("tags");
   authors.value = await fetchAll("authors");
   languages.value = await fetchAll("languages");
-  loading.value = false
-
+  loading.value = false;
 }
 
 async function uploadBook() {
-  loading.value = true
+  loading.value = true;
 
   let formData = new FormData();
-  console.log(formData)
+  console.log(formData);
 
-  if (
-    title.value === "" ||
-    description.value === "" ||
-    pageNumber.value === ""
-  ) {
-    loading.value = false
+  if (title.value === "" || description.value === "" || pageNumber.value === "") {
+    loading.value = false;
 
     emit("showMessageEvent", "You need to fill in all the gaps");
   } else {
@@ -76,37 +70,32 @@ async function uploadBook() {
         },
       })
       .then((response) => {
-        console.log(response.status)
+        console.log(response.status);
         // let responseText = response;
         // let responseMsg = responseText.error
         //   ? responseText.error
         //   : responseText;
         if (response.status !== 201) {
-
           emit("showMessageEvent", responseMsg);
-          loading.value = false
+          loading.value = false;
         } else {
           router.push("books");
           emit("showMessageEvent", "Book uploaded");
-          loading.value = false
-
+          loading.value = false;
         }
-
-      }).catch(error => {
-        console.log(error)
+      })
+      .catch((error) => {
+        console.log(error);
         emit("showMessageEvent", error.response.data);
-        loading.value = false
-
-
+        loading.value = false;
       });
-
   }
 }
 
 function createAuthorBtnClicked() {
-  isAuthorFieldOpen.value = !isAuthorFieldOpen.value
-  if(!isAuthorFieldOpen.value) selectedAuthors.value = 87
-  else selectedAuthors.value = ""
+  isAuthorFieldOpen.value = !isAuthorFieldOpen.value;
+  if (!isAuthorFieldOpen.value) selectedAuthors.value = 87;
+  else selectedAuthors.value = "";
 }
 
 onMounted(() => {
@@ -114,25 +103,15 @@ onMounted(() => {
 });
 </script>
 <template>
-  <loadingGif v-if="loading"/>
+  <loadingGif v-if="loading" />
   <article class="verticalDivCentered">
     <form class="verticalDiv" id="form">
       <h2>Upload a book</h2>
 
       <h3>Title</h3>
-      <input
-        type="text"
-        id="title"
-        placeholder="One piece #23"
-        v-model="title"
-      />
+      <input type="text" id="title" placeholder="One piece #23" v-model="title" />
       <h3 for="description">Description</h3>
-      <textarea
-        type="text"
-        id="description"
-        placeholder="Once upon a time ..."
-        v-model="description"
-      ></textarea>
+      <textarea type="text" id="description" placeholder="Once upon a time ..." v-model="description"></textarea>
 
       <h3>Number of page</h3>
       <input type="number" v-model="pageNumber" min="0" />
@@ -143,33 +122,20 @@ onMounted(() => {
           {{ author.fullname }}
         </option>
       </select>
-      <input v-if="isAuthorFieldOpen"
-        type="text"
-        placeholder="Author fullname"
-        v-model="selectedAuthors"
-      />
-      <button id="createAuthorBtn" @click="createAuthorBtnClicked" type="button"> Create an author </button>
+      <input v-if="isAuthorFieldOpen" type="text" placeholder="Author fullname" v-model="selectedAuthors" />
+      <button id="createAuthorBtn" @click="createAuthorBtnClicked" type="button">Create an author</button>
 
       <h3>Tags</h3>
       <section id="tagSection">
-        <div v-for="tag in tags" :key="tag.id" class="radioTag">
-          <input
-            type="checkbox"
-            :id="tag.id"
-            :value="tag.id"
-            v-model="selectedTags"
-          />
+        <div v-for="tag in tags" :key="tag.id" class="checkboxTag">
+          <input type="checkbox" :id="tag.id" :value="tag.id" v-model="selectedTags" />
           <label :for="tag.id">{{ tag.name }}</label>
         </div>
       </section>
 
       <h3>Language</h3>
       <select name="languages" id="languages" v-model="selectedLanguage">
-        <option
-          v-for="language in languages"
-          :key="language.id"
-          :value="language.id"
-        >
+        <option v-for="language in languages" :key="language.id" :value="language.id">
           {{ language.name }}
         </option>
       </select>
@@ -177,15 +143,13 @@ onMounted(() => {
       <h3>Import pdf</h3>
       <input accept="application/pdf" type="file" name="file" id="pdfFile" @change="onChangeFile" />
 
-      <button class="purpleBackground btn" type="button" @click="uploadBook">
-        Upload
-      </button>
+      <button class="purpleBackground btn" type="button" @click="uploadBook">Upload</button>
     </form>
   </article>
 </template>
 <style scoped>
 
-#createAuthorBtn{
+#createAuthorBtn {
   background-color: #8185e4;
   color: white;
   border: none;
@@ -196,7 +160,7 @@ onMounted(() => {
 }
 
 article {
-  width: 40vw;
+  width: 100%;
 }
 h2 {
   margin: 0px;
@@ -204,7 +168,7 @@ h2 {
 }
 
 #form {
-  width: 30vw;
+  width: 100%;
   min-width: 400px;
   font-size: 1em;
   border-radius: 10px;
@@ -235,12 +199,12 @@ input[type="text"] {
   border-radius: 5px;
 }
 
-.radioTag {
+.checkboxTag {
   font-size: 0.7em;
   margin: 0px 5px;
 }
 
-.radioTag label {
+.checkboxTag label {
   margin-left: 10px;
 }
 
@@ -262,5 +226,10 @@ button {
   grid-template-rows: repeat(5, 1fr);
   grid-column-gap: 0px;
   grid-row-gap: 0px;
+}
+@media only screen and (max-width: 1000px) {
+  .checkboxTag {
+    margin: 5px 5px;
+  }
 }
 </style>

@@ -75,7 +75,20 @@ section {
   text-align: left;
 }
 #rightSection img {
-  margin-top: 15vh;
+  display: flex;
+  margin-top: 27vh;
   width: 40vw;
+  min-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media only screen and (max-width: 800px) {
+  #rightSection {
+    display: none;
+  }
+  #leftSection {
+    width: 100vw;
+  }
 }
 </style>

@@ -24,10 +24,7 @@ function changeMessage(m) {
         <div id="formDiv">
           <h5>{{ showMessage }}</h5>
 
-          <loginForm
-            @showMessageEvent="(msg) => changeMessage(msg)"
-            id="formComponent"
-          />
+          <loginForm @showMessageEvent="(msg) => changeMessage(msg)" id="formComponent" />
         </div>
       </div>
     </section>
@@ -39,6 +36,7 @@ function changeMessage(m) {
 
 <style scoped>
 
+
 #formDiv {
   text-align: center;
   margin-top: 20vh;
@@ -47,7 +45,6 @@ function changeMessage(m) {
 #formDiv h5 {
   color: red;
 }
-
 
 #logoDiv {
   vertical-align: middle;
@@ -80,7 +77,20 @@ section {
   text-align: left;
 }
 #rightSection img {
-  margin-top: 15vh;
+  display: flex;
+  margin-top: 27vh;
   width: 40vw;
+  min-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media only screen and (max-width: 900px) {
+  #rightSection {
+    display: none;
+  }
+  #leftSection {
+    width: 100vw;
+  }
 }
 </style>

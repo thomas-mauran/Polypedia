@@ -87,5 +87,6 @@ section {
 
 #noBookImg {
   max-width: 30vw;
+  min-width: 300px;
 }
 </style>

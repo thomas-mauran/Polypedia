@@ -154,6 +154,8 @@ onMounted(() => {
 
 .bm-burger-button {
   top: 110px;
+  min-width: 2vw;
+  min-height: 2vw;
 }
 
 .bm-burger-bars {
@@ -163,7 +165,7 @@ onMounted(() => {
 .bm-menu {
   box-shadow: inset 0 7px 9px -7px black;
 
-  margin-top: 9vh;
+  margin-top: 80px;
   margin-bottom: 2vh;
   background-color: #dbdcf6;
   max-height: calc(105vh - 8rem);
@@ -194,5 +196,25 @@ onMounted(() => {
   margin: 20px;
   width: 50%;
   height: 95%;
+}
+
+@media only screen and (max-width: 1000px) {
+  .bm-burger-button {
+  top: 20px;
+}
+.bm-menu {
+  z-index: 0;
+  box-shadow: inset 0 7px 9px -7px black;
+  margin-top: 0px;
+  background-color: #dbdcf6;
+  max-height: calc(105vh - 8rem);
+      overflow-y: auto;
+}
+
+.pdfLoader {
+  margin-top: 60px;
+  width: 100%;
+  height: 100%;
+}
 }
 </style>

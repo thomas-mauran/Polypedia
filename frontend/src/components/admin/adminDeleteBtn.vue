@@ -48,7 +48,7 @@ async function callDelete(){
 <style scoped>
 
 img{
-    width: 2vw;
+    width: 30px;
 
 }
 
