@@ -6,7 +6,6 @@ import { ref } from "vue";
 const showMessage = ref("");
 
 function changeMessage(m) {
-  console.log(m);
   showMessage.value = m;
 }
 </script>

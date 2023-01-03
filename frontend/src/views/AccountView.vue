@@ -26,7 +26,7 @@ async function fetchUserInfos() {
     });
 
     if (res.status === 200) {
-      username.value = res.data[0].login;
+      username.value = res.data[0].username;
       email.value = res.data[0].email;
     }
   } catch (error) {

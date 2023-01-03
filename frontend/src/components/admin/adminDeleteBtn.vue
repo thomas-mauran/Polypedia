@@ -23,10 +23,10 @@ async function callDelete(){
         headers: {
           "x-access-token": `${localStorage.getItem("AUTH_TOKEN_KEY")}`,
         },
-      }).then((response) => {
+      }).then(() => {
+
         emit("showMessageEvent", props.elemId);
 
-        console.log(response)
         loading.value = false
 
       }).catch((error) => {

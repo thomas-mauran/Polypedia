@@ -44,12 +44,10 @@ async function getBook(title) {
       },
     })
     .then(async (response) => {
-      console.log("test");
       response.data.forEach((element) => {
         element.image = "data:image/jpeg;base64," + element.image;
       });
       bookList.value = response.data;
-      console.log(bookList.value);
       loading.value = false;
     })
     .catch((error) => {

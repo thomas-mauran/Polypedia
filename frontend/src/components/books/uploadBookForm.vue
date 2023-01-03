@@ -70,7 +70,6 @@ async function uploadBook() {
         },
       })
       .then((response) => {
-        console.log(response.status);
         // let responseText = response;
         // let responseMsg = responseText.error
         //   ? responseText.error

@@ -52,7 +52,6 @@ async function uploadBook() {
   loading.value = true;
 
   let formData = new FormData();
-  console.log(formData);
 
   if (title.value === "" || description.value === "" || pageNumber.value === "") {
     loading.value = false;
@@ -76,7 +75,6 @@ async function uploadBook() {
         },
       })
       .then((response) => {
-        console.log(response.status);
         // let responseText = response;
         // let responseMsg = responseText.error
         //   ? responseText.error
@@ -91,7 +89,6 @@ async function uploadBook() {
         }
       })
       .catch((error) => {
-        console.log(error);
         emit("showMessageEvent", error.response.data);
         loading.value = false;
       });
@@ -108,7 +105,6 @@ onBeforeMount(async () => {
   id = route.params.id;
   const data = await fetchOne("books", id);
 
-  console.log(data);
   title.value = data.title;
   description.value = data.description;
   pageNumber.value = data.number_of_pages;

@@ -32,7 +32,6 @@ async function sendData() {
     return accumulator;
   }, {});
 
-  console.log(refactoredData);
 
   try {
     let res = await axios.post(url, refactoredData, {
@@ -53,7 +52,6 @@ async function sendData() {
   }
 }
 
-console.log(props);
 </script>
 <template>
   <article class="verticalDivCentered">

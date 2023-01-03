@@ -20,7 +20,6 @@ async function createAccount(){
     else if(password.value !== confirmPassword.value)
     {
         emit('showMessageEvent', "Both passwords aren't matching")
-        console.log("emit")
     }
     else{
       const url = `${process.env.VUE_APP_API_URL}/users`;
@@ -68,7 +67,7 @@ async function createAccount(){
         type="text"
         name="username"
         id="username"
-        placeholder="yourEmail@address.com"
+        placeholder="coolUsername1234"
         v-model="username"
       />
 
