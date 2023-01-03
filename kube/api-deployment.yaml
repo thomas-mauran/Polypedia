@@ -26,6 +26,13 @@ spec:
           ports:
             - containerPort: 3000
           resources: {}
+          volumeMounts:
+            - mountPath: "/files"
+              name: mypd
+      volumes:
+        - name: mypd
+          persistentVolumeClaim:
+            claimName: api-pv-claim
 
       restartPolicy: Always
 

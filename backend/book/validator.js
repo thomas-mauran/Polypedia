@@ -3,7 +3,7 @@ module.exports = {
     validateCreate: (req, res, next) => {
 
         const schema = Joi.object({
-            title: Joi.string().min(2).max(255).required(),
+            title: Joi.string().alphanum().min(2).max(255).required(),
             description: Joi.string().min(5).max(500).required(),
             pageNumber: Joi.number().required(),
             language: Joi.number().required(),
@@ -32,7 +32,7 @@ module.exports = {
       validateUpdate: (req, res, next) => {
 
         const schema = Joi.object({
-            title: Joi.string().min(2).max(255).required(),
+            title: Joi.string().alphanum().min(2).max(255).required(),
             description: Joi.string().min(5).max(500).required(),
             pageNumber: Joi.number().required(),
             language: Joi.number().required(),

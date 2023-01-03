@@ -2,31 +2,28 @@
 kind: PersistentVolume
 apiVersion: v1
 metadata:
-  name: postgres-pv
+  name: api-pv
   labels:
     type: local
 spec:
   storageClassName: manual
   capacity:
-    storage: 10G
+    storage: 35G
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   hostPath:
-    path: "/mnt/data/polypedia/database"
+    path: /mnt/data/polypedia/files
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   labels:
-    app: postgres
-  name: postgres-pv-claim
+    app: api
+  name: api-pv-claim
 spec:
   storageClassName: manual
   accessModes:
-  - ReadWriteOnce
+  - ReadWriteMany
   resources:
     requests:
-      storage: 10G
-
-
-      
+      storage: 35G
