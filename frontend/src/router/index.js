@@ -97,6 +97,8 @@ const router = createRouter({
     {
       path: "/:pathMatch(.*)",
       name: "Not Found ",
+      meta: { navbar: true },
+
       component: notFoundView,
     },
   ],

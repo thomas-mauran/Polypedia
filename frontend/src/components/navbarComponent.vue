@@ -18,24 +18,22 @@ const isUserAdmin = ref(localStorage.getItem("IS_ADMIN"));
 
 <template>
   <nav class="horizontalDiv desktop-list">
-    <div class="horizontalDiv">
+    <div class="horizontalDiv logoDiv">
       <img src="@/assets/book.png" alt="opened book image" id="bookImg" />
       <RouterLink to="/books" id="polypediaTitle"> Polypedia </RouterLink>
     </div>
     <div class="horizontalDiv">
-      <input type="text" placeholder="search a book" id="searchBar" v-model="text" v-on:keyup.enter="searchBook" />
+      <input type="text" placeholder="Search a book" id="searchBar" v-model="text" v-on:keyup.enter="searchBook" />
       <RouterLink :to="url" id="searchBtn"><img id="searchIcon" src="@/assets/navbar/searchLogo.png" alt="loop icon for search button" /></RouterLink>
     </div>
     <RouterLink to="/likedBooks" class="navItem">Liked books</RouterLink>
     <RouterLink to="/upload" class="navItem">+ Upload a book</RouterLink>
-    <RouterLink v-if="isUserAdmin === 'true'" to="/admin" class="navItem">Admin Pannel</RouterLink>
+    <RouterLink v-if="isUserAdmin === 'true'" to="/admin" class="navItem">Admin Panel</RouterLink>
     <RouterLink to="/account" class="navItem">My account</RouterLink>
   </nav>
 
   <nav class="horizontalDiv mobile-list">
-    <RouterLink to="/books"  class="navItem"
-      ><img  id="searchIcon" src="@/assets/navbar/search.png" alt="search icon" class="logo"
-    /></RouterLink>
+    <RouterLink to="/books" class="navItem"><img id="searchIcon" src="@/assets/navbar/search.png" alt="search icon" class="logo" /></RouterLink>
     <RouterLink to="/likedBooks" class="navItem"><img id="heartIcon" class="logo" src="@/assets/navbar/heart.png" alt="Heart icon" /></RouterLink>
     <RouterLink to="/upload" class="navItem"><img id="uploadIcon" class="logo" src="@/assets/navbar/upload.png" alt="Upload icon" /></RouterLink>
     <RouterLink v-if="isUserAdmin === 'true'" to="/admin" class="navItem"
@@ -46,6 +44,9 @@ const isUserAdmin = ref(localStorage.getItem("IS_ADMIN"));
 </template>
 
 <style scoped>
+.logoDiv {
+  margin-left: 20px;
+}
 .mobile-list {
   display: none;
 }
@@ -62,15 +63,22 @@ const isUserAdmin = ref(localStorage.getItem("IS_ADMIN"));
   border: none;
 }
 #bookImg {
+  margin-top: auto;
+  margin-bottom: auto;
   width: 40px;
 }
 
 #polypediaTitle {
-  color: #5356b8;
+  background-image: linear-gradient(90deg, rgba(30,9,121,1) 0%, rgba(109,67,255,1) 0%, rgba(136,157,252,1) 100%);
+  background-size: 100%;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
   text-decoration: none;
   font-size: 1.4em;
   font-weight: bold;
   margin: auto 8px;
+  font-family: "Jost", sans-serif;
+
 }
 
 .navItem {
@@ -79,6 +87,8 @@ const isUserAdmin = ref(localStorage.getItem("IS_ADMIN"));
   margin: auto 3vw;
   width: fit-content;
   white-space: nowrap;
+  font-weight: bold;
+  
 }
 
 nav {
@@ -111,8 +121,7 @@ nav input {
 }
 
 @media only screen and (max-width: 1000px) {
-
-  nav{
+  nav {
     height: auto;
   }
   .desktop-list {
@@ -128,7 +137,7 @@ nav input {
     background-color: #8185e4;
   }
 
-  .mobile-list a{
+  .mobile-list a {
     padding: 35px 6vw 20px;
   }
 
@@ -141,7 +150,7 @@ nav input {
 }
 
 @media only screen and (max-width: 400px) {
-  .mobile-list a{
+  .mobile-list a {
     padding: 35px 15px 20px;
   }
   .mobile-list {

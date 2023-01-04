@@ -12,7 +12,7 @@ const props = defineProps({
 
 const data = ref([]);
 const attributes = ref([]);
-const minAttributes = ref([])
+const minAttributes = ref([]);
 const emit = defineEmits(["showMessageEventPass"]);
 const loading = ref(true);
 
@@ -25,21 +25,18 @@ async function fetchData() {
 
   data.value = await fetchAll(props.category);
 
-
-  if(data.value.length > 0){
+  if (data.value.length > 0) {
     attributes.value = Object.keys(data.value[0]) ? Object.keys(data.value[0]) : 0;
-    minAttributes.value = attributes.value.slice(-2)
+    minAttributes.value = attributes.value.slice(-2);
   }
   loading.value = false;
 }
 
 function trimText(text) {
-  if (typeof text === "string" && text.length > 12) return `${text.slice(0,  12)} ...`;
+  if (typeof text === "string" && text.length > 12) return `${text.slice(0, 12)} ...`;
 
   return text;
 }
-
-
 
 function formatAttributeName(text) {
   return text.replaceAll("_", " ");
@@ -67,44 +64,55 @@ onMounted(async () => {
     <div class="desktop-list">
       <ul class="headingOfList">
         <li v-for="attribute in attributes">{{ formatAttributeName(attribute) }}</li>
+        <li>actions</li>
       </ul>
 
-      <h3 v-if="data.length === 0"> No {{ props.category }} in the database</h3>
+      <h3 v-if="data.length === 0">No {{ props.category }} in the database</h3>
       <ul v-for="line in data" class="lines">
-        <li v-for="(attributeName, index) in attributes">
-          <p>{{ trimText(line[attributeName]) }}</p>
-        </li>
-        <RouterLink id="updateBtn" :to="updateUrl(line.id)"><img  src="@/assets/edit.png" alt="create a new element" /></RouterLink>
+        <li v-for="attributeName in attributes">
+          <p v-if="line[attributeName] === true" class="emoji">👑</p>
+          <p v-else-if="line[attributeName] === false" class="emoji">👨‍🌾</p>
 
-        <adminDeleteBtnVue @showMessageEvent="(id) => passMessage(id)" :elemId="line.id" :category="category" class="specialBtn" />
+          <p v-else="">{{ trimText(line[attributeName]) }}</p>
+        </li>
+        <li class="horizontalDiv">
+          <RouterLink id="updateBtn" :to="updateUrl(line.id)"><img src="@/assets/edit.png" alt="create a new element" /></RouterLink>
+
+          <adminDeleteBtnVue @showMessageEvent="(id) => passMessage(id)" :elemId="line.id" :category="category" class="specialBtn" />
+        </li>
       </ul>
     </div>
 
     <div class="mobile-list">
       <ul class="headingOfList">
         <li v-for="attribute in minAttributes">{{ attribute }}</li>
+        <li>actions</li>
       </ul>
 
-      <h3 v-if="data.length === 0"> No {{ props.category }} in the database</h3>
+      <h3 v-if="data.length === 0">No {{ props.category }} in the database</h3>
       <ul v-for="line in data" class="lines">
-        <li v-for="(attributeName, index) in minAttributes">
-          <p>{{ trimText(line[attributeName]) }}</p>
+        <li v-for="attributeName in minAttributes">
+          <p v-if="line[attributeName] === true" class="emoji">👑</p>
+          <p v-else-if="line[attributeName] === false" class="emoji">👨‍🌾</p>
+          <p v-else="">{{ trimText(line[attributeName]) }}</p>
         </li>
-        <RouterLink id="updateBtn" :to="updateUrl(line.id)"><img  src="@/assets/edit.png" alt="create a new element" /></RouterLink>
+          <RouterLink id="updateBtn" :to="updateUrl(line.id)"><img src="@/assets/edit.png" alt="create a new element" /></RouterLink>
 
-        <adminDeleteBtnVue @showMessageEvent="(id) => passMessage(id)" :elemId="line.id" :category="category" class="specialBtn" />
+          <adminDeleteBtnVue @showMessageEvent="(id) => passMessage(id)" :elemId="line.id" :category="category" class="specialBtn" />
       </ul>
     </div>
   </section>
 </template>
 <style scoped>
-#updateBtn{
-  display: flex;
-
+.emoji {
+  font-size: 2.5em;
 }
-#updateBtn img{
+#updateBtn {
+  display: flex;
+}
+#updateBtn img {
   width: 35px;
-  margin:auto 30px auto 20px;
+  margin: auto 30px auto 20px;
 }
 section {
   display: flex;
@@ -139,13 +147,14 @@ ul {
 
 .headingOfList {
   background-color: rgb(218, 195, 248);
+  border-radius: 6px;
 }
 .specialBtn {
   margin-left: auto;
   margin-right: 30px;
 }
 
-.mobile-list{
+.mobile-list {
   display: none;
 }
 
@@ -153,40 +162,35 @@ ul {
   .desktop-list {
     display: none;
   }
-  .mobile-list{
+  .mobile-list {
     display: block;
     width: 80vw;
   }
   .specialBtn {
-  margin-left: auto;
-  margin-right: 10px;
-}
-li{
-  width: 15%;
-  padding-left: 10vw;
-  padding-right: 20vw;
-}
-
+    margin-left: auto;
+    margin-right: 10px;
+  }
+  li {
+    width: 15%;
+    padding-left: 10vw;
+    padding-right: 20vw;
+  }
 }
 
 @media only screen and (max-width: 600px) {
-
-  li{
+  li {
     font-size: 0.8em;
-  width: 100px;
-  padding-left: 0px;
-  padding-right: 0px;
-  margin-left: 80px;
-  margin-right: 0px;
+    width: 100px;
+    padding-left: 0px;
+    padding-right: 0px;
+    margin-left: 80px;
+    margin-right: 0px;
+  }
+  a {
+    margin: auto;
+  }
 
-
-}
-a{
-  margin: auto;
-}
-
-
-.mobile-list{
+  .mobile-list {
     display: block;
     width: 450px;
   }

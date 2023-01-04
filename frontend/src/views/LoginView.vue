@@ -34,8 +34,6 @@ function changeMessage(m) {
 </template>
 
 <style scoped>
-
-
 #formDiv {
   text-align: center;
   margin-top: 20vh;
@@ -51,15 +49,19 @@ function changeMessage(m) {
 }
 
 #bookImg {
+  margin: auto 20px;
   width: 40px;
-  margin: 0px 20px;
 }
 
 #polypediaTitle {
-  color: #5054cb;
+  background-image: linear-gradient(90deg, rgba(30, 9, 121, 1) 0%, rgba(109, 67, 255, 1) 0%, rgba(136, 157, 252, 1) 100%);
+  background-size: 100%;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
   margin-top: auto;
   margin-bottom: auto;
   font-family: "Jost", sans-serif;
+  font-size: 1.7em;
 }
 
 #title {

@@ -31,7 +31,7 @@ onBeforeMount(() => {
     <h5 id="message" v-if="showMessage !== ''">{{ showMessage }}</h5>
 
     <div class="horizontalDiv">
-      <h1 id="title">{{ currentCategory }} pannel</h1>
+      <h1 id="title">{{ currentCategory.charAt(0).toUpperCase() + currentCategory.slice(1) }} panel</h1>
 
       <RouterLink  :to="createUrl"><img id="createBtn" src="@/assets/createBtn.png" alt="create a new element" /></RouterLink>
     </div>

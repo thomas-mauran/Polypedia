@@ -62,13 +62,13 @@ onMounted(() => {
 });
 </script>
 <template>
-  <section>
+  <section class="verticalDiv">
     <loadingGif v-if="loading" />
     <h1 v-if="bookTitle === ''">Latest books</h1>
     <h1 v-else>Search result</h1>
 
     <div class="horizontalDiv mobileSearchbar">
-        <input type="text" placeholder="search a book" id="searchBar" v-model="text" v-on:keyup.enter="searchBook" />
+        <input type="text" placeholder="Search a book" id="searchBar" v-model="text" v-on:keyup.enter="searchBook" />
         <RouterLink :to="url" id="searchBtn"
           ><img id="searchIcon" src="@/assets/navbar/searchLogo.png" alt="loop icon for search button"
         /></RouterLink>
@@ -84,7 +84,7 @@ onMounted(() => {
 
 
       <p id="numberOfResults" v-if="bookList.length !== 0 && bookTitle !== ''">{{bookList.length}} books found</p>
-      <section>
+      <section class="booksList">
         <bookCard
           v-for="book in bookList"
           :key="book.id"
@@ -133,10 +133,19 @@ onMounted(() => {
 
 h1 {
   margin-bottom: 20px;
+  font-family: "Jost", sans-serif;
+  font-size: 1.7em;
 }
 
 section {
   margin-top: 5vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.booksList{
   display: flex;
   justify-content: center;
   flex-direction: row;

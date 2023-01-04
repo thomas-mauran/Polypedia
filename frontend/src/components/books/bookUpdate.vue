@@ -151,10 +151,12 @@ onMounted(() => {
         <button id="createAuthorBtn" @click="createAuthorBtnClicked" type="button">Create an author</button>
 
         <h3>Tags</h3>
+        <p>(hover to get a description of the tag)</p>
+
         <section id="tagSection">
-          <div v-for="tag in tags" :key="tag.id" class="radioTag">
-            <input type="checkbox" :id="tag.id" :value="tag.id" v-model="selectedTags" />
-            <label :for="tag.id">{{ tag.name }}</label>
+          <div v-for="tag in tags" :key="tag.id" class="checkboxTag">
+            <input type="checkbox" :title="tag.description" :id="tag.id" :value="tag.id" v-model="selectedTags" />
+            <label :title="tag.description" :for="tag.id">{{ tag.name }}</label>
           </div>
         </section>
 
@@ -230,13 +232,23 @@ input[type="text"] {
   border-radius: 5px;
 }
 
-.radioTag {
-  font-size: 0.7em;
-  margin: 0px 5px;
+input{
+  cursor: pointer;
 }
 
-.radioTag label {
+.checkboxTag {
+  font-size: 1em;
+  margin: 0px 5px;
+  cursor: pointer;
+
+}
+
+.checkboxTag label {
+  font-size: 1em;
+
   margin-left: 10px;
+  cursor: pointer;
+
 }
 
 button {

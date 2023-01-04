@@ -5,7 +5,7 @@ import { useRoute } from "vue-router";
 import { Slide } from "vue3-burger-menu";
 
 import BurgerLabel from "@/components/burgerLabel.vue";
-import loadingGif from "@/components/loadingGif.vue"
+import loadingGif from "@/components/loadingGif.vue";
 
 const route = useRoute();
 
@@ -17,27 +17,22 @@ const pdfData = ref(null);
 
 const isLiked = ref(false);
 const token = localStorage.getItem("AUTH_TOKEN_KEY");
-const loading = ref(true)
-
+const loading = ref(true);
 
 // const numPages = ref(0);
 const urlBook = `${process.env.VUE_APP_API_URL}/books/${route.params.id}`;
-
 
 async function fetchBook() {
   loading.value = true;
 
   axios
-    .get(
-      urlBook,
-      {
-        headers: {
-          "x-access-token": `${localStorage.getItem("AUTH_TOKEN_KEY")}`,
-        },
-      }
-    )
+    .get(urlBook, {
+      headers: {
+        "x-access-token": `${localStorage.getItem("AUTH_TOKEN_KEY")}`,
+      },
+    })
     .then(async (response) => {
-      bookInfo.value = response.data
+      bookInfo.value = response.data;
       bookTags.value = response.data.tags;
       isLiked.value = response.data.isLiked;
       bookAuthors.value = response.data.authors.length > 0 ? response.data.authors[0] : "undefined";
@@ -48,7 +43,6 @@ async function fetchBook() {
       const blob = new Blob([pdfBuffer], { type: "application/pdf" });
       pdfData.value = URL.createObjectURL(blob);
       loading.value = false;
-
     })
     .catch((error) => {
       loading.value = false;
@@ -107,22 +101,22 @@ function likeBook() {
 }
 
 onMounted(() => {
-
   fetchBook();
-
 });
 </script>
 <template>
   <section id="container">
-    <loadingGif v-if="loading"/>
+    <loadingGif v-if="loading" />
 
-    <object :data="pdfData" type="application/pdf" class="pdfLoader"></object>
+    <object :data="pdfData" type="application/pdf" class="pdfLoader">
+      <p v-if="loading === false">Your web browser doesn't have a PDF plugin. Instead you can <a :href="pdfData">click here to download the PDF file.</a></p>
+    </object>
     <Slide noOverlay disableOutsideClick isOpen="true" left width="400">
       <div class="verticalDiv">
         <h1>Informations</h1>
 
         <BurgerLabel isBig title="Title" :text="bookInfo.title" />
-        <BurgerLabel title="Title" :text="bookInfo.id" />
+        <BurgerLabel title="Id" :text="bookInfo.id" />
         <BurgerLabel isBig title="Author" :text="bookAuthors.fullname" />
         <BurgerLabel isBig title="Description" :text="bookInfo.description" />
         <BurgerLabel title="Number of pages" :text="bookInfo.number_of_pages" />
@@ -154,7 +148,7 @@ onMounted(() => {
 
 .bm-burger-button {
   top: 110px !important;
-  min-width: 2vw !important; 
+  min-width: 2vw !important;
   min-height: 2vw !important;
 }
 
@@ -169,7 +163,7 @@ onMounted(() => {
   margin-bottom: 2vh !important;
   background-color: #dbdcf6 !important;
   max-height: calc(105vh - 8rem) !important;
-      overflow-y: auto !important;
+  overflow-y: auto !important;
 }
 
 .bm-cross {
@@ -200,21 +194,21 @@ onMounted(() => {
 
 @media only screen and (max-width: 1000px) {
   .bm-burger-button {
-  top: 20px;
-}
-.bm-menu {
-  z-index: 0;
-  box-shadow: inset 0 7px 9px -7px black;
-  margin-top: 0px;
-  background-color: #dbdcf6;
-  max-height: calc(105vh - 8rem);
-      overflow-y: auto;
-}
+    top: 20px !important;
+  }
+  .bm-menu {
+    z-index: 0;
+    box-shadow: inset 0 7px 9px -7px black !important;
+    margin-top: 0px !important;
+    background-color: #dbdcf6 !important;
+    max-height: calc(105vh - 8rem) !important;
+    overflow-y: auto !important;
+  }
 
-.pdfLoader {
-  margin-top: 60px;
-  width: 100%;
-  height: 100%;
-}
+  .pdfLoader {
+    margin-top: 60px;
+    width: 100%;
+    height: 100%;
+  }
 }
 </style>
