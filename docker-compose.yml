@@ -34,12 +34,12 @@ services:
     extra_hosts:
     - "host.docker.internal:host-gateway"
   
-  # frontend:
-  #   container_name: polypedia-frontend
-  #   build: ./frontend
-  #   ports: 
-  #   - "80:8080"
-  #   - "443:443"
+  frontend:
+    container_name: polypedia-frontend
+    build: ./frontend
+    ports: 
+    - "80:80"
+    - "443:443"
   #   volumes:
   #   - ./frontend:/app
   #   stdin_open: true
