@@ -68,7 +68,7 @@ async function uploadBook() {
     formData.append("tags", JSON.stringify(selectedTags.value));
     formData.append("language", JSON.stringify(selectedLanguage.value));
     axios
-      .post(url, formData, {
+      .patch(url, formData, {
         headers: {
           "x-access-token": `${localStorage.getItem("AUTH_TOKEN_KEY")}`,
           "Content-Type": "multipart/form-data",

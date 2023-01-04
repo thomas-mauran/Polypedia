@@ -44,15 +44,15 @@ async function tryLogin() {
       />
 
       <div class="horizontalDiv buttonDiv" type="button">
-        <button class="purpleBackground btn" @click="tryLogin">Login</button>
+        <button class="purpleBackground btn" @click="tryLogin" type="button">Login</button>
         <p>or</p>
         <RouterLink class="btn purpleOutline" to="signup"
           >Create an account</RouterLink
         >
       </div>
-      <RouterLink class="purpleText" to="resetPassword"
+      <!-- <RouterLink class="purpleText" to="resetPassword"
         >forgot my password 😞</RouterLink
-      >
+      > -->
     </form>
   </article>
 </template>

@@ -153,40 +153,40 @@ onMounted(() => {
 }
 
 .bm-burger-button {
-  top: 110px;
-  min-width: 2vw;
-  min-height: 2vw;
+  top: 110px !important;
+  min-width: 2vw !important; 
+  min-height: 2vw !important;
 }
 
 .bm-burger-bars {
-  background-color: #8185e4;
+  background-color: #8185e4 !important;
 }
 
 .bm-menu {
-  box-shadow: inset 0 7px 9px -7px black;
+  box-shadow: inset 0 7px 9px -7px black !important;
 
-  margin-top: 80px;
-  margin-bottom: 2vh;
-  background-color: #dbdcf6;
-  max-height: calc(105vh - 8rem);
-      overflow-y: auto;
+  margin-top: 80px !important;
+  margin-bottom: 2vh !important;
+  background-color: #dbdcf6 !important;
+  max-height: calc(105vh - 8rem) !important;
+      overflow-y: auto !important;
 }
 
 .bm-cross {
-  background: black;
+  background: black !important;
 }
 
 .bm-item-list > * {
-  color: black;
+  color: black !important;
 }
 .bm-item-list h1 {
-  margin-bottom: 20px;
-  font-size: 1.8em;
-  text-decoration: underline 2px;
+  margin-bottom: 20px !important;
+  font-size: 1.8em !important;
+  text-decoration: underline 2px !important;
 }
 
 .bm-item-list h2 {
-  font-size: 1.4em;
+  font-size: 1.4em !important;
 }
 
 #container {

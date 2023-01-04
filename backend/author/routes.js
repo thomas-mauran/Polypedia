@@ -12,7 +12,7 @@ router.get("/", auth, controller.getAll)
 router.post("/", adminCheck, validator.validateCreate, controller.insert)
 router.delete("/:id", adminCheck, controller.deleteFromDb)
 router.get("/:id", auth, controller.getById)
-router.post("/:id", adminCheck, validator.validateCreate, controller.update)
+router.patch("/:id", adminCheck, validator.validateCreate, controller.update)
 
 
 

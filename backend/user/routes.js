@@ -15,6 +15,6 @@ router.delete("/:id", adminCheck, controller.deleteFromDb)
 router.get("/:id", auth ,controller.getById)
 router.post("/login",validator.validateLogin, controller.loginUser)
 router.get("/isAdmin/:id", auth ,controller.isUserAdmin)
-router.post("/:id", adminCheck, validator.validateUpdate, controller.update)
+router.patch("/:id", adminCheck, validator.validateUpdate, controller.update)
 
 module.exports = router

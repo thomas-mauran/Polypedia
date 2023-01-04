@@ -73,10 +73,14 @@ async function uploadBook() {
         // let responseText = response;
         // let responseMsg = responseText.error
         //   ? responseText.error
-        //   : responseText;
+        //   : responseText
         if (response.status !== 201) {
           emit("showMessageEvent", responseMsg);
           loading.value = false;
+        } else if (response.status === 413) {
+          emit("showMessageEvent", "File sent is too big");
+          loading.value = false;
+
         } else {
           router.push("books");
           emit("showMessageEvent", "Book uploaded");
@@ -147,7 +151,6 @@ onMounted(() => {
   </article>
 </template>
 <style scoped>
-
 #createAuthorBtn {
   background-color: #8185e4;
   color: white;

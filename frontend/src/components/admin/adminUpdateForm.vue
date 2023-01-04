@@ -48,7 +48,7 @@ async function sendData() {
   }, {});
 
   try {
-    let res = await axios.post(url, refactoredData, {
+    let res = await axios.patch(url, refactoredData, {
       headers: {
         "x-access-token": `${localStorage.getItem("AUTH_TOKEN_KEY")}`,
       },

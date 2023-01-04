@@ -206,7 +206,9 @@ const uploadBook = async (req, res) => {
 
               try {
                 await storeAsImage(pageToConvertAsImage);
+                console.log("stored")
               } catch (error) {
+                console.log(error)
                 return res.status(500).send(error);
               }
             }
