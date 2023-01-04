@@ -179,7 +179,7 @@ const deleteFromDb = async (req, res) => {
     await pool.query(queries.deleteInter, [id]);
     await pool.query(queries.deleteFromDb, [id]);
 
-    return res.status(200).send();
+    return res.status(204).send();
   } catch (error) {
     console.log(error);
     return res.status(500).send({ error: error });

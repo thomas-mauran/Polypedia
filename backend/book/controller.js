@@ -197,8 +197,8 @@ const uploadBook = async (req, res) => {
                 saveFilename: `${bookId}`, // output file name
                 savePath: "/files/img", // output directory
                 format: "jpeg", // output file format
-                width: 1080,
-                height: 1600,
+                width: 500,
+                height: 700,
               };
 
               const storeAsImage = pdf2pic.fromPath(`/files/pdf/${fileName}`, options);
@@ -271,7 +271,7 @@ const likeBook = async (req, res) => {
     if (result.rows.length > 0) {
       const addLikeResult = await pool.query(queries.addLike, [bookId, userId]);
       if (addLikeResult) return res.status(200);
-      return res.status(500);
+      return res.status(500).send("internal server error");
     } else {
       return res.status(404).send("Book Id not found");
     }
@@ -293,7 +293,7 @@ const unlikeBook = async (req, res) => {
     if (result.rows.length > 0) {
       const removeLikeResult = await pool.query(queries.removeLike, [bookId, userId]);
       if (removeLikeResult) return res.status(200);
-      return res.status(500);
+      return res.status(500).send("internal server error");
     } else {
       return res.status(404).send("Book Id not found");
     }
@@ -328,7 +328,7 @@ const deleteFromDb = async (req, res) => {
     const pdfExists = await fileExistsFunction(pdfPath);
     if (pdfExists) await fs.promises.unlink(pdfPath);
 
-    return res.status(200).send();
+    return res.status(204).send();
   } catch (error) {
     console.log(error);
     return res.status(500).send({ error: error });
@@ -405,8 +405,8 @@ const update = async (req, res) => {
           saveFilename: `${id}`, // output file name
           savePath: "/files/img", // output directory
           format: "jpeg", // output file format
-          width: 1080,
-          height: 1600,
+          width: 500,
+          height: 700,
         };
 
         const storeAsImage = pdf2pic.fromPath(newPath, options);
