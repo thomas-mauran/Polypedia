@@ -1,0 +1,14 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: ssl-cert-staging
+  namespace: default
+spec:
+  secretName: ssl-cert-staging
+  issuerRef:
+    name: letsencrypt-staging
+    kind: ClusterIssuer
+  commonName: 162.38.112.156.dopolytech.fr
+  dnsNames:
+  - 162.38.112.156.dopolytech.fr
+  - api.162.38.112.156.dopolytech.fr

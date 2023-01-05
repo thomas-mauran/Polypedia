@@ -1,0 +1,18 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-production
+  namespace: default
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: thomas.mauran@etu.umontpellier.fr
+    privateKeySecretRef:
+      name: letsencrypt-production
+    solvers:
+    - selector: {}
+      http01:
+        ingress:
+          class: nginx
+
+
