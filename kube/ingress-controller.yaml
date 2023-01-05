@@ -5,7 +5,6 @@ metadata:
   annotations:
       nginx.ingress.kubernetes.io/proxy-body-size: "0"
       nginx.org/client-max-body-size: "30m"
-#      cert-manager.io/cluster-issuer: letsencrypt-staging
 spec:
   rules:
     - host: cluster-2022-6.dopolytech.fr
@@ -30,7 +29,8 @@ spec:
                   number: 80
   ingressClassName: nginx
   tls:
-     - hosts:
-       - cluster-2022-6.dopolytech.fr
-       secretName: ssl-cert-staging
-    
+  - hosts:
+      - cluster-2022-6.dopolytech.fr
+      - api.cluster-2022-6.dopolytech.fr  
+    secretName: ssl-cert-production
+ 

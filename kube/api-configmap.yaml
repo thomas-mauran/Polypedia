@@ -3,7 +3,8 @@ kind: ConfigMap
 metadata:
   name: api-configmap
 data:
-  PORT: "3000"
+  SERVER_PORT: "3000"
+  SERVER_HOST: "localhost"
   DB: "polypedia"
   DIALECT: "postgres"
   USER: "admin"

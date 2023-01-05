@@ -20,6 +20,9 @@ spec:
         - env:
             - name: CHOKIDAR_USEPOLLING
               value: "true"
+            - name: VUE_APP_API_URL
+              value: "https://api.cluster-2022-6.dopolytech.fr"
+
           image: thomasmauran/polypedia_frontend
           imagePullPolicy: Always
           name: frontend-deployment
