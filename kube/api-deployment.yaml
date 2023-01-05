@@ -5,7 +5,7 @@ metadata:
     service: api
   name: api
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       service: api
@@ -25,7 +25,9 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 3000
-          resources: {}
+          resources:
+            requests:
+              cpu: 100m 
           volumeMounts:
             - mountPath: "/files"
               name: mypd
@@ -35,5 +37,6 @@ spec:
             claimName: api-pv-claim
 
       restartPolicy: Always
+
 
 status: {}
