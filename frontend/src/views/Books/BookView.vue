@@ -12,7 +12,7 @@ const route = useRoute();
 const bookInfo = ref("");
 const bookAuthors = ref([]);
 const bookTags = ref([]);
-
+const windowSize = ref(0)
 const pdfData = ref(null);
 
 const isLiked = ref(false);
@@ -101,16 +101,20 @@ function likeBook() {
 }
 
 onMounted(() => {
+
   fetchBook();
+  windowSize.value = window.innerWidth
 });
 </script>
 <template>
   <section id="container">
     <loadingGif v-if="loading" />
 
-    <object :data="pdfData" type="application/pdf" class="pdfLoader">
+    <object v-if="windowSize >= 500" :data="pdfData" type="application/pdf" class="pdfLoader">
       <p v-if="loading === false">Your web browser doesn't have a PDF plugin. Instead you can <a :href="pdfData">click here to download the PDF file.</a></p>
     </object>
+    <iframe v-else-if="windowSize < 500" :src="pdfData" class="pdfLoader">
+    </iframe>
     <Slide noOverlay disableOutsideClick isOpen="true" left width="400">
       <div class="verticalDiv">
         <h1>Informations</h1>
@@ -206,6 +210,7 @@ onMounted(() => {
   }
 
   .pdfLoader {
+    margin:0px;
     margin-top: 60px;
     width: 100%;
     height: 100%;
