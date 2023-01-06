@@ -16,6 +16,8 @@ router.delete("/:id", adminCheck, controller.deleteFromDb);
 
 router.get("/search", auth, controller.search);
 router.get("/:id", auth, controller.getBookById);
+router.get("/file/:id", auth, controller.getFile);
+
 router.patch("/:id", adminCheck, upload.single("file"), validator.validateUpdate, controller.update)
 
 router.post("/like/:id", auth, controller.likeBook);

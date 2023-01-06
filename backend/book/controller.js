@@ -36,19 +36,48 @@ const getBookById = async (req, res) => {
     const isLikedResult = await pool.query(queries.isLiked, [id, userId]);
     data.isLiked = isLikedResult.rows.length > 0 ? true : false;
 
-    // We retrieve the book buffer
-    const pdfName = `${data.id}-${data.title}`.toLowerCase().split(" ").join("-");
-    const pdfPath = `/files/pdf/${pdfName}`;
-
-    const fileExists = await fileExistsFunction(pdfPath);
-    if (fileExists) data.pdfFile = await fs.promises.readFile(pdfPath);
-
     res.status(200).json(data);
   } catch (error) {
     console.log(error);
     return res.status(500).send({ error });
   }
 };
+
+
+// Get a book info using his id
+const getFile = async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const token = req.headers["x-access-token"];
+
+    const decoded = jwt.verify(token, process.env.JWT_TOKEN_KEY);
+    const userId = decoded.userId;
+
+    // We get the book infos
+    const result = await pool.query(queries.getById, [id]);
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: `no books with the id : ${id}` });
+    }
+    const data = result.rows[0];
+
+    // We retrieve the book buffer
+    const pdfName = `${data.id}-${data.title}`.toLowerCase().split(" ").join("-");
+    const pdfPath = `/files/pdf/${pdfName}`;
+
+    
+    const fileExists = await fileExistsFunction(pdfPath);
+    if (fileExists)  res.status(200).sendFile(pdfPath, {
+      headers: {
+        "Content-Type": "application/pdf",
+      }
+    });
+
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({ error });
+  }
+};
+
 
 const getAll = async (req, res) => {
   try {
@@ -441,4 +470,5 @@ module.exports = {
   search,
   deleteFromDb,
   update,
+  getFile
 };
