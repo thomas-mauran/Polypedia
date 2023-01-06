@@ -5,4 +5,4 @@ metadata:
   namespace: ingress-nginx
 data:
   use-gzip: "true"
-  gzip-types: "*"
+  gzip-types: "text/plain application/xml application/javascript text/css application/json"
