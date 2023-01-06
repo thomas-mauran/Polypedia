@@ -12,7 +12,7 @@ const route = useRoute();
 const bookInfo = ref("");
 const bookAuthors = ref([]);
 const bookTags = ref([]);
-const windowSize = ref(0)
+const windowSize = ref(0);
 const pdfData = ref(null);
 
 const isLiked = ref(false);
@@ -37,11 +37,30 @@ async function fetchBook() {
       isLiked.value = response.data.isLiked;
       bookAuthors.value = response.data.authors.length > 0 ? response.data.authors[0] : "undefined";
 
-      let pdf = await response.data.pdfFile.data;
+      loading.value = false;
+    })
+    .catch((error) => {
+      loading.value = false;
 
-      const pdfBuffer = await new Uint8Array(pdf);
-      const blob = new Blob([pdfBuffer], { type: "application/pdf" });
-      pdfData.value = URL.createObjectURL(blob);
+      console.log(error);
+    });
+}
+
+async function fetchFile() {
+  loading.value = true;
+
+  const urlFile = `${process.env.VUE_APP_API_URL}/books/file/${route.params.id}`;
+  axios
+    .get(urlFile, {
+      headers: {
+        "x-access-token": `${localStorage.getItem("AUTH_TOKEN_KEY")}`,
+      },
+      responseType: "blob",
+    })
+    .then(async (response) => {
+      //const blob = new Blob([response.data], { type: "application/pdf" });
+      //console.log(blob)
+      pdfData.value = URL.createObjectURL(response.data);
       loading.value = false;
     })
     .catch((error) => {
@@ -58,6 +77,7 @@ function likeBook() {
   if (isLiked.value) {
     bookInfo.value.number_of_likes += 1;
     const url = `${process.env.VUE_APP_API_URL}/books/like/${bookInfo.value.id}`;
+    loading.value = true;
 
     axios
       .post(
@@ -71,9 +91,11 @@ function likeBook() {
       )
       .then((response) => {
         console.log(response.status);
+        loading.value = false;
       })
       .catch((error) => {
         console.log(error);
+        loading.value = false;
       });
   }
   // We unlike the book
@@ -101,9 +123,9 @@ function likeBook() {
 }
 
 onMounted(() => {
-
   fetchBook();
-  windowSize.value = window.innerWidth
+  fetchFile();
+  windowSize.value = window.innerWidth;
 });
 </script>
 <template>
@@ -111,10 +133,14 @@ onMounted(() => {
     <loadingGif v-if="loading" />
 
     <object v-if="windowSize >= 500" :data="pdfData" type="application/pdf" class="pdfLoader">
-      <p v-if="loading === false">Your web browser doesn't have a PDF plugin. Instead you can <a :href="pdfData">click here to download the PDF file.</a></p>
+      <p v-if="loading === false">
+        Your web browser doesn't have a PDF plugin. Instead you can <a :href="pdfData">click here to download the PDF file.</a>
+      </p>
     </object>
-    <iframe v-else-if="windowSize < 500" :src="pdfData" class="pdfLoader">
-    </iframe>
+    <div class="middleCentered">
+      <a v-if="windowSize < 500" :href="pdfData" target="_blank" rel="noopener noreferrer" id="downloadBtn">click here to see the PDF file.</a>
+      <p>The inline pdf reader is not included in the mobile version. Click on the button to see your book</p>
+    </div>
     <Slide noOverlay disableOutsideClick isOpen="true" left width="400">
       <div class="verticalDiv">
         <h1>Informations</h1>
@@ -137,6 +163,25 @@ onMounted(() => {
 </template>
 
 <style>
+.middleCentered {
+  margin-top: 45vh;
+}
+
+.middleCentered p {
+  margin-top: 20px;
+}
+
+#downloadBtn {
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  align-self: center;
+  background-color: rgb(164, 120, 198);
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  text-decoration: none;
+}
 #likeBtn {
   width: fit-content;
   align-self: center;
@@ -210,7 +255,7 @@ onMounted(() => {
   }
 
   .pdfLoader {
-    margin:0px;
+    margin: 0px;
     margin-top: 60px;
     width: 100%;
     height: 100%;

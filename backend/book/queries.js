@@ -6,7 +6,7 @@ const getAuthorsByBookId = "SELECT a.id, a.fullname FROM books b JOIN books_auth
 const getLikedBooks = "SELECT distinct book_id, b.title FROM books_users bu JOIN books b ON bu.book_id = b.id WHERE user_id = $1"
 const getAll = "SELECT id, title, description FROM books"
 const isLiked = "SELECT * FROM books_users WHERE book_id = $1 AND user_id = $2; "
-const searchBook = "SELECT * FROM books WHERE LOWER(title) LIKE $1 ORDER BY id desc LIMIT 20;"
+const searchBook = "SELECT * FROM books WHERE title ILIKE $1 ORDER BY id desc LIMIT 100;"
 
 const update = 'UPDATE books SET "title"=$2, "description"=$3, "number_of_pages"=$4, "language_id"=$5 WHERE id=$1'
 

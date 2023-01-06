@@ -33,6 +33,8 @@ async function tryLogin() {
         id="email"
         placeholder="yourEmail@address.com"
         v-model="email"
+        v-on:keyup.enter="tryLogin"
+
       />
 
       <label for="password">Password</label>
@@ -41,6 +43,7 @@ async function tryLogin() {
         id="password"
         placeholder="veryStrongPassword"
         v-model="password"
+        v-on:keyup.enter="tryLogin"
       />
 
       <div class="horizontalDiv buttonDiv" type="button">

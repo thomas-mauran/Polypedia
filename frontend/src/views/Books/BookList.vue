@@ -20,6 +20,7 @@ const text = ref("");
 const url = computed(() => {
   return `/books/${text.value}`;
 });
+
 function searchBook() {
   router.push(url.value);
 }

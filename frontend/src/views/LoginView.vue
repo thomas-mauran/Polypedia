@@ -93,5 +93,6 @@ section {
   #leftSection {
     width: 100vw;
   }
+
 }
 </style>

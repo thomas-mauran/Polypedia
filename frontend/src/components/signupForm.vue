@@ -14,14 +14,11 @@ const checkbox = ref(false);
 const emit = defineEmits(["showMessageEvent"]);
 
 async function createAccount() {
-  if (username.value === "" || email.value === "" || password.value === "" || confirmPassword.value === "" ) {
+  if (username.value === "" || email.value === "" || password.value === "" || confirmPassword.value === "") {
     emit("showMessageEvent", "You need to fill in all the gaps");
-  } 
-   else if (checkbox.value === false){
+  } else if (checkbox.value === false) {
     emit("showMessageEvent", "You need to check the polypedia conditions at the bottom");
-
-   } 
-  else if (password.value !== confirmPassword.value) {
+  } else if (password.value !== confirmPassword.value) {
     emit("showMessageEvent", "Both passwords aren't matching");
   } else {
     const url = `${process.env.VUE_APP_API_URL}/users`;
@@ -58,16 +55,16 @@ async function createAccount() {
   <article class="verticalDivCentered">
     <form class="verticalDiv" id="form">
       <label for="username">Username</label>
-      <input type="text" name="username" id="username" placeholder="coolUsername1234" v-model="username" />
+      <input type="text" name="username" id="username" placeholder="coolUsername1234" v-model="username" v-on:keyup.enter="createAccount" />
 
       <label for="email">Email</label>
-      <input type="text" name="email" id="email" placeholder="yourEmail@address.com" v-model="email" />
+      <input type="text" name="email" id="email" placeholder="yourEmail@address.com" v-model="email" v-on:keyup.enter="createAccount" />
 
       <label for="password">Password</label>
-      <input type="password" name="password" id="password" placeholder="veryStrongPassword" v-model="password" />
+      <input type="password" name="password" id="password" placeholder="veryStrongPassword" v-model="password" v-on:keyup.enter="createAccount" />
 
       <label for="passwordConfirm">Confirm password</label>
-      <input type="password" name="passwordConfirm" id="passwordConfirm" placeholder="veryStrongPassword" v-model="confirmPassword" />
+      <input type="password" name="passwordConfirm" id="passwordConfirm" placeholder="veryStrongPassword" v-model="confirmPassword" v-on:keyup.enter="createAccount" />
 
       <div id="confirmRights">
         <p>I am the owner of the file I will upload on polypedia:</p>
@@ -97,6 +94,6 @@ async function createAccount() {
   margin-top: 5px;
   margin-right: 200px;
   width: 1.3em;
-        height: 1.3em;
+  height: 1.3em;
 }
 </style>
