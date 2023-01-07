@@ -107,13 +107,13 @@ nav input {
   border-bottom: 2px solid #8185e4;
 }
 
-@media (max-width: 1400px) {
+@media (max-width: 1500px) {
   .navItem {
     margin: auto 2vw;
   }
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 1300px) {
   .navItem {
     margin: auto 1vw;
     font-size: 0.8em;

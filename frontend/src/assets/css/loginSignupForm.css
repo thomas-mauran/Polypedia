@@ -1,69 +1,81 @@
 #form {
-    text-align: center;
-  }
-  
-  #form p {
-    margin: 10px;
-  }
-  
-  .purpleText {
-    color: #8185e4;
-    text-decoration: none;
-  }
-  
-  form {
-    text-align: left;
-    font-size: 1.2em;
-  }
-  
-  form label {
-    text-align: left;
-    margin: 20px 0px;
-  }
-  
-  form input {
-    font-size: 0.8em;
-    background-color: transparent;
-    border: none;
-    border-bottom: 2px solid black;
-  }
-  
-  input:focus {
-    outline: none;
-  }
-  
-  .buttonDiv {
-    margin: 20px 50px;
-    text-align: center;
-  }
-  
-  .buttonDiv p {
-    padding-top: 7px;
-  }
-  
-  .btn {
-    padding: 10px 20px;
-    margin: 10px;
-    background-color: transparent;
-    border: none;
-    border-radius: 5px;
-    font-weight: bold;
-    font-size: 0.8em;
-    cursor: pointer;
-    text-decoration: none;
-  }
-  
-  .purpleBackground {
-    background-color: #8185e4;
-    color: white;
-  }
-  
-  .purpleOutline {
-    border: 2px #8185e4 solid;
-    color: black;
-  }
-  
-  input[type="password"] {
-    color: black;
-  }
+  text-align: center;
+}
 
+#form p {
+  margin: 10px;
+}
+
+.purpleText {
+  color: #8185e4;
+  text-decoration: none;
+}
+
+form {
+  text-align: left;
+  font-size: 1.2em;
+}
+
+form label {
+  text-align: left;
+  margin: 20px 0px;
+}
+
+form input {
+  font-size: 0.8em;
+  background-color: transparent;
+  border: none;
+  border-bottom: 2px solid black;
+}
+
+input:focus {
+  outline: none;
+}
+
+.buttonDiv {
+  margin: 20px 50px;
+  text-align: center;
+}
+
+.buttonDiv p {
+  padding-top: 7px;
+}
+
+.btn {
+  padding: 10px 20px;
+  margin: 10px;
+  background-color: transparent;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  font-size: 0.8em;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.purpleBackground {
+  background-color: #8185e4;
+  color: white;
+}
+
+.purpleOutline {
+  border: 2px #8185e4 solid;
+  color: black;
+}
+
+input[type="password"] {
+  color: black;
+}
+
+@media only screen and (max-width: 900px) {
+  form input {
+    margin: 0px 30px;
+  }
+  form label {
+    margin: 20px 30px;
+  }
+  .btn {
+    font-size: 0.6em;
+    padding: 4px 10px;
+  }
+}

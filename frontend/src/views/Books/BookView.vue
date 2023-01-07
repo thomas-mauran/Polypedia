@@ -21,6 +21,8 @@ const loading = ref(true);
 
 // const numPages = ref(0);
 const urlBook = `${process.env.VUE_APP_API_URL}/books/${route.params.id}`;
+const isMobile = ref(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
+
 
 async function fetchBook() {
   loading.value = true;
@@ -102,6 +104,7 @@ function likeBook() {
   else {
     bookInfo.value.number_of_likes -= 1;
     const url = `${process.env.VUE_APP_API_URL}/books/unlike/${bookInfo.value.id}`;
+    loading.value = true;
 
     axios
       .post(
@@ -119,6 +122,8 @@ function likeBook() {
       .catch((error) => {
         console.log(error);
       });
+      loading.value = false;
+
   }
 }
 
@@ -132,13 +137,13 @@ onMounted(() => {
   <section id="container">
     <loadingGif v-if="loading" />
 
-    <object v-if="windowSize >= 500" :data="pdfData" type="application/pdf" class="pdfLoader">
+    <object v-if="!isMobile" :data="pdfData" type="application/pdf" class="pdfLoader">
       <p v-if="loading === false">
         Your web browser doesn't have a PDF plugin. Instead you can <a :href="pdfData">click here to download the PDF file.</a>
       </p>
     </object>
-    <div class="middleCentered">
-      <a v-if="windowSize < 500" :href="pdfData" target="_blank" rel="noopener noreferrer" id="downloadBtn">click here to see the PDF file.</a>
+    <div v-if="isMobile" class="middleCentered">
+      <a  :href="pdfData" target="_blank" rel="noopener noreferrer" id="downloadBtn">click here to see the PDF file.</a>
       <p>The inline pdf reader is not included in the mobile version. Click on the button to see your book</p>
     </div>
     <Slide noOverlay disableOutsideClick isOpen="true" left width="400">

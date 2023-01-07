@@ -299,7 +299,7 @@ const likeBook = async (req, res) => {
 
     if (result.rows.length > 0) {
       const addLikeResult = await pool.query(queries.addLike, [bookId, userId]);
-      if (addLikeResult) return res.status(200);
+      if (addLikeResult) return res.status(200).send();
       return res.status(500).send("internal server error");
     } else {
       return res.status(404).send("Book Id not found");
@@ -321,7 +321,7 @@ const unlikeBook = async (req, res) => {
 
     if (result.rows.length > 0) {
       const removeLikeResult = await pool.query(queries.removeLike, [bookId, userId]);
-      if (removeLikeResult) return res.status(200);
+      if (removeLikeResult) return res.status(200).send();
       return res.status(500).send("internal server error");
     } else {
       return res.status(404).send("Book Id not found");

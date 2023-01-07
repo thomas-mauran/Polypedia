@@ -101,6 +101,31 @@ function createAuthorBtnClicked() {
   else selectedAuthors.value = "";
 }
 
+
+async function fetchFile() {
+  loading.value = true;
+
+  const urlFile = `${process.env.VUE_APP_API_URL}/books/file/${route.params.id}`;
+  axios
+    .get(urlFile, {
+      headers: {
+        "x-access-token": `${localStorage.getItem("AUTH_TOKEN_KEY")}`,
+      },
+      responseType: "blob",
+    })
+    .then(async (response) => {
+      //const blob = new Blob([response.data], { type: "application/pdf" });
+      //console.log(blob)
+      pdfData.value = URL.createObjectURL(response.data);
+      loading.value = false;
+    })
+    .catch((error) => {
+      loading.value = false;
+
+      console.log(error);
+    });
+}
+
 onBeforeMount(async () => {
   id = route.params.id;
   const data = await fetchOne("books", id);
@@ -116,10 +141,7 @@ onBeforeMount(async () => {
   selectedTags.value = tags;
 
   selectedLanguage.value = data.language_id;
-  const pdf = data.pdfFile.data;
-  const pdfBuffer = await new Uint8Array(pdf);
-  const blob = new Blob([pdfBuffer], { type: "application/pdf" });
-  pdfData.value = URL.createObjectURL(blob);
+  fetchFile()
 });
 
 onMounted(() => {
@@ -193,7 +215,7 @@ onMounted(() => {
 }
 
 article {
-  width: 40vw;
+  width: 50vw;
 }
 h2 {
   margin: 0px;
@@ -201,7 +223,7 @@ h2 {
 }
 
 #form {
-  width: 30vw;
+  width: 90%;
   min-width: 400px;
   font-size: 1em;
   border-radius: 10px;
@@ -277,9 +299,26 @@ button {
 }
 
 #rightSection{
-    width: 50vw;
+    width: 45vw;
+
 }
 #rightSection h3{
     text-decoration: underline;
+}
+
+@media only screen and (max-width: 1200px) {
+  #rightSection {
+    display: none;
+  }
+  #leftSection {
+    width: 100vw;
+  }
+  #formDiv {
+    margin: 2vh 5vh 10vh 10vh;
+  }
+
+  #form{
+    width: 90%;
+  }
 }
 </style>

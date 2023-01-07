@@ -65,7 +65,7 @@ onMounted(() => {
 <template>
   <section class="verticalDiv">
     <loadingGif v-if="loading" />
-    <h1 v-if="bookTitle === ''">Latest books</h1>
+    <h1 v-if="bookTitle === '' ">Latest books</h1>
     <h1 v-else>Search result</h1>
 
     <div class="horizontalDiv mobileSearchbar">
@@ -75,7 +75,7 @@ onMounted(() => {
         /></RouterLink>
       </div>
 
-    <div class="noBooksDiv" v-if="bookList.length < 1">
+    <div class="noBooksDiv" v-if="bookList.length < 1 && loading === false">
       <img id="noBookImg" src="@/assets/404noBooks.gif" alt="Books not found gif of a book getting stealed by an ovni" />
 
       <h2>404 No books found with this title</h2>
@@ -168,6 +168,9 @@ section {
 @media only screen and (max-width: 1000px) {
   .mobileSearchbar {
     display: block;
+  }
+  .booksList{
+    margin-bottom: 100px;
   }
 }
 </style>
