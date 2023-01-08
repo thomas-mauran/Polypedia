@@ -1,0 +1,29 @@
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: api-pv
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 35G
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: /mnt/data/polypedia/files
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    app: api
+  name: api-pv-claim
+spec:
+  storageClassName: manual
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 35G

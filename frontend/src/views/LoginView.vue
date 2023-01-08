@@ -1,12 +1,11 @@
 <script setup>
-import loginForm from "../components/loginForm.vue";
+import loginForm from "@/components/loginForm.vue";
 
 import { ref } from "vue";
 
 const showMessage = ref("");
 
 function changeMessage(m) {
-  console.log(m);
   showMessage.value = m;
 }
 </script>
@@ -15,7 +14,7 @@ function changeMessage(m) {
   <div class="horizontalDiv">
     <section id="leftSection">
       <div class="horizontalDiv" id="logoDiv">
-        <img src="../assets/book.png" alt="opened book image" id="bookImg" />
+        <img src="@/assets/book.png" alt="opened book image" id="bookImg" />
         <h1 id="polypediaTitle">Polypedia</h1>
       </div>
 
@@ -24,21 +23,17 @@ function changeMessage(m) {
         <div id="formDiv">
           <h5>{{ showMessage }}</h5>
 
-          <loginForm
-            @showMessageEvent="(msg) => changeMessage(msg)"
-            id="formComponent"
-          />
+          <loginForm @showMessageEvent="(msg) => changeMessage(msg)" id="formComponent" />
         </div>
       </div>
     </section>
     <section id="rightSection">
-      <img src="../assets/undraw_library.png" alt="Girl reading a library" />
+      <img src="@/assets/undraw_library.png" alt="Girl reading a library" />
     </section>
   </div>
 </template>
 
 <style scoped>
-
 #formDiv {
   text-align: center;
   margin-top: 20vh;
@@ -48,22 +43,25 @@ function changeMessage(m) {
   color: red;
 }
 
-
 #logoDiv {
   vertical-align: middle;
   margin-top: 1vh;
 }
 
 #bookImg {
+  margin: auto 20px;
   width: 40px;
-  margin: 0px 20px;
 }
 
 #polypediaTitle {
-  color: #5054cb;
+  background-image: linear-gradient(90deg, rgba(30, 9, 121, 1) 0%, rgba(109, 67, 255, 1) 0%, rgba(136, 157, 252, 1) 100%);
+  background-size: 100%;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
   margin-top: auto;
   margin-bottom: auto;
   font-family: "Jost", sans-serif;
+  font-size: 1.7em;
 }
 
 #title {
@@ -80,7 +78,21 @@ section {
   text-align: left;
 }
 #rightSection img {
-  margin-top: 15vh;
+  display: flex;
+  margin-top: 27vh;
   width: 40vw;
+  min-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media only screen and (max-width: 900px) {
+  #rightSection {
+    display: none;
+  }
+  #leftSection {
+    width: 100vw;
+  }
+
 }
 </style>

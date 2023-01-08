@@ -1,15 +1,13 @@
 <script setup>
 import { ref } from "vue";
-import uploadBookForm from "../components/uploadBookForm.vue";
+import uploadBookForm from "@/components/books/uploadBookForm.vue";
 
 const showMessage = ref("");
 
-
 function changeMessage(m) {
-  window.scrollTo(0,0)
+  window.scrollTo(0, 0);
   showMessage.value = m;
 }
-
 </script>
 <template>
   <div>
@@ -18,11 +16,11 @@ function changeMessage(m) {
         <div class="verticalDivCentered" id="formDiv">
           <h5>{{ showMessage }}</h5>
 
-          <uploadBookForm  @showMessageEvent="(msg) => changeMessage(msg)" id="form" />
+          <uploadBookForm @showMessageEvent="(msg) => changeMessage(msg)" id="form" />
         </div>
       </section>
       <section id="rightSection">
-        <img src="../assets/undraw_library.png" alt="Girl reading a library" />
+        <img src="@/assets/undraw_uploadBook.svg" alt="Girl reading a library" />
       </section>
     </div>
   </div>
@@ -30,16 +28,16 @@ function changeMessage(m) {
 
 <style scoped>
 
+
 #formDiv {
   text-align: center;
-  margin: 10vh 15vh;
+  margin: 10vh 10vh;
 }
 
 #formDiv h5 {
   color: rgb(206, 103, 103);
   font-size: 1.2em;
 }
-
 
 #logoDiv {
   vertical-align: middle;
@@ -62,17 +60,33 @@ function changeMessage(m) {
   margin-top: 5vh;
 }
 
-
-
 #rightSection img {
-  margin-top: 15vh;
-  width: 40vw;
-  min-width: 500px;
+  display: flex;
+  margin-top: 24vh;
+  margin-left: auto;
+  margin-right: auto;
+  width: 20vw;
+  max-width: 700px;
+  min-width: 300px;
 }
 
 section {
   width: 50%;
   height: 100vh;
 }
+@media only screen and (max-width: 1000px) {
+  #rightSection {
+    display: none;
+  }
+  #leftSection {
+    width: 100vw;
+  }
+  #formDiv {
+    margin: 2vh 5vh 10vh 10vh;
+  }
 
+  #form{
+    width: 90%;
+  }
+}
 </style>

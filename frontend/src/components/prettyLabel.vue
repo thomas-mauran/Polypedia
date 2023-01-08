@@ -17,8 +17,6 @@ function randomColor() {
 
 const customBackground = randomColor();
 
-console.log(props.text)
-console.log("test")
 </script>
 <template>
     <p id="label" :style="customBackground">{{ text }}</p>

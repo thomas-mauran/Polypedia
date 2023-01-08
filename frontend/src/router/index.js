@@ -1,16 +1,18 @@
 /* eslint-disable*/
 import { createRouter, createWebHashHistory } from "vue-router";
-import LoginView from "../views/LoginView";
-import SignupView from "../views/SignupView";
-import AccountView from "../views/AccountView";
-import BooksView from "../views/BooksView";
-import UploadView from "../views/UploadBook";
-import BookView from "../views/BookView";
-import LikedBooksView from "../views/LikedBooksView";
-import AdminPannelView from "../views/AdminPannelView";
-import AdminCategory from "../views/AdminCategory";
+import LoginView from "@/views/LoginView";
+import SignupView from "@/views/SignupView";
+import AccountView from "@/views/AccountView";
+import UploadView from "@/views/Books/UploadBook";
+import BookView from "@/views//Books/BookView";
+import BookList from "@/views/Books/BookList";
+import LikedBooksView from "@/views/Books/LikedBooksView";
+import AdminPannelView from "@/views/Admin/AdminPannelView";
+import AdminCategory from "@/views/Admin/AdminCategoryView";
+import AdminCreateUpdateView from "@/views/Admin/AdminCreateUpdateView";
+import notFoundView from "@/views/NotFoundView"
 
-import { isLoggedIn } from "../utils/auth";
+import { isLoggedIn } from "@/utils/auth";
 
 import axios from "axios"
 
@@ -27,7 +29,7 @@ const router = createRouter({
     {
       path: "/books/:bookTitle?",
       name: "Books",
-      component: BooksView,
+      component: BookList,
       meta: { navbar: true },
     },
 
@@ -80,10 +82,24 @@ const router = createRouter({
     },
     {
       path: "/admin/:category",
-      name: "Admin Tag Control",
+      name: "Admin category",
       beforeEnter(to, from, next) {beforeEnterAdmin(to, from, next)},
       component: AdminCategory,
       meta: { navbar: true },
+    },
+    {
+      path: "/admin/:category/:action/:id?",
+      name: "Admin create update",
+      beforeEnter(to, from, next) {beforeEnterAdmin(to, from, next)},
+      component: AdminCreateUpdateView,
+      meta: { navbar: true },
+    },
+    {
+      path: "/:pathMatch(.*)",
+      name: "Not Found ",
+      meta: { navbar: true },
+
+      component: notFoundView,
     },
   ],
 });

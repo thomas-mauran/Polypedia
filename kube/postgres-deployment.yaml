@@ -1,0 +1,51 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-config
+data:
+  POSTGRES_DB: "polypedia"
+  POSTGRES_PASSWORD: "1234"
+  POSTGRES_USER: "admin"
+
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    service: postgres
+  name: postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: postgres
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        service: postgres
+    spec: 
+      containers:
+        - name: polypedia-postgres
+          image: thomasmauran/polypedia_database
+          imagePullPolicy: Always
+          envFrom:
+          - configMapRef:
+              name: postgres-config
+          ports:
+            - containerPort: 5432
+          resources: {}
+          volumeMounts:
+            - mountPath: "/var/lib/postgresql/data"
+              name: postgres-pv-claim
+              readOnly: false
+      volumes:
+        - name: postgres-pv-claim
+          persistentVolumeClaim:
+            claimName: postgres-pv-claim
+      restartPolicy: Always
+
+status: {}

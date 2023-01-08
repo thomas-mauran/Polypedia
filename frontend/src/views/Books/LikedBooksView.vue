@@ -1,14 +1,18 @@
 <script setup>
 /* eslint-disable */
 
-import bookCard from "@/components/bookCard.vue";
+import bookCard from "@/components/books/bookCard.vue";
 import axios from "axios";
 import { onMounted, ref } from "vue";
+import loadingGif from "@/components/loadingGif.vue"
 
 const bookList = ref([]);
 const urlBook = `${process.env.VUE_APP_API_URL}/books/likedBooks/${localStorage.getItem("AUTH_TOKEN_KEY")}`;
+const loading = ref(true)
 
 async function getBook() {
+  loading.value = true
+
   axios
     .get(urlBook, {
       headers: {
@@ -16,17 +20,20 @@ async function getBook() {
       },
     })
     .then(async (response) => {
-      console.log("test");
       response.data.forEach((element) => {
         element.image = "data:image/jpeg;base64," + element.image;
       });
       bookList.value = response.data;
-      console.log(bookList.value);
+      loading.value = false
+
     })
     .catch((error) => {
       console.log(error);
       bookList.value = [];
+      loading.value = false
+
     });
+
 }
 
 onMounted(() => {
@@ -34,9 +41,11 @@ onMounted(() => {
 });
 </script>
 <template>
-  <div>
+  <section>
+    <loadingGif v-if="loading"/>
+
     <div class="noBooksDiv" v-if="bookList.length < 1">
-      <img id="noBookImg" src="../assets/noLikesAnimation.gif" alt="Books not found gif of a book getting stealed by an ovni" />
+      <img id="noBookImg" src="@/assets/noLikesAnimation.gif" alt="Books not found gif of a book getting stealed by an ovni" />
 
       <h2>You did not like any book yet !</h2>
     </div>
@@ -54,7 +63,7 @@ onMounted(() => {
           :bookTitle="book.title" />
       </section>
     </div>
-  </div>
+  </section>
 </template>
 <style scoped>
 h1 {
@@ -76,5 +85,6 @@ section {
 
 #noBookImg {
   max-width: 30vw;
+  min-width: 300px;
 }
 </style>

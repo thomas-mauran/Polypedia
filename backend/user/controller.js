@@ -3,8 +3,49 @@ const jwt = require("jsonwebtoken");
 
 const pool = require("../db");
 const queries = require("./queries");
-const bookQueries = require("../book/queries")
+const bookQueries = require("../book/queries");
 
+const getAttributes = (req, res) => {
+  const attributes = [
+    {
+      name: "username",
+      type: "text",
+      placeholder: "this is the username of the user",
+      value: "",
+    },
+    {
+      name: "email",
+      type: "text",
+      placeholder: "email@email.com",
+      value: "",
+    },
+    {
+      name: "password",
+      type: "text",
+      placeholder: "Strong password",
+      value: "",
+    },
+    {
+      name: "is_admin",
+      type: "checkbox",
+      placeholder: "",
+      value: false,
+    },
+  ];
+  return res.status(200).send(attributes);
+};
+
+const update = async (req, res) => {
+  try {
+    let id = req.params.id;
+    let { username, email, is_admin } = req.body;
+    await pool.query(queries.update, [id, username, email, is_admin]);
+    res.status(204).send({ message: "User updated" });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({ error: error });
+  }
+};
 
 const getAll = async (req, res) => {
   try {
@@ -16,9 +57,8 @@ const getAll = async (req, res) => {
   }
 };
 
-
-// To get a user using it's id 
-const getUserById = async (req, res) => {
+// To get a user using it's id
+const getById = async (req, res) => {
   try {
     const id = parseInt(req.params.id);
     const results = await pool.query(queries.getById, [id]);
@@ -35,7 +75,30 @@ const getUserById = async (req, res) => {
 // Create a new user
 const signup = async (req, res) => {
   try {
+    // If we have the token and the user is admin it means we are sending from the admin pannel
+    // So we wanna be able to retrieve the is_admin value
+
+    const token = req.headers["x-access-token"];
+    let decoded, is_admin;
+    let isAdminResult = [];
+    console.log(token);
+    if (token !== undefined) {
+      decoded = jwt.verify(token, process.env.JWT_TOKEN_KEY);
+      userId = decoded.userId;
+      isAdminResult = await pool.query(queries.isUserAdmin, [userId]);
+    }
+
     const { username, email, password } = req.body;
+
+    console.log(isAdminResult.rows);
+    if (isAdminResult.rows && isAdminResult.rows.length > 0) {
+      is_admin = req.body.is_admin;
+    }
+    console.log(is_admin);
+    let is_adminValue = is_admin !== undefined ? is_admin : false;
+
+    console.log(is_adminValue);
+
     const cryptedPassword = await bcrypt.hash(password, 10);
 
     // we check if the mail isn't already used
@@ -45,7 +108,7 @@ const signup = async (req, res) => {
     }
 
     // we insert the iser
-    await pool.query(queries.addUser, [username, email, cryptedPassword, false]);
+    await pool.query(queries.addUser, [username, email, cryptedPassword, is_adminValue]);
     res.sendStatus(201);
   } catch (error) {
     console.error(error);
@@ -100,36 +163,37 @@ const isUserAdmin = async (req, res) => {
 };
 
 const deleteFromDb = async (req, res) => {
-  try{
-    const id = req.params.id
+  try {
+    const id = req.params.id;
 
     const idExist = await pool.query(queries.getById, [id]);
 
-    if(idExist.rows.length < 1) return res.status(404).send("id not found")
-    
-    const getAllLikedBooks = await pool.query(bookQueries.getLikedBooks, [id])
+    if (idExist.rows.length < 1) return res.status(404).send("id not found");
+
+    const getAllLikedBooks = await pool.query(bookQueries.getLikedBooks, [id]);
 
     getAllLikedBooks.rows.forEach(async (bookId) => {
-      await pool.query(bookQueries.removeLike, [bookId])
-    })
+      await pool.query(bookQueries.removeLike, [bookId]);
+    });
 
-    await pool.query(queries.deleteInter, [id])
-    await pool.query(queries.deleteFromDb, [id])
+    await pool.query(queries.deleteInter, [id]);
+    await pool.query(queries.deleteFromDb, [id]);
 
-    return res.status(200).send()
-
+    return res.status(204).send();
   } catch (error) {
     console.log(error);
     return res.status(500).send({ error: error });
   }
+};
 
-}
 
 module.exports = {
-  getUserById,
+  getById,
   signup,
   loginUser,
   isUserAdmin,
   getAll,
-  deleteFromDb
+  deleteFromDb,
+  getAttributes,
+  update
 };

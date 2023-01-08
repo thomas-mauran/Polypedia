@@ -1,8 +1,8 @@
 <script setup>
 /* eslint-disable*/
 
-import "../assets/css/loginSignupForm.css";
-import { login } from "../utils/auth";
+import "@/assets/css/loginSignupForm.css";
+import { login } from "@/utils/auth";
 
 import { RouterLink, useRouter } from "vue-router";
 import { defineEmits, ref } from "vue";
@@ -33,6 +33,8 @@ async function tryLogin() {
         id="email"
         placeholder="yourEmail@address.com"
         v-model="email"
+        v-on:keyup.enter="tryLogin"
+
       />
 
       <label for="password">Password</label>
@@ -41,18 +43,19 @@ async function tryLogin() {
         id="password"
         placeholder="veryStrongPassword"
         v-model="password"
+        v-on:keyup.enter="tryLogin"
       />
 
       <div class="horizontalDiv buttonDiv" type="button">
-        <button class="purpleBackground btn" @click="tryLogin">Login</button>
+        <button class="purpleBackground btn" @click="tryLogin" type="button">Login</button>
         <p>or</p>
         <RouterLink class="btn purpleOutline" to="signup"
           >Create an account</RouterLink
         >
       </div>
-      <RouterLink class="purpleText" to="resetPassword"
+      <!-- <RouterLink class="purpleText" to="resetPassword"
         >forgot my password 😞</RouterLink
-      >
+      > -->
     </form>
   </article>
 </template>

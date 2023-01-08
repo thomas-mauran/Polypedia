@@ -1,6 +1,6 @@
 CREATE TABLE "users" (
 	"id" serial NOT NULL,
-	"login" VARCHAR(75) NOT NULL,
+	"username" VARCHAR(75) NOT NULL,
 	"email" VARCHAR(255) NOT NULL UNIQUE,
 	"password" VARCHAR(255) NOT NULL,
 	"is_admin" BOOLEAN NOT NULL,
@@ -140,11 +140,11 @@ FOR EACH ROW
 EXECUTE PROCEDURE decrement_likes_function();
 
 -- Default User admin
--- login : admin
+-- username : admin
 -- email: admin@admin.com
 -- password : admin
  
-INSERT INTO users(login, email, "password", is_admin)VALUES('admin', 'admin@admin.com', '$2b$10$y25zy37aMWarlzyN8wPKLesjtPs0fXDr.HFugzsgR1/aXC/94G8ei', true);
+INSERT INTO users(username, email, "password", is_admin)VALUES('admin', 'admin@admin.com', '$2b$10$y25zy37aMWarlzyN8wPKLesjtPs0fXDr.HFugzsgR1/aXC/94G8ei', true);
 
 
 -- Authors 

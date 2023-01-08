@@ -2,9 +2,10 @@
 import { useRouter } from "vue-router";
 import { onMounted, ref } from "vue";
 import axios from "axios";
+import loadingGif from "@/components/loadingGif.vue";
 
 
-
+const loading = ref(true);
 const username = ref("");
 const email = ref("");
 const userId = localStorage.getItem("USER_ID")
@@ -12,6 +13,7 @@ const router = useRouter();
 
 
 async function fetchUserInfos() {
+  loading.value = true
     if(!userId) router.push('login')
 
   const url = `${process.env.VUE_APP_API_URL}/users/${userId}`;
@@ -26,11 +28,15 @@ async function fetchUserInfos() {
     });
 
     if (res.status === 200) {
-      username.value = res.data[0].login;
+      username.value = res.data[0].username;
       email.value = res.data[0].email;
+      loading.value = false
+
     }
   } catch (error) {
     console.log(error);
+    loading.value = false
+
   }
 }
 
@@ -48,10 +54,12 @@ onMounted(() => {
 });
 </script>
 <template>
-  <div>
+      <loadingGif v-if="loading" />
+
+  <section>
     <h2>Username : {{username}}#{{userId}}</h2>
     <h2>Email: {{email}}</h2>
-</div>
+</section>
   <button @click="disconnect" id="disconnectBtn">Disconnect</button>
 </template>
 <style scoped>

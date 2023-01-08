@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: api-configmap
+data:
+  SERVER_PORT: "3000"
+  SERVER_HOST: "localhost"
+  CORS_URL: ""
+  DB: ""
+  DIALECT: ""
+  USER: ""
+  PASSWORD: ""
+  HOST: postgres
+  DBPORT: "5432"
+  JWT_TOKEN_KEY: ""

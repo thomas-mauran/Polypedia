@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    service: api
+  name: api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      service: api
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        service: api
+    spec:
+      containers:
+        - name: api-deployment
+          envFrom:
+            - configMapRef:
+                  name: api-configmap
+          image: thomasmauran/polypedia_api
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+          resources:
+            requests:
+              cpu: 100m 
+          volumeMounts:
+            - mountPath: "/files"
+              name: mypd
+      volumes:
+        - name: mypd
+          persistentVolumeClaim:
+            claimName: api-pv-claim
+
+      restartPolicy: Always
+
+
+status: {}
