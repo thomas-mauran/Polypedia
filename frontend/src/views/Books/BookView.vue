@@ -21,7 +21,9 @@ const loading = ref(true);
 
 // const numPages = ref(0);
 const urlBook = `${process.env.VUE_APP_API_URL}/books/${route.params.id}`;
-const isMobile = ref(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
+const isMobile = ref(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/.test(navigator.userAgent));
+const isVertical = ref(window.innerHeight < window.innerWidth);
+
 const isOpen = ref(false)
 
 async function fetchBook() {
@@ -39,10 +41,8 @@ async function fetchBook() {
       isLiked.value = response.data.isLiked;
       bookAuthors.value = response.data.authors.length > 0 ? response.data.authors[0] : "undefined";
 
-      loading.value = false;
     })
     .catch((error) => {
-      loading.value = false;
 
       console.log(error);
     });
@@ -126,15 +126,17 @@ function likeBook() {
 }
 
 
-onMounted(() => {
-  fetchBook();
-  fetchFile();
+onMounted(async () => {
+  await fetchBook();
+  await fetchFile();
+
   windowSize.value = window.innerWidth;
 });
 </script>
 <template>
+      <loadingGif v-if="loading" />
+
   <section id="container">
-    <loadingGif v-if="loading" />
 
     <object v-if="!isMobile && loading === false" :data="pdfData" type="application/pdf" class="pdfLoader">
     </object>
@@ -142,11 +144,10 @@ onMounted(() => {
       <a :href="pdfData" target="_blank" rel="noopener noreferrer" id="downloadBtn">click here to see the PDF file.</a>
       <p>The inline pdf reader is not included in the mobile version. Click on the button to see your book</p>
     </div>
-    <Slide v-if="windowSize > 500" noOverlay disableOutsideClick :isOpen="isOpen" left closeOnNavigation="true">
+    <Slide v-if="isVertical" noOverlay disableOutsideClick :isOpen="isOpen" left closeOnNavigation="true">
 
       <div class="verticalDiv">
         <h1>Informations</h1>
-
         <BurgerLabel isBig title="Title" :text="bookInfo.title" />
         <BurgerLabel title="Id" :text="bookInfo.id" />
         <BurgerLabel isBig title="Author" :text="bookAuthors.fullname" />
@@ -254,7 +255,7 @@ onMounted(() => {
     top: 20px !important;
   }
   .bm-menu {
-    z-index: 0;
+    z-index: 30;
     box-shadow: inset 0 7px 9px -7px black !important;
     margin-top: 0px !important;
     background-color: #dbdcf6 !important;
@@ -276,8 +277,7 @@ onMounted(() => {
     text-decoration: underline 2px !important;
   }
   #container{
-    top: 0px;
-    position: fixed
+    width: 100vw;
   }
 }
 </style>
