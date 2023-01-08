@@ -96,9 +96,8 @@ const router = createRouter({
     },
     {
       path: "/:pathMatch(.*)",
-      name: "Not Found ",
+      name: "NotFound",
       meta: { navbar: true },
-
       component: notFoundView,
     },
   ],
@@ -115,11 +114,12 @@ function beforeEnterAdmin(to, from, next) {
     })
     .then(async (response) => {
       
-      if(response.status !== 200) next({name: "/books"})
+      if(response.status !== 200) next({path: "/NotFound"})
       next()
     })
     .catch((error) => {
-      next({name: "/books"})
+      console.log("test")
+      next({path: "/NotFound"})
     });
 }
 

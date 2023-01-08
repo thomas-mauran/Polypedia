@@ -23,6 +23,7 @@ section{
     width: 30%;
     border-radius: 20px;
     padding: 30px;
+    min-width: 300px;
 }
 h1{
     color: white;
@@ -35,7 +36,7 @@ h4{
 }
 
 #gif404{
-    width: 200px;
-    min-width: 300px;
+    width: 20vw;
+    min-width: 200px;
 }
 </style>
