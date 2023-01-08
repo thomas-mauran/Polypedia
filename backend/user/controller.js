@@ -138,7 +138,7 @@ const loginUser = async (req, res) => {
       return res.status(401).send({ error: "Incorrect password" });
     }
     // We create a token and send it
-    const token = jwt.sign({ userId }, process.env.JWT_TOKEN_KEY, { expiresIn: "20m" });
+    const token = jwt.sign({ userId }, process.env.JWT_TOKEN_KEY, { expiresIn: "6h" });
     res.send({ token, id: userId, is_admin });
   } catch (error) {
     console.error(error);

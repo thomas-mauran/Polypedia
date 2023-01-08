@@ -22,6 +22,9 @@ img {
   z-index: 20;
   animation: 1s ease-in-out;
   filter: hue-rotate(-30deg) saturate(200%) brightness(89%) contrast(87%);
+  position: fixed;
+  top: 45vh;
+  left: 45vw;
 }
 
 .greyBackground{
@@ -34,10 +37,5 @@ img {
     position: fixed;
 }
 
-@media only screen and (max-width: 1000px) {
-  img {
-    
-  }
 
-}
 </style>
