@@ -21,8 +21,8 @@ const loading = ref(true);
 
 // const numPages = ref(0);
 const urlBook = `${process.env.VUE_APP_API_URL}/books/${route.params.id}`;
-const isMobile = ref(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
-
+const isMobile = ref(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
+const isOpen = ref(false)
 
 async function fetchBook() {
   loading.value = true;
@@ -60,9 +60,8 @@ async function fetchFile() {
       responseType: "blob",
     })
     .then(async (response) => {
-      //const blob = new Blob([response.data], { type: "application/pdf" });
-      //console.log(blob)
-      pdfData.value = URL.createObjectURL(response.data);
+
+      pdfData.value = await URL.createObjectURL(response.data);
       loading.value = false;
     })
     .catch((error) => {
@@ -122,10 +121,10 @@ function likeBook() {
       .catch((error) => {
         console.log(error);
       });
-      loading.value = false;
-
+    loading.value = false;
   }
 }
+
 
 onMounted(() => {
   fetchBook();
@@ -137,16 +136,14 @@ onMounted(() => {
   <section id="container">
     <loadingGif v-if="loading" />
 
-    <object v-if="!isMobile" :data="pdfData" type="application/pdf" class="pdfLoader">
-      <p v-if="loading === false">
-        Your web browser doesn't have a PDF plugin. Instead you can <a :href="pdfData">click here to download the PDF file.</a>
-      </p>
+    <object v-if="!isMobile && loading === false" :data="pdfData" type="application/pdf" class="pdfLoader">
     </object>
     <div v-if="isMobile" class="middleCentered">
-      <a  :href="pdfData" target="_blank" rel="noopener noreferrer" id="downloadBtn">click here to see the PDF file.</a>
+      <a :href="pdfData" target="_blank" rel="noopener noreferrer" id="downloadBtn">click here to see the PDF file.</a>
       <p>The inline pdf reader is not included in the mobile version. Click on the button to see your book</p>
     </div>
-    <Slide noOverlay disableOutsideClick isOpen="true" left width="400">
+    <Slide v-if="windowSize > 500" noOverlay disableOutsideClick :isOpen="isOpen" left closeOnNavigation="true">
+
       <div class="verticalDiv">
         <h1>Informations</h1>
 
@@ -154,7 +151,7 @@ onMounted(() => {
         <BurgerLabel title="Id" :text="bookInfo.id" />
         <BurgerLabel isBig title="Author" :text="bookAuthors.fullname" />
         <BurgerLabel isBig title="Description" :text="bookInfo.description" />
-        <BurgerLabel title="Number of pages" :text="bookInfo.number_of_pages" />
+        <BurgerLabel title="Number of pages" isBig :text="bookInfo.number_of_pages" />
         <BurgerLabel title="Tags" isBig prettyLabel :list="bookTags" />
         <BurgerLabel title="Language" :text="bookInfo.language_name" />
         <BurgerLabel title="Likes" :text="bookInfo.number_of_likes" />
@@ -239,11 +236,17 @@ onMounted(() => {
 
 #container {
   height: 90vh;
+  
 }
 .pdfLoader {
   margin: 20px;
   width: 50%;
   height: 95%;
+}
+
+.mobileBtn{
+  z-index: 10;
+  cursor: pointer;
 }
 
 @media only screen and (max-width: 1000px) {
@@ -256,6 +259,7 @@ onMounted(() => {
     margin-top: 0px !important;
     background-color: #dbdcf6 !important;
     max-height: calc(105vh - 8rem) !important;
+    width: 90vw !important;
     overflow-y: auto !important;
   }
 
@@ -264,6 +268,16 @@ onMounted(() => {
     margin-top: 60px;
     width: 100%;
     height: 100%;
+  }
+
+  .bm-item-list h1 {
+    margin-bottom: 20px !important;
+    font-size: 1.4em !important;
+    text-decoration: underline 2px !important;
+  }
+  #container{
+    top: 0px;
+    position: fixed
   }
 }
 </style>

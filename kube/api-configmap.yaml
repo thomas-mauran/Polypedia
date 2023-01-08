@@ -5,10 +5,11 @@ metadata:
 data:
   SERVER_PORT: "3000"
   SERVER_HOST: "localhost"
-  DB: "polypedia"
-  DIALECT: "postgres"
-  USER: "admin"
-  PASSWORD: "1234"
+  CORS_URL: ""
+  DB: ""
+  DIALECT: ""
+  USER: ""
+  PASSWORD: ""
   HOST: postgres
   DBPORT: "5432"
-  JWT_TOKEN_KEY: "sdjk2doz"
+  JWT_TOKEN_KEY: ""
